@@ -18,12 +18,18 @@ public:
 private:
     void OnApply(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
+    void OnExit2(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
+    void OnNothing(wxCommandEvent& event);
+
+    wxToolBar* toolbar1;
 };
  
 enum
 {
-    ID_MYAPP = 1
+    ID_MYAPP = 1,
+    wxID_ANY2,
+    wxID_ANY3
 };
  
 bool MyApp::OnInit()
@@ -53,10 +59,45 @@ MyFrame::MyFrame():wxFrame(nullptr, wxID_ANY, "My App")
  
     CreateStatusBar();
     SetStatusText("My WxSkequletonApp");
+    
+    wxImage::AddHandler(new wxPNGHandler);
+    wxBitmap exit(wxT("exit.png"), wxBITMAP_TYPE_PNG);
+    wxBitmap closeb(wxT("close.png"), wxBITMAP_TYPE_PNG);
+
+
+    toolbar1 = new wxToolBar(this, wxID_ANY);
+    wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
+    vbox->Add(toolbar1, 0, wxEXPAND);
+
+    toolbar1->AddTool(wxID_ANY2, wxT("Exit"), exit);
+    toolbar1->AddTool(wxID_ANY3, wxT("Close"), closeb);
+    toolbar1->Realize();
+
+    SetSizer(vbox);
  
     Bind(wxEVT_MENU, &MyFrame::OnApply, this, ID_MYAPP);
     Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+    
+    Bind(wxEVT_COMMAND_TOOL_CLICKED, &MyFrame::OnExit2, this, wxID_ANY2);
+    Bind(wxEVT_COMMAND_TOOL_CLICKED, &MyFrame::OnNothing, this, wxID_ANY3);
+
+    
+
+
+}
+
+void MyFrame::OnExit2(wxCommandEvent& event)
+{
+    Close(true);
+}
+
+void MyFrame::OnNothing(wxCommandEvent& event)
+{
+    wxMessageBox("Hope this works",
+        "About Skeleton App",
+        wxOK | wxICON_INFORMATION);
+
 }
  
 void MyFrame::OnExit(wxCommandEvent& event)
