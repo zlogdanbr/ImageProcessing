@@ -6,13 +6,6 @@
 #include <wx/wx.h>
 #include <memory>
  
-class MyApp : public wxApp
-{
-public:
-    bool OnInit() override;
-};
- 
-wxIMPLEMENT_APP(MyApp);
  
 class MyFrame : public wxFrame
 {
@@ -26,8 +19,8 @@ private:
     void OnAbout(wxCommandEvent& event);
     void OnNothing(wxCommandEvent& event);
 
-    wxToolBar* toolbar1;
-    wxTextCtrl* textctrl;
+    wxToolBar* toolbar1 = nullptr;
+    wxTextCtrl* textctrl = nullptr;
 };
  
 enum
@@ -37,12 +30,6 @@ enum
     wxID_ANY3   // IDs for the buttons in the toolbar
 };
  
-bool MyApp::OnInit()
-{
-    MyFrame *frame = new MyFrame();
-    frame->Show(true);
-    return true;
-}
  
 MyFrame::MyFrame():wxFrame(nullptr, wxID_ANY, "My App")
 {
@@ -54,15 +41,12 @@ MyFrame::MyFrame():wxFrame(nullptr, wxID_ANY, "My App")
     //                    "&Apply...\tCtrl-H", 
     //                    "Apply");
     //menuFile->AppendSeparator();
-    //menuFile->Append(wxID_EXIT);
- 
+    //menuFile->Append(wxID_EXIT); 
     //std::unique_ptr < wxMenu > menuHelp{ new wxMenu };
-    //menuHelp->Append(wxID_ABOUT);
- 
+    //menuHelp->Append(wxID_ABOUT); 
     //std::unique_ptr <wxMenuBar> menuBar{ new wxMenuBar };
     //menuBar->Append(menuFile.release(), "&File");
-    //menuBar->Append(menuHelp.release(), "&Help");
- 
+    //menuBar->Append(menuHelp.release(), "&Help"); 
     //SetMenuBar( menuBar.release() );
  
     // ------------------------------------------------------
@@ -85,7 +69,8 @@ MyFrame::MyFrame():wxFrame(nullptr, wxID_ANY, "My App")
     //toolbar1->AddTool(wxID_ANY3, wxT("Close"), closeb);
     //toolbar1->Realize();
     //SetSizer(vbox); 
-    // 
+    
+
     // ---------------------------------------------------------
     //          how to connect Event handlers
     // ---------------------------------------------------------
@@ -121,20 +106,36 @@ void MyFrame::OnNothing(wxCommandEvent& event)
         wxOK | wxICON_INFORMATION);
 
 }
- 
+
 void MyFrame::OnExit(wxCommandEvent& event)
 {
     Close(true);
 }
- 
+
 void MyFrame::OnAbout(wxCommandEvent& event)
 {
     wxMessageBox("This is a wxWidgets skeleton app",
-                 "About Skeleton App",
-                 wxOK | wxICON_INFORMATION);
+        "About Skeleton App",
+        wxOK | wxICON_INFORMATION);
 }
- 
+
 void MyFrame::OnApply(wxCommandEvent& event)
 {
     wxLogMessage("It should do something!");
+}
+
+
+class MyApp : public wxApp
+{
+public:
+    bool OnInit() override;
+};
+
+wxIMPLEMENT_APP(MyApp);
+
+bool MyApp::OnInit()
+{
+    MyFrame* frame = new MyFrame();
+    frame->Show(true);
+    return true;
 }
