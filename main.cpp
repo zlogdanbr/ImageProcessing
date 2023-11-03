@@ -1,5 +1,6 @@
 // https://www.codtronic.com/blog/windows/building-wxwidgets-applications-using-microsoft-visual-studio/
 #include <wx/wx.h>
+#include <memory>
  
 class MyApp : public wxApp
 {
@@ -15,7 +16,7 @@ public:
     MyFrame();
  
 private:
-    void OnHello(wxCommandEvent& event);
+    void OnApply(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 };
@@ -32,28 +33,28 @@ bool MyApp::OnInit()
     return true;
 }
  
-MyFrame::MyFrame():wxFrame(nullptr, wxID_ANY, "Hello World")
+MyFrame::MyFrame():wxFrame(nullptr, wxID_ANY, "My App")
 {
-    wxMenu *menuFile = new wxMenu;
+    std::unique_ptr<wxMenu> menuFile{ new wxMenu };
     menuFile->Append(   ID_MYAPP,
-                        "&Hello...\tCtrl-H", 
-                        "Help string shown in status bar for this menu item");
+                        "&Apply...\tCtrl-H", 
+                        "Apply");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
  
-    wxMenu *menuHelp = new wxMenu;
+    std::unique_ptr < wxMenu > menuHelp{ new wxMenu };
     menuHelp->Append(wxID_ABOUT);
  
-    wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(menuHelp, "&Help");
+    std::unique_ptr <wxMenuBar> menuBar{ new wxMenuBar };
+    menuBar->Append(menuFile.release(), "&File");
+    menuBar->Append(menuHelp.release(), "&Help");
  
-    SetMenuBar( menuBar );
+    SetMenuBar( menuBar.release() );
  
     CreateStatusBar();
-    SetStatusText("Welcome to wxWidgets!");
+    SetStatusText("My WxSkequletonApp");
  
-    Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_MYAPP);
+    Bind(wxEVT_MENU, &MyFrame::OnApply, this, ID_MYAPP);
     Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
 }
@@ -65,12 +66,12 @@ void MyFrame::OnExit(wxCommandEvent& event)
  
 void MyFrame::OnAbout(wxCommandEvent& event)
 {
-    wxMessageBox("This is a wxWidgets Hello World example",
-                 "About Hello World",
+    wxMessageBox("This is a wxWidgets skeleton app",
+                 "About Skeleton App",
                  wxOK | wxICON_INFORMATION);
 }
  
-void MyFrame::OnHello(wxCommandEvent& event)
+void MyFrame::OnApply(wxCommandEvent& event)
 {
-    wxLogMessage("Hello world from wxWidgets!");
+    wxLogMessage("It should do something!");
 }
