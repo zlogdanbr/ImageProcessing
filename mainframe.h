@@ -9,6 +9,7 @@
 
 using MenuContainer = std::map<wxString, wxMenu*>;
 
+
 class MyFrame : public wxFrame
 {
 public:
@@ -23,9 +24,7 @@ private:
     wxMenu* fmenu = nullptr;
     wxMenu* fhelp = nullptr;
     wxMenuBar* menubar = nullptr;
-    wxBoxSizer* vbox;
-    wxPanel* panel1;
-
+    wxPanel* main_panel = nullptr;
 
     //--------------------------------------------------------------
     // Data containers
@@ -47,20 +46,6 @@ private:
         return s.str();
     }
 
-    template<typename W, typename S>
-    void
-    setTextOfContainer(W& w, S& s)
-    {
-        w->settext(s);
-    }
-
-    template<typename W, typename S>
-    S
-    setTextOfContainer(W& w)
-    {
-        return w.gettext();
-    }
-
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
     //---------------------------------------------------------------
@@ -73,7 +58,9 @@ enum
 {
     ID_MYAPP = 1,
     wxID_ANY2,  // IDs for the buttons in the toolbar
-    wxID_ANY3   // IDs for the buttons in the toolbar
+    wxID_ANY3,  // IDs for the buttons in the toolbar
+    wxID_BUTTONOK,
+    wxID_BUTTONCANEL
 };
 
 

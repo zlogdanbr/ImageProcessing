@@ -1,6 +1,7 @@
 
 #include "mainframe.h"
 
+
 wxMenu* MyFrame::setMenu(int ID, wxString&& item, wxString&& helpertext)
 {
     wxMenu* menu{ new wxMenu };
@@ -32,7 +33,7 @@ wxMenuBar* MyFrame::setAppMenuBar()
 MyFrame::MyFrame() :wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1), wxSize(250, 180))
 {
     // ------------------------------------------------------
-    //          how to create a menu  
+    //          create a menu  
     // ------------------------------------------------------
     fmenu = setMenu(ID_MYAPP, "&Apply...\tCtrl-H", "Apply");
     fmenu->Append(wxID_EXIT);
@@ -45,32 +46,25 @@ MyFrame::MyFrame() :wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1), wxSize(
     SetMenuBar(menubar);
 
     // ------------------------------------------------------
-    //          how to create a status bar
+    //          create a status bar
     // ------------------------------------------------------
     CreateStatusBar();
     SetStatusText("My WxSkequletonApp");
+   
 
+    // ------------------------------------------------------
+    //          Layout
+    // ------------------------------------------------------
+
+    main_panel = new wxPanel(this, -1);
 
     // ---------------------------------------------------------
-    //          how to connect Event handlers
+    //          connect Event handlers
     // ---------------------------------------------------------
     Bind(wxEVT_MENU, &MyFrame::OnApply, this, ID_MYAPP);
     Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
-    
 
-
-    // ------------------------------------------------------
-    //          how to add text control
-    // ------------------------------------------------------
-
-    wxColour col1;
-    col1.Set(wxT("#ededed"));
-    vbox = new wxBoxSizer(wxVERTICAL);
-    panel1 = new wxPanel(this, -1);
-    panel1->SetBackgroundColour(col1);
-    panel1->SetSizer(vbox);
-    
     Centre();
 }
 
@@ -88,5 +82,5 @@ void MyFrame::OnAbout(wxCommandEvent& event)
 
 void MyFrame::OnApply(wxCommandEvent& event)
 {
-    wxLogMessage("It should do something!");
+    
 }

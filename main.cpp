@@ -2,6 +2,7 @@
 // 
 // https://www.codtronic.com/blog/windows/building-wxwidgets-applications-using-microsoft-visual-studio/
 // https://zetcode.com/gui/wxwidgets/
+// https://wiki.wxwidgets.org/Avoiding_Memory_Leaks
 // ---------------------------------------------------------------------------------------------
 
 #include "mainframe.h"

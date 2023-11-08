@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>C:\Users\Administrador\lib\opencv\build\x64\vc16\lib\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;opencv_world480.lib;opencv_world480d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,11 +137,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="demo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
+    <ClCompile Include="opcvwrapper.cpp" />
+    <ClCompile Include="segmentation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="demo.h" />
     <ClInclude Include="mainframe.h" />
+    <ClInclude Include="opcvwrapper.h" />
+    <ClInclude Include="segmentation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
