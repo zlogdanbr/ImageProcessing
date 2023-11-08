@@ -75,32 +75,4 @@ private:
 	std::vector<Vec4i> hierarchy;
 };
 
-class EyesDetector
-{
-public:
-	explicit EyesDetector(NoduleRec& n): n(n){ };
-	virtual ~EyesDetector() {};
-	Mat findEyes(int tol, int option);
-	std::vector<Rect> removeNonEyes(std::vector<Rect>& eyes,int tol);
-
-private:
-
-	inline int calculateRadius(const Rect& r) const
-	{
-		int sum = r.width + r.height;
-		return cvRound( sum*0.25);
-	}
-
-	inline int getYCenter(const Rect& r) const
-	{
-		return r.y + r.height / 2;
-	}
-
-	inline int getXCenter(const Rect& r) const
-	{
-		return r.x + r.width / 2;
-	}
-
-	NoduleRec& n;
-};
 

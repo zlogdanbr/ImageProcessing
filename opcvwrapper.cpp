@@ -131,23 +131,6 @@ Mat laplacian(Mat& src)
     return abs_dst;
 }
 
-// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
-std::vector<Rect> detectEyesInImage(Mat& img)
-{
-
-    if (img.type() != CV_8UC1)
-    {   // not gray-level image
-        convertograyScale(img);
-    }
-
-    std::vector<Rect> eyes;
-    CascadeClassifier cascade;
-    //cascade.load(CASCADE_PATH_FRONTAL_EYE); 
-    cascade.load(CASCADE_PATH_FRONTAL_EYE_CUDA);
-    cascade.detectMultiScale(img, eyes);
-    return eyes;
-
-}
 
 // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
 void drawCirclesAtImgFromRoi(Mat& img,Rect& roi)

@@ -12,11 +12,6 @@
 #include <algorithm>
 #include <cmath>
 
-const std::string CASCADE_PATH_FRONTAL_EXTENDED	= "C:\\Users\\Administrador\\lib\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalcatface_extended.xml";
-const std::string CASCADE_PATH_FRONTAL			= "C:\\Users\\Administrador\\lib\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_default.xml";
-const std::string CASCADE_PATH_FRONTAL_EYE		= "C:\\Users\\Administrador\\lib\\opencv\\sources\\data\\haarcascades\\haarcascade_eye.xml";
-const std::string CASCADE_PATH_FRONTAL_EYE_CUDA	= "C:\\Users\\Administrador\\lib\\opencv\\sources\\data\\haarcascades_cuda\\haarcascade_eye.xml";
-
 
 using namespace cv;
 
@@ -34,7 +29,6 @@ Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel, int ddepth, Point& anchor, double delta);
 Mat laplacian(Mat& src);
 Mat convertRectoImg(Rect& r, Mat& img);
-std::vector<Rect> detectEyesInImage(Mat& img);
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
 void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
 std::vector<Mat> splitChannel(Mat& img);
