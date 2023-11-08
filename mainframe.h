@@ -1,14 +1,53 @@
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/statbmp.h>
+#include <wx/panel.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <wx/artprov.h>
 #include <memory>
 #include <map>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "filesys.h"
 
-using MenuContainer = std::map<wxString, wxMenu*>;
 
+std::string convertWxStringToString(const wxString wsx);
+
+class CImageMaps final
+{
+public:
+    CImageMaps() = default;
+
+
+    bool setOriginalImage(wxString& path)
+    {
+        original = getImagePath(path);
+        return original.Exists();
+    }
+
+    bool setFinalImage(wxString& path)
+    {
+        finalimage = getImagePath(path);
+        return finalimage.Exists();
+    }
+
+    wxFileName  original;
+    wxFileName  finalimage;
+
+private:
+
+    wxFileName getImagePath(wxString& path)
+    {
+        wxFileName imagePath{ wxStandardPaths::Get().GetExecutablePath() };
+        imagePath.SetFullName(path);
+        return imagePath;
+    }
+
+
+};
 
 class MyFrame : public wxFrame
 {
@@ -17,51 +56,27 @@ public:
 
 private:
 
+    wxMenuBar* mainMenu = new wxMenuBar();
+
+    inline static const int ALGO1 = 1;
+    inline static const int ALGO2 = 2;
+
     //--------------------------------------------------------------
     // components---------------------------------------------------
     //--------------------------------------------------------------
 
-    wxMenu* fmenu = nullptr;
-    wxMenu* fhelp = nullptr;
-    wxMenuBar* menubar = nullptr;
     wxPanel* main_panel = nullptr;
-
-    //--------------------------------------------------------------
-    // Data containers
-    //---------------------------------------------------------------
-
-    MenuContainer menus;// container of menus
-
-    //---------------------------------------------------------------
-    // helper functions----------------------------------------------
-    //---------------------------------------------------------------
-    
-    wxMenu* setMenu(int ID, wxString&& item, wxString&& helpertext );// set a menu     
-    wxMenuBar* setAppMenuBar();// set a menu bar
-
-    std::string convertWxStringToString(const wxString wsx) const
-    {
-        std::stringstream s;
-        s << wsx;
-        return s.str();
-    }
+    wxStaticBitmap* staticBitmap1 = nullptr;
+    CImageMaps images_map{};
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
     //---------------------------------------------------------------
-    void OnApply(wxCommandEvent& event);
-    void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
+    void OnOpen(wxCommandEvent& event);
+    void OnAlgo1(wxCommandEvent& event);
+
 };
 
-enum
-{
-    ID_MYAPP = 1,
-    wxID_ANY2,  // IDs for the buttons in the toolbar
-    wxID_ANY3,  // IDs for the buttons in the toolbar
-    wxID_BUTTONOK,
-    wxID_BUTTONCANEL
-};
 
 
 class MyApp : public wxApp

@@ -1,13 +1,13 @@
 #include "demo.h"
 
-void FindAndDrawCircles(const std::string& image_path)
+bool FindAndDrawCircles(const std::string& image_path)
 {
     Mat img;
 
     if (loadImage(image_path, img) == false)
     {
         std::cout << "Could not read the image: " << image_path << std::endl;
-        return;
+        return false;
     }
     std::vector<Rect> faces = detectFacesInImage(img);
 
@@ -15,7 +15,11 @@ void FindAndDrawCircles(const std::string& image_path)
     {
         drawCirclesAtImgFromRoi(img, roi);
     }
+
     showImage(img, "Final");
+
+    return true;
+    
 }
 
 void FindAndDrawRectangles(const std::string& image_path)

@@ -109,15 +109,16 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WXUSINGDLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll\mswud</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;opencv_world480.lib;opencv_world480d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;opencv_world480d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,14 +138,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="demo.cpp" />
+    <ClCompile Include="filesys.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
     <ClCompile Include="segmentation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="demo.h" />
+    <ClInclude Include="filesys.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />
     <ClInclude Include="segmentation.h" />

@@ -1,4 +1,5 @@
 ﻿#include "opcvwrapper.h"
+#include <mutex> 
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool loadImage(const std::string& image_path, Mat& img)
@@ -14,8 +15,7 @@ bool loadImage(const std::string& image_path, Mat& img)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool saveImage(const std::string& image_path, Mat& img)
 {
-    std::string f = image_path + ".jpg";
-    return imwrite(f, img);
+    return imwrite(image_path, img);
 }
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
@@ -129,22 +129,6 @@ Mat laplacian(Mat& src)
     // converting back to CV_8U
     convertScaleAbs(dst, abs_dst);
     return abs_dst;
-}
-
-// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
-std::vector<Rect> detectFacesInImage(Mat& img)
-{
-    if (img.type() != CV_8UC1)
-    {   // not gray-level image
-        convertograyScale(img);
-    }
-
-    std::vector<Rect> faces;
-    CascadeClassifier cascade;
-    cascade.load(CASCADE_PATH_FRONTAL);
-    cascade.detectMultiScale(img, faces);
-    return faces;
-
 }
 
 // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html

@@ -8,7 +8,7 @@
 #define image_path_faces 	"C:\\sers\\Administrador\\Documents\\GitHub\\images\\data\\f.jpg"
 
 
-void FindAndDrawCircles(const std::string& image_path);
+bool FindAndDrawCircles(const std::string& image_path);
 void FindAndDrawRectangles(const std::string& image_path);
 void FindAndDFacesAndEyes(const std::string& image_path);
 void FindAndDFacesAndEyes(Mat& img);
