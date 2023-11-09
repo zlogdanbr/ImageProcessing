@@ -19,9 +19,6 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // ------------------------------------------------------------------------------  
     auto menuFile = new wxMenu();
 
-    auto menuItemFileNew = menuFile->Append(wxID_NEW);
-    menuItemFileNew->SetBitmap(wxArtProvider::GetBitmap(wxART_NEW, wxART_MENU));
-
     auto menuItemFileOpen = menuFile->Append(wxID_OPEN);
     menuItemFileOpen->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_MENU));
 
@@ -46,7 +43,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
 
     auto menuAlgo = new wxMenu();
     auto menuItemAlgo1= menuAlgo->Append(ALGO1, "Segmentation\tCTRL+F", "Segments Image");
-    auto menuItemAlgo2 = menuAlgo->Append(ALGO2, "Algo\tCTRL+E", "algo");
+    auto menuItemAlgo2 = menuAlgo->Append(ALGO2,"Gray Scale\tCTRL+G", "Converts to Gray");
 
 
     // -----------------------------------------------------------------------------  
@@ -69,36 +66,17 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // -----------------------------------------------------------------------------
     Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
     Bind(wxEVT_MENU, &MyFrame::OnAlgo1, this, ALGO1);
-    Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
+    Bind(wxEVT_MENU, &MyFrame::OnAlgo2, this, ALGO2);
     SetMenuBar(mainMenu);
    
     // -----------------------------------------------------------------------------
     //          Image
     // ------------------------------------------------------------------------------
     main_panel = new wxPanel(this, -1);
-    staticBitmap1 = new wxStaticBitmap(main_panel, wxID_ANY, wxNullBitmap, { 20, 20 }, { 100, 50 });
 
     Centre();
 }
 
-void MyFrame::OnSave(wxCommandEvent& event)
-{
-    wxFileDialog saveFileDialog(    this, 
-                                    wxEmptyString, 
-                                    wxEmptyString, 
-                                    "MyFile.bmp",
-                                    "Image files (*.bmp)|*.bmp|All Files (*.*)|*.*", 
-                                    wxFD_SAVE);
-
-    if (saveFileDialog.ShowModal() == wxID_OK) 
-    {
-        wxString f = saveFileDialog.GetPath();
-        if (images_map.SaveImage(f))
-        {
-            images_map.setFinalImage(f);
-        }
-    }
-}
 
 void MyFrame::OnOpen(wxCommandEvent& event)
 {
@@ -109,15 +87,21 @@ void MyFrame::OnOpen(wxCommandEvent& event)
                                     "Image files (*.bmp)|*.bmp|All Files (*.*)|*.*",
                                     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-
+    images_map.clean();
     openFileDialog.SetFilterIndex(0);
     if (openFileDialog.ShowModal() == wxID_OK)
     {     
-        wxString path = wxString::Format("File = %s", openFileDialog.GetPath());
+        wxString path =  openFileDialog.GetPath();
+        std::string spath = convertWxStringToString(path);
         if (images_map.setOriginalImage(path))
         {
-            staticBitmap1->SetBitmap(wxBitmapBundle{ wxBitmap {images_map.original.GetFullPath(), wxBITMAP_TYPE_ANY} });
-            staticBitmap1->SetWindowStyle(wxBORDER_SIMPLE);
+            Mat img;
+            if (loadImage(spath, img) == true)
+            {
+                images_map.Original_ImageOpenCVFormat = img;
+                showImage(images_map.Original_ImageOpenCVFormat, "");
+                images_map.Original_ImageOpenCVFormat.deallocate();
+            }
         }
     }
 }
@@ -136,6 +120,26 @@ void MyFrame::OnAlgo1(wxCommandEvent& event)
         images_map.Final_ImageOpenCVFormat = n.getFinalImg();
         showImage(images_map.Final_ImageOpenCVFormat, "");
     }
+
+}
+
+void MyFrame::OnAlgo2(wxCommandEvent& event)
+{
+    auto path = images_map.original.GetFullPath();
+    std::string spath = convertWxStringToString(path);
+    Mat img;
+    Mat out;
+
+    if ( loadImage(spath, img) == true)
+    {
+        out = convertograyScale(img);
+        if (out.empty() == false)
+        {
+            images_map.Final_ImageOpenCVFormat = out;
+            showImage(images_map.Final_ImageOpenCVFormat, "");
+        }
+    }
+    
 
 }
 

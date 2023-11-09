@@ -4,7 +4,7 @@
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool loadImage(const std::string& image_path, Mat& img)
 {
-    img = imread(image_path, IMREAD_COLOR);
+    img = imread(image_path);
     if (img.empty())
     {
         return false;

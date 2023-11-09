@@ -11,6 +11,12 @@
 
 #include "mainframe.h"
 
+class MyApp : public wxApp
+{
+public:
+    bool OnInit() override;
+};
+
 wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()

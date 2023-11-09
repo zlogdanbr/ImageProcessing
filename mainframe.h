@@ -21,23 +21,47 @@ class CImageHelper final
 public:
     CImageHelper() = default;
 
+    wxFileName getImagePath(wxString& path)
+    {
+        wxFileName imagePath{ wxStandardPaths::Get().GetExecutablePath() };
+        imagePath.SetFullName(path);
+        return imagePath;
+    }
 
     bool setOriginalImage(wxString& path)
     {
         original = getImagePath(path);
-        return original.Exists();
+        original_initiated =  original.Exists();
+        return original_initiated;
     }
 
     bool setFinalImage(wxString& path)
     {
         finalimage = getImagePath(path);
-        return finalimage.Exists();
+        final_initiated = finalimage.Exists();
+        return final_initiated;
     }
 
     wxFileName  original;
     wxFileName  finalimage;
 
     Mat Final_ImageOpenCVFormat;
+    Mat Original_ImageOpenCVFormat;
+
+    bool original_initiated = false;
+    bool final_initiated = false;
+
+    void clean()
+    {
+        original.Clear();
+        finalimage.Clear();
+        original_initiated = false;
+        final_initiated = false;
+        if (Final_ImageOpenCVFormat.empty() == false)
+        {
+            Final_ImageOpenCVFormat.deallocate();
+        }
+    }
 
     // ------------------------------------------------------------------------------------------------------------
     // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
@@ -81,47 +105,15 @@ public:
         return true;
     }
 
-    wxImage convertOpenCVMatGrayToWxigets(Mat& pictureMatrix) const
-    {
-        cv::Mat grayOutput, rgbOutput;
-        pictureMatrix.convertTo(grayOutput, CV_8U);
-        cvtColor(grayOutput, rgbOutput, 8); // note the BGR here. 
-        //If on Linux, set as RGB
-        wxImage test(rgbOutput.cols, rgbOutput.rows, rgbOutput.data, true);
-        return test;
-    }
-
     bool SaveImage(wxString& Path, bool ifGray = false)
     {
         wxImage ImgToSave;
-        if (ifGray == false)
+        if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
         {
-            if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
-            {
-                return ImgToSave.SaveFile(Path);
-            }
-        }
-        else
-        {
-            ImgToSave = convertOpenCVMatGrayToWxigets(Final_ImageOpenCVFormat);
-            if (ImgToSave.IsOk())
-            {
-                return ImgToSave.SaveFile(Path);
-            }
-        }
+            return ImgToSave.SaveFile(Path);
+        }       
         return false;
     }
-
-
-private:
-
-    wxFileName getImagePath(wxString& path)
-    {
-        wxFileName imagePath{ wxStandardPaths::Get().GetExecutablePath() };
-        imagePath.SetFullName(path);
-        return imagePath;
-    }
-
 
 };
 
@@ -150,15 +142,8 @@ private:
     //---------------------------------------------------------------
     void OnOpen(wxCommandEvent& event);
     void OnAlgo1(wxCommandEvent& event);
-    void OnSave(wxCommandEvent& event);
+    void OnAlgo2(wxCommandEvent& event);
 
 };
 
-
-
-class MyApp : public wxApp
-{
-public:
-    bool OnInit() override;
-};
 
