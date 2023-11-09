@@ -72,7 +72,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // -----------------------------------------------------------------------------
     //          Image
     // ------------------------------------------------------------------------------
-    main_panel = new wxPanel(this, -1);
+    textCtrl->AppendText("Init application\n");
 
     Centre();
 }
@@ -101,7 +101,16 @@ void MyFrame::OnOpen(wxCommandEvent& event)
                 images_map.Original_ImageOpenCVFormat = img;
                 showImage(images_map.Original_ImageOpenCVFormat, "");
                 images_map.Original_ImageOpenCVFormat.deallocate();
+                textCtrl->AppendText("Image loaded correctly\n");
             }
+            else
+            {
+                textCtrl->AppendText("Error loading Image\n");
+            }
+        }
+        else
+        {
+            textCtrl->AppendText("Error loading Image\n");
         }
     }
 }
@@ -119,6 +128,11 @@ void MyFrame::OnAlgo1(wxCommandEvent& event)
         n.HighlightRoi();
         images_map.Final_ImageOpenCVFormat = n.getFinalImg();
         showImage(images_map.Final_ImageOpenCVFormat, "");
+        textCtrl->AppendText("Algorithm applied correctly\n");
+    }
+    else
+    {
+        textCtrl->AppendText("Algorithm error\n");
     }
 
 }
@@ -137,7 +151,16 @@ void MyFrame::OnAlgo2(wxCommandEvent& event)
         {
             images_map.Final_ImageOpenCVFormat = out;
             showImage(images_map.Final_ImageOpenCVFormat, "");
+            textCtrl->AppendText("Algorithm applied correctly\n");
         }
+        else
+        {
+            textCtrl->AppendText("Algorithm error\n");
+        }
+    }
+    else
+    {
+        textCtrl->AppendText("Image not loaded\n");
     }
     
 

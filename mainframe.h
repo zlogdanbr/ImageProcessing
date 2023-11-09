@@ -136,6 +136,7 @@ private:
     wxPanel* main_panel = nullptr;
     wxStaticBitmap* staticBitmap1 = nullptr;
     CImageHelper images_map{};
+    wxTextCtrl* textCtrl = new wxTextCtrl(this, wxID_ANY, "textBox", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
