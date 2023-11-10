@@ -42,14 +42,18 @@ public:
         return final_initiated;
     }
 
-    wxFileName  original;
-    wxFileName  finalimage;
+    wxFileName getOriginalImage()const { return original; };
+    wxFileName getFinalImage()const { return finalimage; };
 
-    Mat Final_ImageOpenCVFormat;
-    Mat Original_ImageOpenCVFormat;
+    Mat getOrginalImageOpenCV() const { return Original_ImageOpenCVFormat; };
+    Mat getFinalImageOpenCV() const { return Final_ImageOpenCVFormat; };
 
-    bool original_initiated = false;
-    bool final_initiated = false;
+    void setOrginalImageOpenCV(Mat& m) { Original_ImageOpenCVFormat = m; };
+    void setFinalImageOpenCV(Mat& m) { Final_ImageOpenCVFormat = m; };
+
+    bool getOriginalImageInitiated() const { return original_initiated; };
+    bool getFinallImageInitiated() const { return final_initiated; }
+
 
     void clean()
     {
@@ -61,73 +65,46 @@ public:
         {
             Final_ImageOpenCVFormat.deallocate();
         }
+        if (Original_ImageOpenCVFormat.empty() == false)
+        {
+            Original_ImageOpenCVFormat.deallocate();
+        }
     }
+
+    bool SaveImage(wxString& Path, bool ifGray = false);
+  
+
+private:
+
+    wxFileName  original;
+    wxFileName  finalimage;
+
+    Mat Final_ImageOpenCVFormat;
+    Mat Original_ImageOpenCVFormat;
+
+    bool original_initiated = false;
+    bool final_initiated = false;
 
     // ------------------------------------------------------------------------------------------------------------
     // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
     // ------------------------------------------------------------------------------------------------------------
+    bool convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const;
 
-    bool convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
-    {
-        try
-        {
-            // data dimension
-            int w = cvImg.cols;
-            int h = cvImg.rows;
-            int size = w * h * 3 * sizeof(unsigned char);
-
-            // allocate memory for internal wxImage data
-            unsigned char* wxData = (unsigned char*)malloc(size);
-
-            // the matrix stores BGR image for conversion
-            Mat cvRGBImg = Mat(h, w, CV_8UC3, wxData);
-            switch (cvImg.channels())
-            {
-                case 3: // 3-channel case: swap R&B channels
-                {
-                    int mapping[] = { 0,2,1,1,2,0 }; // CV(BGR) to WX(RGB)
-                    mixChannels(&cvImg, 1, &cvRGBImg, 1, mapping, 3);
-                } break;
-
-                default:
-                {
-                }
-            }
-
-            wxImg.Destroy(); // free existing data if there's any
-            wxImg = wxImage(w, h, wxData);
-        }
-        catch (...)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    bool SaveImage(wxString& Path, bool ifGray = false)
-    {
-        wxImage ImgToSave;
-        if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
-        {
-            return ImgToSave.SaveFile(Path);
-        }       
-        return false;
-    }
 
 };
 
 class MyFrame : public wxFrame
 {
 public:
+
     MyFrame();
 
 private:
 
     wxMenuBar* mainMenu = new wxMenuBar();
 
-    inline static const int ALGO1 = 1;
-    inline static const int ALGO2 = 2;
+    inline static const int ALGO_NODE_REC = 1;
+    inline static const int ALGO_GRAY_C = 2;
 
     //--------------------------------------------------------------
     // components---------------------------------------------------
@@ -135,15 +112,26 @@ private:
 
     wxPanel* main_panel = nullptr;
     wxStaticBitmap* staticBitmap1 = nullptr;
-    CImageHelper images_map{};
-    wxTextCtrl* textCtrl = new wxTextCtrl(this, wxID_ANY, "textBox", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+    CImageHelper ImageHelper{};
+    wxTextCtrl* textCtrl{ new wxTextCtrl(
+                                            this, 
+                                            wxID_ANY, 
+                                            "", 
+                                            wxDefaultPosition, 
+                                            wxDefaultSize, 
+                                            wxTE_MULTILINE
+                                        ) 
+                        };
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
     //---------------------------------------------------------------
     void OnOpen(wxCommandEvent& event);
-    void OnAlgo1(wxCommandEvent& event);
-    void OnAlgo2(wxCommandEvent& event);
+    void OnClose(wxCommandEvent& event);
+    void OnExit(wxCommandEvent& event);
+    void OnSave(wxCommandEvent& event);
+    void OnNoduleRec(wxCommandEvent& event);
+    void OnDoGrayScale(wxCommandEvent& event);
 
 };
 

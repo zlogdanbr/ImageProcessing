@@ -9,6 +9,55 @@ std::string convertWxStringToString(const wxString wsx)
     return s.str();
 }
 
+
+bool CImageHelper::SaveImage(wxString& Path, bool ifGray)
+{
+    wxImage ImgToSave;
+    if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
+    {
+        return ImgToSave.SaveFile(Path);
+    }
+    return false;
+}
+
+bool CImageHelper::convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
+{
+    try
+    {
+        // data dimension
+        int w = cvImg.cols;
+        int h = cvImg.rows;
+        int size = w * h * 3 * sizeof(unsigned char);
+
+        // allocate memory for internal wxImage data
+        unsigned char* wxData = (unsigned char*)malloc(size);
+
+        // the matrix stores BGR image for conversion
+        Mat cvRGBImg = Mat(h, w, CV_8UC3, wxData);
+        switch (cvImg.channels())
+        {
+            case 3: // 3-channel case: swap R&B channels
+            {
+                int mapping[] = { 0,2,1,1,2,0 }; // CV(BGR) to WX(RGB)
+                mixChannels(&cvImg, 1, &cvRGBImg, 1, mapping, 3);
+            } break;
+
+            default:
+            {
+            }
+        }
+
+        wxImg.Destroy(); // free existing data if there's any
+        wxImg = wxImage(w, h, wxData);
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
 {
     SetClientSize(640, 480);
@@ -29,9 +78,6 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuItemFileSave = menuFile->Append(wxID_SAVE);
     menuItemFileSave->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_MENU));
 
-    auto menuItemFileSaveAs = menuFile->Append(wxID_SAVEAS);
-    menuItemFileSaveAs->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_SAVE_AS, wxART_MENU));
-
     menuFile->AppendSeparator();
 
     auto menuItemFileQuit = menuFile->Append(wxID_EXIT);
@@ -40,19 +86,15 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // ------------------------------------------------------------------------------  
     // menu   algos
     // ------------------------------------------------------------------------------  
-
     auto menuAlgo = new wxMenu();
-    auto menuItemAlgo1= menuAlgo->Append(ALGO1, "Segmentation\tCTRL+F", "Segments Image");
-    auto menuItemAlgo2 = menuAlgo->Append(ALGO2,"Gray Scale\tCTRL+G", "Converts to Gray");
-
+    auto menuItemNode= menuAlgo->Append(ALGO_NODE_REC, "Segmentation\tCTRL+F", "Segments Image");
+    auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C,"Gray Scale\tCTRL+G", "Converts to Gray");
 
     // -----------------------------------------------------------------------------  
     // menu   help
     // -----------------------------------------------------------------------------
-
     auto menuHelp = new wxMenu();
     menuHelp->Append(wxID_ABOUT);
-
 
     // ----------------------------------------------------------------------------- 
     // Menu loaded
@@ -65,18 +107,54 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // Menu Events
     // -----------------------------------------------------------------------------
     Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
-    Bind(wxEVT_MENU, &MyFrame::OnAlgo1, this, ALGO1);
-    Bind(wxEVT_MENU, &MyFrame::OnAlgo2, this, ALGO2);
+    Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
+    Bind(wxEVT_MENU, &MyFrame::OnDoGrayScale, this, ALGO_GRAY_C);
+    Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
+    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
     SetMenuBar(mainMenu);
    
     // -----------------------------------------------------------------------------
     //          Image
     // ------------------------------------------------------------------------------
-    textCtrl->AppendText("Init application\n");
+    textCtrl->AppendText("Application initiated...\n");
 
     Centre();
 }
 
+void MyFrame::OnExit(wxCommandEvent& event)
+{
+    Close();
+}
+
+void MyFrame::OnClose(wxCommandEvent& event)
+{
+    destroyAllWindows();
+    ImageHelper.clean();
+}
+
+void MyFrame::OnSave(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        auto name_final = ImageHelper.getOriginalImage().GetName();
+        auto path = ImageHelper.getOriginalImage().GetPath();
+        auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
+        if (ImageHelper.SaveImage(tosave))
+        {
+            textCtrl->AppendText("Image sucessfully saved as:\n");
+            textCtrl->AppendText(tosave+"\n");
+        }
+        else
+        {
+            textCtrl->AppendText("Error saving image.\n");
+        }       
+    }
+    else
+    {
+        textCtrl->AppendText("Image has not been loaded.\n");
+    }
+}
 
 void MyFrame::OnOpen(wxCommandEvent& event)
 {
@@ -84,23 +162,22 @@ void MyFrame::OnOpen(wxCommandEvent& event)
                                     wxEmptyString,
                                     wxEmptyString,
                                     wxEmptyString,
-                                    "Image files (*.bmp)|*.bmp|All Files (*.*)|*.*",
+                                    "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*",
                                     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-    images_map.clean();
+    ImageHelper.clean();
     openFileDialog.SetFilterIndex(0);
     if (openFileDialog.ShowModal() == wxID_OK)
     {     
         wxString path =  openFileDialog.GetPath();
         std::string spath = convertWxStringToString(path);
-        if (images_map.setOriginalImage(path))
+        if (ImageHelper.setOriginalImage(path))
         {
             Mat img;
             if (loadImage(spath, img) == true)
             {
-                images_map.Original_ImageOpenCVFormat = img;
-                showImage(images_map.Original_ImageOpenCVFormat, "");
-                images_map.Original_ImageOpenCVFormat.deallocate();
+                ImageHelper.setOrginalImageOpenCV(img);
+                showImage(ImageHelper.getOrginalImageOpenCV(), "Original");
                 textCtrl->AppendText("Image loaded correctly\n");
             }
             else
@@ -115,9 +192,9 @@ void MyFrame::OnOpen(wxCommandEvent& event)
     }
 }
 
-void MyFrame::OnAlgo1(wxCommandEvent& event)
+void MyFrame::OnNoduleRec(wxCommandEvent& event)
 {
-    auto path = images_map.original.GetFullPath();
+    auto path = ImageHelper.getOriginalImage().GetFullPath();
     std::string spath = convertWxStringToString(path);  
 
     NoduleRec n{ spath };
@@ -126,8 +203,9 @@ void MyFrame::OnAlgo1(wxCommandEvent& event)
     {
         n.findContornos(1);
         n.HighlightRoi();
-        images_map.Final_ImageOpenCVFormat = n.getFinalImg();
-        showImage(images_map.Final_ImageOpenCVFormat, "");
+        Mat out = n.getFinalImg();
+        ImageHelper.setFinalImageOpenCV(out);
+        showImage(ImageHelper.getFinalImageOpenCV(), "Final");
         textCtrl->AppendText("Algorithm applied correctly\n");
     }
     else
@@ -137,20 +215,21 @@ void MyFrame::OnAlgo1(wxCommandEvent& event)
 
 }
 
-void MyFrame::OnAlgo2(wxCommandEvent& event)
+void MyFrame::OnDoGrayScale(wxCommandEvent& event)
 {
-    auto path = images_map.original.GetFullPath();
+    auto path = ImageHelper.getOriginalImage().GetFullPath();
     std::string spath = convertWxStringToString(path);
     Mat img;
     Mat out;
 
-    if ( loadImage(spath, img) == true)
+
+    if (loadImage(spath, img) == true)
     {
         out = convertograyScale(img);
         if (out.empty() == false)
         {
-            images_map.Final_ImageOpenCVFormat = out;
-            showImage(images_map.Final_ImageOpenCVFormat, "");
+            ImageHelper.setFinalImageOpenCV(out);
+            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
             textCtrl->AppendText("Algorithm applied correctly\n");
         }
         else
