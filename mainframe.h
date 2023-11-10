@@ -110,6 +110,8 @@ private:
 
     inline static const int ALGO_NODE_REC = 1;
     inline static const int ALGO_GRAY_C = 2;
+    inline static const int ALGO_EQUALIZE= 3;
+    inline static const int ALGO_LAPLACIAN = 4;
 
     //--------------------------------------------------------------
     // components---------------------------------------------------
@@ -128,6 +130,10 @@ private:
                                         ) 
                         };
 
+    template<typename F>
+    void
+        ApplyAlgorith(F& f, bool Gray);
+
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
     //---------------------------------------------------------------
@@ -137,6 +143,8 @@ private:
     void OnSave(wxCommandEvent& event);
     void OnNoduleRec(wxCommandEvent& event);
     void OnDoGrayScale(wxCommandEvent& event);
+    void OnDoEqualize(wxCommandEvent& event);
+    void OnDoLaplacian(wxCommandEvent& event);
 
 };
 

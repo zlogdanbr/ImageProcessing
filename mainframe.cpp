@@ -104,6 +104,8 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuAlgo = new wxMenu();
     auto menuItemNode= menuAlgo->Append(ALGO_NODE_REC, "Segmentation\tCTRL+F", "Segments Image");
     auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C,"Gray Scale\tCTRL+G", "Converts to Gray");
+    auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
+    auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -124,6 +126,8 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
     Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
     Bind(wxEVT_MENU, &MyFrame::OnDoGrayScale, this, ALGO_GRAY_C);
+    Bind(wxEVT_MENU, &MyFrame::OnDoEqualize, this, ALGO_EQUALIZE);// 
+    Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN);
     Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
@@ -230,17 +234,19 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
 
 }
 
-void MyFrame::OnDoGrayScale(wxCommandEvent& event)
+template<typename F>
+void
+MyFrame::ApplyAlgorith(F& f, bool Gray)
 {
     auto path = ImageHelper.getOriginalImage().GetFullPath();
     std::string spath = convertWxStringToString(path);
     Mat img;
     Mat out;
-    ImageHelper.setFinalGray(false);
+    ImageHelper.setFinalGray(Gray);
 
     if (loadImage(spath, img) == true)
     {
-        out = convertograyScale(img);
+        out = f(img);
         if (out.empty() == false)
         {
             ImageHelper.setFinalImageOpenCV(out);
@@ -257,8 +263,21 @@ void MyFrame::OnDoGrayScale(wxCommandEvent& event)
     {
         textCtrl->AppendText("Image not loaded\n");
     }
-    
+}
 
+void MyFrame::OnDoGrayScale(wxCommandEvent& event)
+{
+    ApplyAlgorith(convertograyScale, true);    
+}
+
+void MyFrame::OnDoEqualize(wxCommandEvent& event)
+{
+    ApplyAlgorith(equalizeColorImage, false);
+}
+
+void MyFrame::OnDoLaplacian(wxCommandEvent& event)
+{
+    ApplyAlgorith(laplacian, false);
 }
 
 

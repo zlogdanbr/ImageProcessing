@@ -16,7 +16,8 @@
 
 using namespace cv;
 
-typedef std::vector< std::vector<Point> > RoiAretype;
+
+using RoiAretype = std::vector< std::vector<Point> >;
 
 bool loadImage(const std::string& image_path, Mat& img);
 void showImage(const Mat& img, const std::string& title);
