@@ -21,7 +21,6 @@ bool saveImage(const std::string& image_path, Mat& img)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 void showImage(const Mat& img, const std::string& title)
 {
-
     Mat reducedImage;
     cv::pyrDown(img, reducedImage);
     imshow(title, reducedImage);

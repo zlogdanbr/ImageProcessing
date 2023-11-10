@@ -24,7 +24,6 @@ bool CImageHelper::SaveImage(wxString& Path)
     }
     else
     {
-        // not supported saving gray scales images yet
         std::string spath = convertWxStringToString(Path);
         Mat final = getFinalImageOpenCV();
         if (saveImage(spath, final))
