@@ -72,7 +72,7 @@ public:
         }
     }
 
-    bool SaveImage(wxString& Path, bool ifGray = false);
+    bool SaveImage(wxString& Path);
   
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };

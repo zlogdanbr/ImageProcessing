@@ -10,9 +10,10 @@ std::string convertWxStringToString(const wxString wsx)
 }
 
 
-bool CImageHelper::SaveImage(wxString& Path, bool ifGray)
+bool CImageHelper::SaveImage(wxString& Path)
 {
-    if (ifGray == false)
+
+    if (getFinalGray() == false)
     {
         wxImage ImgToSave;
         if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
@@ -24,6 +25,12 @@ bool CImageHelper::SaveImage(wxString& Path, bool ifGray)
     else
     {
         // not supported saving gray scales images yet
+        std::string spath = convertWxStringToString(Path);
+        Mat final = getFinalImageOpenCV();
+        if (saveImage(spath, final))
+        {
+            return true;
+        }
         return false;
     }
 
@@ -146,26 +153,18 @@ void MyFrame::OnSave(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
     {
-        if (!ImageHelper.getFinalGray())
+        auto name_final = ImageHelper.getOriginalImage().GetName();
+        auto path = ImageHelper.getOriginalImage().GetPath();
+        auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
+        if (ImageHelper.SaveImage(tosave))
         {
-            auto name_final = ImageHelper.getOriginalImage().GetName();
-            auto path = ImageHelper.getOriginalImage().GetPath();
-            auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
-            if (ImageHelper.SaveImage(tosave))
-            {
-                textCtrl->AppendText("Image sucessfully saved as:\n");
-                textCtrl->AppendText(tosave + "\n");
-            }
-            else
-            {
-                textCtrl->AppendText("Error saving image.\n");
-            }
+            textCtrl->AppendText("Image sucessfully saved as:\n");
+            textCtrl->AppendText(tosave + "\n");
         }
         else
         {
-            textCtrl->AppendText("Saving grey scale images not supported yet.\n");
-        }
-     
+            textCtrl->AppendText("Error saving image.\n");
+        }    
     }
     else
     {
