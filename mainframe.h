@@ -112,6 +112,9 @@ private:
     inline static const int ALGO_GRAY_C = 2;
     inline static const int ALGO_EQUALIZE= 3;
     inline static const int ALGO_LAPLACIAN = 4;
+    inline static const int ALGO_BLUR33 = 5;
+    inline static const int ALGO_BLUR55 = 6; 
+    inline static const int ALGO_GAUSSIAN = 7;
 
     //--------------------------------------------------------------
     // components---------------------------------------------------
@@ -132,7 +135,11 @@ private:
 
     template<typename F>
     void
-        ApplyAlgorith(F& f, bool Gray);
+        ApplyAlgorithm(F& f, bool Gray);
+
+    template<typename F>
+    void
+        ApplyAlgorithm(F& f, bool Gray, int kernel_size);
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
@@ -145,7 +152,9 @@ private:
     void OnDoGrayScale(wxCommandEvent& event);
     void OnDoEqualize(wxCommandEvent& event);
     void OnDoLaplacian(wxCommandEvent& event);
-
+    void onImageBlurKernel33(wxCommandEvent& event);
+    void onImageBlurKernel55(wxCommandEvent& event);
+    void onGaussian(wxCommandEvent& event);
 };
 
 

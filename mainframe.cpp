@@ -106,6 +106,9 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C,"Gray Scale\tCTRL+G", "Converts to Gray");
     auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
     auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
+    auto menuItemBlur33 = menuAlgo->Append(ALGO_BLUR33, "Blur Kernel Size 3\tCTRL+B", "Blur Kernel Size 3");
+    auto menuItemBlur55 = menuAlgo->Append(ALGO_BLUR55, "Blur Kernel Size 5\tCTRL+T", "Blur Kernel Size 5");
+    auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -126,8 +129,11 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
     Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
     Bind(wxEVT_MENU, &MyFrame::OnDoGrayScale, this, ALGO_GRAY_C);
-    Bind(wxEVT_MENU, &MyFrame::OnDoEqualize, this, ALGO_EQUALIZE);// 
-    Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN);
+    Bind(wxEVT_MENU, &MyFrame::OnDoEqualize, this, ALGO_EQUALIZE);
+    Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN); 
+    Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel33, this, ALGO_BLUR33);
+    Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
+    Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
     Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
@@ -236,7 +242,7 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
 
 template<typename F>
 void
-MyFrame::ApplyAlgorith(F& f, bool Gray)
+MyFrame::ApplyAlgorithm(F& f, bool Gray)
 {
     auto path = ImageHelper.getOriginalImage().GetFullPath();
     std::string spath = convertWxStringToString(path);
@@ -265,19 +271,68 @@ MyFrame::ApplyAlgorith(F& f, bool Gray)
     }
 }
 
+template<typename F>
+void
+MyFrame::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
+{
+    auto path = ImageHelper.getOriginalImage().GetFullPath();
+    std::string spath = convertWxStringToString(path);
+    Mat img;
+    Mat out;
+    ImageHelper.setFinalGray(Gray);
+
+    if (loadImage(spath, img) == true)
+    {
+
+        out = f(img, kernel_size);
+
+
+        if (out.empty() == false)
+        {
+            ImageHelper.setFinalImageOpenCV(out);
+            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
+            textCtrl->AppendText("Algorithm applied correctly\n");
+            ImageHelper.setFinalGray(true);
+        }
+        else
+        {
+            textCtrl->AppendText("Algorithm error\n");
+        }
+    }
+    else
+    {
+        textCtrl->AppendText("Image not loaded\n");
+    }
+}
+
 void MyFrame::OnDoGrayScale(wxCommandEvent& event)
 {
-    ApplyAlgorith(convertograyScale, true);    
+    ApplyAlgorithm(convertograyScale, true);    
 }
 
 void MyFrame::OnDoEqualize(wxCommandEvent& event)
 {
-    ApplyAlgorith(equalizeColorImage, false);
+    ApplyAlgorithm(equalizeColorImage, false);
 }
 
 void MyFrame::OnDoLaplacian(wxCommandEvent& event)
 {
-    ApplyAlgorith(laplacian, false);
+    ApplyAlgorithm(laplacian, false);
+}
+
+void MyFrame::onImageBlurKernel33(wxCommandEvent& event)
+{
+    ApplyAlgorithm(blurImageSmooth, false, 3);
+}
+
+void MyFrame::onImageBlurKernel55(wxCommandEvent& event)
+{
+    ApplyAlgorithm(blurImageSmooth, false, 5);
+}
+
+void MyFrame::onGaussian(wxCommandEvent& event)
+{
+    ApplyAlgorithm(GaussianImageSmooth, false, 5);
 }
 
 
