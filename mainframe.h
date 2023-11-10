@@ -115,6 +115,7 @@ private:
     inline static const int ALGO_BLUR33 = 5;
     inline static const int ALGO_BLUR55 = 6; 
     inline static const int ALGO_GAUSSIAN = 7;
+    inline static const int ALGO_MEDIAN = 8;
 
     //--------------------------------------------------------------
     // components---------------------------------------------------
@@ -155,6 +156,7 @@ private:
     void onImageBlurKernel33(wxCommandEvent& event);
     void onImageBlurKernel55(wxCommandEvent& event);
     void onGaussian(wxCommandEvent& event);
+    void onMedian(wxCommandEvent& event);
 };
 
 

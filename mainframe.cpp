@@ -109,6 +109,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuItemBlur33 = menuAlgo->Append(ALGO_BLUR33, "Blur Kernel Size 3\tCTRL+B", "Blur Kernel Size 3");
     auto menuItemBlur55 = menuAlgo->Append(ALGO_BLUR55, "Blur Kernel Size 5\tCTRL+T", "Blur Kernel Size 5");
     auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
+    auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -133,7 +134,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN); 
     Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel33, this, ALGO_BLUR33);
     Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
-    Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
+    Bind(wxEVT_MENU, &MyFrame::onMedian, this, ALGO_MEDIAN);
     Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
@@ -335,4 +336,7 @@ void MyFrame::onGaussian(wxCommandEvent& event)
     ApplyAlgorithm(GaussianImageSmooth, false, 5);
 }
 
-
+void MyFrame::onMedian(wxCommandEvent& event)
+{
+    ApplyAlgorithm(MedianImageSmooth, false, 3);
+}
