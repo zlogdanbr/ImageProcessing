@@ -61,6 +61,7 @@ public:
         finalimage.Clear();
         original_initiated = false;
         final_initiated = false;
+        final_isgray = false;
         if (Final_ImageOpenCVFormat.empty() == false)
         {
             Final_ImageOpenCVFormat.deallocate();
@@ -73,6 +74,8 @@ public:
 
     bool SaveImage(wxString& Path, bool ifGray = false);
   
+    void setFinalGray(bool b) { final_isgray = b; };
+    const bool getFinalGray() const { return final_isgray; };
 
 private:
 
@@ -84,6 +87,8 @@ private:
 
     bool original_initiated = false;
     bool final_initiated = false;
+
+    bool final_isgray = false;
 
     // ------------------------------------------------------------------------------------------------------------
     // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/

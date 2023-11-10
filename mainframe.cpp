@@ -12,12 +12,21 @@ std::string convertWxStringToString(const wxString wsx)
 
 bool CImageHelper::SaveImage(wxString& Path, bool ifGray)
 {
-    wxImage ImgToSave;
-    if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
+    if (ifGray == false)
     {
-        return ImgToSave.SaveFile(Path);
+        wxImage ImgToSave;
+        if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
+        {
+            return ImgToSave.SaveFile(Path);
+        }
+        return false;
     }
-    return false;
+    else
+    {
+        // not supported saving gray scales images yet
+        return false;
+    }
+
 }
 
 bool CImageHelper::convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
@@ -137,18 +146,26 @@ void MyFrame::OnSave(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
     {
-        auto name_final = ImageHelper.getOriginalImage().GetName();
-        auto path = ImageHelper.getOriginalImage().GetPath();
-        auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
-        if (ImageHelper.SaveImage(tosave))
+        if (!ImageHelper.getFinalGray())
         {
-            textCtrl->AppendText("Image sucessfully saved as:\n");
-            textCtrl->AppendText(tosave+"\n");
+            auto name_final = ImageHelper.getOriginalImage().GetName();
+            auto path = ImageHelper.getOriginalImage().GetPath();
+            auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
+            if (ImageHelper.SaveImage(tosave))
+            {
+                textCtrl->AppendText("Image sucessfully saved as:\n");
+                textCtrl->AppendText(tosave + "\n");
+            }
+            else
+            {
+                textCtrl->AppendText("Error saving image.\n");
+            }
         }
         else
         {
-            textCtrl->AppendText("Error saving image.\n");
-        }       
+            textCtrl->AppendText("Saving grey scale images not supported yet.\n");
+        }
+     
     }
     else
     {
@@ -196,7 +213,7 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
 {
     auto path = ImageHelper.getOriginalImage().GetFullPath();
     std::string spath = convertWxStringToString(path);  
-
+    ImageHelper.setFinalGray(false);
     NoduleRec n{ spath };
 
     if (n.ErrorInOriginalLoading() == false)
@@ -221,7 +238,7 @@ void MyFrame::OnDoGrayScale(wxCommandEvent& event)
     std::string spath = convertWxStringToString(path);
     Mat img;
     Mat out;
-
+    ImageHelper.setFinalGray(false);
 
     if (loadImage(spath, img) == true)
     {
@@ -231,6 +248,7 @@ void MyFrame::OnDoGrayScale(wxCommandEvent& event)
             ImageHelper.setFinalImageOpenCV(out);
             showImage(ImageHelper.getFinalImageOpenCV(), "Final");
             textCtrl->AppendText("Algorithm applied correctly\n");
+            ImageHelper.setFinalGray(true);
         }
         else
         {
