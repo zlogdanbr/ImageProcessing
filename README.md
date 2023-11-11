@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is my attempt to blend OpenCV and WxWidgets to re-learn Image Processing and at the same time, geg more proficient on both libs.
+This project is my attempt to blend OpenCV and WxWidgets to re-learn Image Processing and at the same time, get more proficient on both libs.
 
 There is another project I have here that shares the same code, but uses python, as a sort of make,  to build C++ sources: 
 
