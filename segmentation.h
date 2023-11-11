@@ -1,4 +1,10 @@
 #pragma once
+
+//--------------------------------------------------------------------------------------------------
+// Class for finding edges and nodes in an image
+// author: Daniel Vasconcelos Gomes 2022
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
 #include "opcvwrapper.h"
 
 class NoduleRec final
@@ -74,5 +80,5 @@ private:
 	RoiAretype contours;
 	std::vector<Vec4i> hierarchy;
 };
-
+//--------------------------------------------------------------------------------------------------
 

@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="filesys.cpp" />
+    <ClCompile Include="image_helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="filesys.h" />
+    <ClInclude Include="image_helper.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />
     <ClInclude Include="segmentation.h" />

@@ -1,6 +1,12 @@
 #ifndef _CVWRAPPER_
 #define _CVWRAPPER_
 
+//--------------------------------------------------------------------------------------------------
+// These functions have been taken from OpenCV documentation and made easier to use
+// author: Daniel Vasconcelos Gomes 2022
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
+
 #include "opencv2/objdetect.hpp"
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -39,3 +45,5 @@ int findcontours(const Mat& img, RoiAretype& contours, std::vector<Vec4i>& hiera
 void drawCountour(RoiAretype& contours, Mat& img, std::vector<Vec4i>& hierarchy);
 
 #endif
+
+//--------------------------------------------------------------------------------------------------
