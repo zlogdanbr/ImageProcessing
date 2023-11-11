@@ -102,7 +102,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // menu   algos
     // ------------------------------------------------------------------------------  
     auto menuAlgo = new wxMenu();
-    auto menuItemNode= menuAlgo->Append(ALGO_NODE_REC, "Segmentation\tCTRL+F", "Segments Image");
+    auto menuItemNode= menuAlgo->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours");
     auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C,"Gray Scale\tCTRL+G", "Converts to Gray");
     auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
     auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
@@ -135,6 +135,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel33, this, ALGO_BLUR33);
     Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
     Bind(wxEVT_MENU, &MyFrame::onMedian, this, ALGO_MEDIAN);
+    Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
     Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
@@ -222,14 +223,14 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
 {
     auto path = ImageHelper.getOriginalImage().GetFullPath();
     std::string spath = convertWxStringToString(path);  
-    ImageHelper.setFinalGray(false);
+    ImageHelper.setFinalGray(true);
     NoduleRec n{ spath };
 
     if (n.ErrorInOriginalLoading() == false)
     {
-        n.findContornos(1);
+        n.findContornos(40);
         n.HighlightRoi();
-        Mat out = n.getFinalImg();
+        Mat out = n.getEdgesImg();
         ImageHelper.setFinalImageOpenCV(out);
         showImage(ImageHelper.getFinalImageOpenCV(), "Final");
         textCtrl->AppendText("Algorithm applied correctly\n");
