@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project is my attempt to blend OpenCV and WxWidgets to re-learn Image Processing and at the time, getting more proficient on both libs.
+This project is my attempt to blend OpenCV and WxWidgets to re-learn Image Processing and at the same time, geg more proficient on both libs.
 
 There is another project I have here that shares the same code, but uses python, as a sort of make,  to build C++ sources: 
 
@@ -41,6 +41,7 @@ images
 
 I am working with jpgs images only now but I plan to add options for more formats. Actually you
 can change that option only by changing these lines:
+
 void MyFrame::OnOpen(wxCommandEvent& event)
 
    wxFileDialog openFileDialog(this,
