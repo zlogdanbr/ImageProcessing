@@ -12,6 +12,24 @@ bool loadImage(const std::string& image_path, Mat& img)
     return true;
 }
 
+Mat SumImages(const Mat& img1, const Mat& img2)
+{
+ 
+    auto src_gray1 = convertograyScale(img1);
+    //auto src_gray2 = convertograyScale(img2);
+    Mat f;
+    try
+    {
+        f = src_gray1 + img2;
+    }
+    catch (...)
+    {
+        return f;
+    }
+    
+    return f;
+}
+
 Mat flipImageHorizontal(const Mat& img)
 {
     cv::Mat result; 

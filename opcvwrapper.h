@@ -34,6 +34,7 @@ Mat equalizeColorImage(const Mat& img);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
 Mat flipImage(const Mat& img);
+Mat SumImages(const Mat& img1, const Mat& img2);
 
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);

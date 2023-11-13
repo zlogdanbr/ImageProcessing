@@ -119,6 +119,7 @@ private:
     inline static const int FLIP_H = 9;
     inline static const int FLIP_V = 10;
     inline static const int FLIP_B = 11;
+    inline static const int SUMIMG = 12;
 
     //--------------------------------------------------------------
     // components---------------------------------------------------
@@ -166,6 +167,8 @@ private:
     void onFlipV(wxCommandEvent& event);
     void onFlipH(wxCommandEvent& event);
     void onFlipA(wxCommandEvent& event);
+
+    void onSumImages(wxCommandEvent& event);
 };
 
 

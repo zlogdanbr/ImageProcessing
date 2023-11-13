@@ -44,6 +44,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuFlipH= menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
     auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
+    auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -76,6 +77,8 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
     Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
     Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
+    Bind(wxEVT_MENU, &MyFrame::onSumImages, this, SUMIMG);
+    
 
 
     SetMenuBar(mainMenu);
@@ -182,12 +185,13 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
 
     if (n.ErrorInOriginalLoading() == false)
     {
-        n.findContornos(40);
+        n.findContornos(155);
         n.HighlightRoi();
         Mat out = n.getEdgesImg();
         ImageHelper.setFinalImageOpenCV(out);
         showImage(ImageHelper.getFinalImageOpenCV(), "Final");
         outxt.writeTo("Algorithm applied correctly\n");
+        ImageHelper.setFinalImage(spath);
     }
     else
     {
@@ -214,6 +218,7 @@ MyFrame::ApplyAlgorithm(F& f, bool Gray)
             showImage(ImageHelper.getFinalImageOpenCV(), "Final");
             outxt.writeTo("Algorithm applied correctly\n");
             ImageHelper.setFinalGray(true);
+            ImageHelper.setFinalImage(spath);
         }
         else
         {
@@ -237,16 +242,14 @@ MyFrame::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
 
     if (loadImage(spath, img) == true)
     {
-
         out = f(img, kernel_size);
-
-
         if (out.empty() == false)
         {
             ImageHelper.setFinalImageOpenCV(out);
             showImage(ImageHelper.getFinalImageOpenCV(), "Final");
             outxt.writeTo("Algorithm applied correctly\n");
             ImageHelper.setFinalGray(true);
+            ImageHelper.setFinalImage(spath);
         }
         else
         {
@@ -307,4 +310,28 @@ void MyFrame::onFlipH(wxCommandEvent& event)
 void MyFrame::onFlipA(wxCommandEvent& event)
 {
     ApplyAlgorithm(flipImage, false);
+}
+
+void MyFrame::onSumImages(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() && ImageHelper.getFinallImageInitiated())
+    {
+        Mat out = SumImages(ImageHelper.getOrginalImageOpenCV(), ImageHelper.getFinalImageOpenCV());
+
+        if (out.empty() == false)
+        {
+            ImageHelper.setFinalImageOpenCV(out);
+            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
+            outxt.writeTo("Algorithm applied correctly\n");
+            ImageHelper.setFinalGray(true);
+        }
+        else
+        {
+            outxt.writeTo("Error\n");
+        }
+    }
+    else
+    {
+        outxt.writeTo("Images not loaded\n");
+    }
 }
