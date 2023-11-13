@@ -12,6 +12,28 @@ bool loadImage(const std::string& image_path, Mat& img)
     return true;
 }
 
+Mat flipImageHorizontal(const Mat& img)
+{
+    cv::Mat result; 
+    cv::flip(img, result, 1); // positive for horizontal
+    return result;
+}
+
+Mat flipImageVertical(const Mat& img)
+{
+    cv::Mat result; 
+    cv::flip(img, result, 0); // positive for horizontal
+    return result;
+}
+
+Mat flipImage(const Mat& img)
+{
+    cv::Mat result; 
+    cv::flip(img, result, -1); // positive for horizontal
+    return result;
+}
+
+
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool saveImage(const std::string& image_path, Mat& img)
 {

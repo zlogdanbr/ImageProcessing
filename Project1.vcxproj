@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\eigen\Eigen;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Users\Administrador\lib\opencv\build\x64\vc16\lib\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>C:\Users\Administrador\Documents\GitHub\mycpp\mycpp\template_lib;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -33,6 +33,39 @@ bool CImageHelper::SaveImage(wxString& Path)
 
 }
 
+std::unique_ptr<unsigned char> CImageHelper::getRawData(Mat& m) const
+{
+    // data dimension
+    int w = m.cols;
+    int h = m.rows;
+    int size = w * h * 3 * sizeof(unsigned char);
+
+    // allocate memory for internal wxImage data
+    std::unique_ptr<unsigned char> wxData{ new unsigned char(size) };
+
+    if (wxData == nullptr)
+    {
+        return nullptr;
+    }
+
+    // the matrix stores BGR image for conversion
+    Mat cvRGBImg = Mat(h, w, CV_8UC3, wxData.get());
+    switch (m.channels())
+    {
+        case 3: // 3-channel case: swap R&B channels
+        {
+            int mapping[] = { 0,2,1,1,2,0 }; // CV(BGR) to WX(RGB)
+            mixChannels(&m, 1, &cvRGBImg, 1, mapping, 3);
+        }
+        break;
+
+        default:
+        {
+        }
+    }
+    return wxData;
+}
+
 bool CImageHelper::convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
 {
     try
@@ -43,25 +76,31 @@ bool CImageHelper::convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
         int size = w * h * 3 * sizeof(unsigned char);
 
         // allocate memory for internal wxImage data
-        unsigned char* wxData = (unsigned char*)malloc(size);
+        std::unique_ptr<unsigned char> wxData{ new unsigned char(size) };
+
+        if (wxData == nullptr)
+        {
+            return false;
+        }
 
         // the matrix stores BGR image for conversion
-        Mat cvRGBImg = Mat(h, w, CV_8UC3, wxData);
+        Mat cvRGBImg = Mat(h, w, CV_8UC3, wxData.get());
         switch (cvImg.channels())
         {
-        case 3: // 3-channel case: swap R&B channels
-        {
-            int mapping[] = { 0,2,1,1,2,0 }; // CV(BGR) to WX(RGB)
-            mixChannels(&cvImg, 1, &cvRGBImg, 1, mapping, 3);
-        } break;
+            case 3: // 3-channel case: swap R&B channels
+                {
+                    int mapping[] = { 0,2,1,1,2,0 }; // CV(BGR) to WX(RGB)
+                    mixChannels(&cvImg, 1, &cvRGBImg, 1, mapping, 3);
+                } 
+                break;
 
-        default:
-        {
-        }
+            default:
+                {
+                }
         }
 
         wxImg.Destroy(); // free existing data if there's any
-        wxImg = wxImage(w, h, wxData);
+        wxImg = wxImage(w, h, wxData.release());
     }
     catch (...)
     {

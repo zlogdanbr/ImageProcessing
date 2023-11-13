@@ -82,6 +82,10 @@ private:
     inline static const int ALGO_GAUSSIAN = 7;
     inline static const int ALGO_MEDIAN = 8;
 
+    inline static const int FLIP_H = 9;
+    inline static const int FLIP_V = 10;
+    inline static const int FLIP_B = 11;
+
     //--------------------------------------------------------------
     // components---------------------------------------------------
     //--------------------------------------------------------------
@@ -122,6 +126,10 @@ private:
     void onImageBlurKernel55(wxCommandEvent& event);
     void onGaussian(wxCommandEvent& event);
     void onMedian(wxCommandEvent& event);
+
+    void onFlipV(wxCommandEvent& event);
+    void onFlipH(wxCommandEvent& event);
+    void onFlipA(wxCommandEvent& event);
 };
 
 

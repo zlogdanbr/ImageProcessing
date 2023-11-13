@@ -40,6 +40,10 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
     auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5");
 
+    auto menuFlipH= menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
+    auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
+    auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
+
     // -----------------------------------------------------------------------------  
     // menu   help
     // -----------------------------------------------------------------------------
@@ -68,6 +72,10 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
+    Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
+    Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
+    Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
+
 
     SetMenuBar(mainMenu);
    
@@ -270,4 +278,19 @@ void MyFrame::onGaussian(wxCommandEvent& event)
 void MyFrame::onMedian(wxCommandEvent& event)
 {
     ApplyAlgorithm(MedianImageSmooth, false, 3);
+}
+
+void MyFrame::onFlipV(wxCommandEvent& event)
+{
+    ApplyAlgorithm(flipImageHorizontal, false);
+}
+
+void MyFrame::onFlipH(wxCommandEvent& event)
+{
+    ApplyAlgorithm(flipImageVertical, false);
+}
+
+void MyFrame::onFlipA(wxCommandEvent& event)
+{
+    ApplyAlgorithm(flipImage, false);
 }

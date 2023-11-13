@@ -19,6 +19,7 @@
 #include "filesys.h"
 #include  "segmentation.h"
 
+
 std::string convertWxStringToString(const wxString wsx);
 
 class CImageHelper final
@@ -64,6 +65,8 @@ public:
 
     bool getOriginalImageInitiated() const { return original_initiated; };
     bool getFinallImageInitiated() const { return final_initiated; }
+
+    std::unique_ptr<unsigned char> getRawData(Mat& m) const;
 
 
     void clean()
