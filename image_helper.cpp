@@ -8,15 +8,15 @@ std::string convertWxStringToString(const wxString wsx)
 }
 
 
-bool CImageHelper::SaveImage(wxString& Path)
+bool CImageHelper::SaveImage(std::string& Path)
 {
-
+    wxString s = convertWxStringToString(Path);
     if (getFinalGray() == false)
     {
         wxImage ImgToSave;
         if (convertOpenCVMatToWxImage(Final_ImageOpenCVFormat, ImgToSave))
         {
-            return ImgToSave.SaveFile(Path);
+            return ImgToSave.SaveFile(s);
         }
         return false;
     }

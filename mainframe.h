@@ -62,6 +62,41 @@
 // ---------------------------------------------------------------------------------------------
 
 #include "image_helper.h"
+#include <chrono>
+
+class CWriteLogs
+{
+public:
+    CWriteLogs(wxTextCtrl* ptrtextCtrl):textCtrl{ ptrtextCtrl } {};
+    virtual ~CWriteLogs() {};
+
+    void writeTo(wxString& msg)
+    {
+        textCtrl->AppendText(return_current_time_and_date() + ": " + msg);
+    }
+
+    void writeTo(const char* msg)
+    {
+        textCtrl->AppendText(return_current_time_and_date() + ": " + msg);
+    }
+
+    std::string return_current_time_and_date()
+    {
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+        std::stringstream ss;
+        ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
+        return ss.str();
+    }
+
+
+private:
+    CWriteLogs(CWriteLogs&) = delete;
+    CWriteLogs& operator=(CWriteLogs&) = delete;
+    wxTextCtrl* textCtrl;
+
+
+};
 
 class MyFrame : public wxFrame
 {
@@ -81,7 +116,6 @@ private:
     inline static const int ALGO_BLUR55 = 6; 
     inline static const int ALGO_GAUSSIAN = 7;
     inline static const int ALGO_MEDIAN = 8;
-
     inline static const int FLIP_H = 9;
     inline static const int FLIP_V = 10;
     inline static const int FLIP_B = 11;
@@ -102,6 +136,8 @@ private:
                                             wxTE_MULTILINE
                                         ) 
                         };
+
+    CWriteLogs outxt{ textCtrl };
 
     template<typename F>
     void

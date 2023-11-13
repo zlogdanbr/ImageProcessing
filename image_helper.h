@@ -35,27 +35,27 @@ public:
 
     wxFileName getImagePath(wxString& path)
     {
-        wxFileName imagePath{ wxStandardPaths::Get().GetExecutablePath() };
+        wxFileName imagePath;
         imagePath.SetFullName(path);
         return imagePath;
     }
 
-    bool setOriginalImage(wxString& path)
+    bool setOriginalImage(std::string& path)
     {
-        original = getImagePath(path);
-        original_initiated = original.Exists();
+        original = path;
+        original_initiated = file_exists(original);
         return original_initiated;
     }
 
-    bool setFinalImage(wxString& path)
+    bool setFinalImage(std::string& path)
     {
-        finalimage = getImagePath(path);
-        final_initiated = finalimage.Exists();
+        finalimage = path;
+        final_initiated = file_exists(finalimage);
         return final_initiated;
     }
 
-    wxFileName getOriginalImage()const { return original; };
-    wxFileName getFinalImage()const { return finalimage; };
+    std::string  getOriginalImage()const { return original; };
+    std::string  getFinalImage()const { return finalimage; };
 
     Mat getOrginalImageOpenCV() const { return Original_ImageOpenCVFormat; };
     Mat getFinalImageOpenCV() const { return Final_ImageOpenCVFormat; };
@@ -68,11 +68,10 @@ public:
 
     std::unique_ptr<unsigned char> getRawData(Mat& m) const;
 
-
     void clean()
     {
-        original.Clear();
-        finalimage.Clear();
+        original.clear();
+        finalimage.clear();
         original_initiated = false;
         final_initiated = false;
         final_isgray = false;
@@ -86,7 +85,7 @@ public:
         }
     }
 
-    bool SaveImage(wxString& Path);
+    bool SaveImage(std::string& Path);
 
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };
@@ -96,8 +95,8 @@ private:
     CImageHelper(CImageHelper&) = delete;
     CImageHelper& operator=(CImageHelper&) = delete;
 
-    wxFileName  original;
-    wxFileName  finalimage;
+    std::string  original;
+    std::string  finalimage;
 
     Mat Final_ImageOpenCVFormat;
     Mat Original_ImageOpenCVFormat;
