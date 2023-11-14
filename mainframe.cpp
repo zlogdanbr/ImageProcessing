@@ -113,7 +113,7 @@ void MyFrame::OnOpen(wxCommandEvent& event)
                                     wxEmptyString,
                                     wxEmptyString,
                                     wxEmptyString,
-                                    "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*",
+                                    "jpg and tif files(*.jpg; *.tif) | *.jpg; *.tif",
                                     wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     ImageHelper.clean();
