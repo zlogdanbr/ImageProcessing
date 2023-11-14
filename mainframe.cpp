@@ -47,7 +47,6 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
     auto menuSub = menuAlgo->Append(SUBIMG, "Subtrack Images", "Subtrack Images");
     auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");
-    auto menuXApplySeveral = menuAlgo->Append(SEV, "Apply algos in batch", "Apply algos in batch");
 
     // -----------------------------------------------------------------------------  
     // menu   help

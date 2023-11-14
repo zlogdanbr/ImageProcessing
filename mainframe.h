@@ -98,6 +98,7 @@ private:
 
 };
 
+
 class MyFrame : public wxFrame
 {
 public:
