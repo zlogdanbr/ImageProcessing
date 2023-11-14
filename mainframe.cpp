@@ -31,22 +31,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // menu   algos
     // ------------------------------------------------------------------------------  
     auto menuAlgo = new wxMenu();
-    auto menuItemNode= menuAlgo->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours");
-    auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C,"Gray Scale\tCTRL+G", "Converts to Gray");
-    auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
-    auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
-    menuAlgo->AppendSeparator();
-    auto menuItemBlur33 = menuAlgo->Append(ALGO_BLUR33, "Blur Kernel Size 3\tCTRL+B", "Blur Kernel Size 3");
-    auto menuItemBlur55 = menuAlgo->Append(ALGO_BLUR55, "Blur Kernel Size 5\tCTRL+T", "Blur Kernel Size 5");
-    auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
-    auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5");
-    menuAlgo->AppendSeparator();
-    auto menuFlipH= menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
-    auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
-    auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
-    auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
-    auto menuSub = menuAlgo->Append(SUBIMG, "Subtrack Images", "Subtrack Images");
-    auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");
+    AddSubitemsToMenu(menuAlgo);
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -70,7 +55,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // -----------------------------------------------------------------------------
     //          Image
 
-    outxt.writeTo("Application initiated...\n");
+    outxt.writeTo("Application initiated.\n");
 
     Centre();
 }
@@ -94,9 +79,6 @@ void MyFrame::OnSave(wxCommandEvent& event)
         wxFileDialog saveFileDialog(this, wxEmptyString, wxEmptyString, "MyFile.jpg", "Text Files (*.jpg)|*.jpg|All Files (*.*)|*.*", wxFD_SAVE);
         if (saveFileDialog.ShowModal() == wxID_OK) 
         {
-            //auto name_final = ImageHelper.getOriginalImage().GetName();
-            //auto path = ImageHelper.getOriginalImage().GetPath();
-            //auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
 
             wxString spath = saveFileDialog.GetPath();
             std::string path = convertWxStringToString(spath);
@@ -246,6 +228,60 @@ MyFrame::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
     }
 }
 
+template<typename F>
+void
+MyFrame::ApplyBaseOperationsOnExistent(F& f, bool Gray, int kernel_size)
+{
+    if (ImageHelper.getFinalGray() == true)
+    {
+        if (ImageHelper.getOriginalImageInitiated() && ImageHelper.getFinallImageInitiated())
+        {
+            Mat out = f(ImageHelper.getOrginalImageOpenCV(), ImageHelper.getFinalImageOpenCV());
+
+            if (out.empty() == false)
+            {
+                ImageHelper.setFinalImageOpenCV(out);
+                showImage(ImageHelper.getFinalImageOpenCV(), "Final");
+                outxt.writeTo("Algorithm applied correctly\n");
+                ImageHelper.setFinalGray(true);
+            }
+            else
+            {
+                outxt.writeTo("Error\n");
+            }
+        }
+        else
+        {
+            outxt.writeTo("Images not loaded\n");
+        }
+    }
+    else
+    {
+        outxt.writeTo("Only supports gray scaled images as the second operand\n");
+    }
+}
+
+void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
+{    
+    auto menuItemNode = menuAlgo->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours");
+    auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C, "Gray Scale\tCTRL+G", "Converts to Gray");
+    auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
+    auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
+    menuAlgo->AppendSeparator();
+    auto menuItemBlur33 = menuAlgo->Append(ALGO_BLUR33, "Blur Kernel Size 3\tCTRL+B", "Blur Kernel Size 3");
+    auto menuItemBlur55 = menuAlgo->Append(ALGO_BLUR55, "Blur Kernel Size 5\tCTRL+T", "Blur Kernel Size 5");
+    auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
+    auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5");
+    menuAlgo->AppendSeparator();
+    auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
+    auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
+    auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
+    auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
+    auto menuSub = menuAlgo->Append(SUBIMG, "Subtrack Images", "Subtrack Images");
+    auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");
+}
+
+
 void MyFrame::OnDoGrayScale(wxCommandEvent& event)
 {
     ApplyAlgorithm(convertograyScale, true);    
@@ -294,39 +330,6 @@ void MyFrame::onFlipH(wxCommandEvent& event)
 void MyFrame::onFlipA(wxCommandEvent& event)
 {
     ApplyAlgorithm(flipImage, false);
-}
-
-template<typename F>
-void
-MyFrame::ApplyBaseOperationsOnExistent(F& f, bool Gray, int kernel_size )
-{
-    if (ImageHelper.getFinalGray() == true)
-    {
-        if (ImageHelper.getOriginalImageInitiated() && ImageHelper.getFinallImageInitiated())
-        {
-            Mat out = f(ImageHelper.getOrginalImageOpenCV(), ImageHelper.getFinalImageOpenCV());
-
-            if (out.empty() == false)
-            {
-                ImageHelper.setFinalImageOpenCV(out);
-                showImage(ImageHelper.getFinalImageOpenCV(), "Final");
-                outxt.writeTo("Algorithm applied correctly\n");
-                ImageHelper.setFinalGray(true);
-            }
-            else
-            {
-                outxt.writeTo("Error\n");
-            }
-        }
-        else
-        {
-            outxt.writeTo("Images not loaded\n");
-        }
-    }
-    else
-    {
-        outxt.writeTo("Only supports gray scaled images as the second operand\n");
-    }
 }
 
 void MyFrame::onSumImages(wxCommandEvent& event)

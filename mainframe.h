@@ -164,20 +164,23 @@ private:
     void onSubImages(wxCommandEvent& event);
     void onXorImages(wxCommandEvent& event);
 
-    inline static const int ALGO_NODE_REC = 1;
-    inline static const int ALGO_GRAY_C = 2;
-    inline static const int ALGO_EQUALIZE = 3;
-    inline static const int ALGO_LAPLACIAN = 4;
-    inline static const int ALGO_BLUR33 = 5;
-    inline static const int ALGO_BLUR55 = 6;
-    inline static const int ALGO_GAUSSIAN = 7;
-    inline static const int ALGO_MEDIAN = 8;
-    inline static const int FLIP_H = 9;
-    inline static const int FLIP_V = 10;
-    inline static const int FLIP_B = 11;
-    inline static const int SUMIMG = 12;
-    inline static const int SUBIMG = 13;
-    inline static const int XORIMG = 14;
+    enum  Opt {
+            ALGO_NODE_REC = 1,
+            ALGO_GRAY_C,
+            ALGO_EQUALIZE,
+            ALGO_LAPLACIAN,
+            ALGO_BLUR33 ,
+            ALGO_BLUR55 ,
+            ALGO_GAUSSIAN ,
+            ALGO_MEDIAN ,
+            FLIP_H ,
+            FLIP_V ,
+            FLIP_B ,
+            SUMIMG ,
+            SUBIMG ,
+            XORIMG 
+
+    };
 
     void BinAllEvents()
     {
@@ -200,6 +203,8 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onSubImages, this, SUBIMG);
         Bind(wxEVT_MENU, &MyFrame::onXorImages, this, XORIMG);
     }
+
+    void AddSubitemsToMenu(wxMenu* menuAlgo);
 };
 
 
