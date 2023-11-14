@@ -108,19 +108,6 @@ private:
 
     wxMenuBar* mainMenu = new wxMenuBar();
 
-    inline static const int ALGO_NODE_REC = 1;
-    inline static const int ALGO_GRAY_C = 2;
-    inline static const int ALGO_EQUALIZE= 3;
-    inline static const int ALGO_LAPLACIAN = 4;
-    inline static const int ALGO_BLUR33 = 5;
-    inline static const int ALGO_BLUR55 = 6; 
-    inline static const int ALGO_GAUSSIAN = 7;
-    inline static const int ALGO_MEDIAN = 8;
-    inline static const int FLIP_H = 9;
-    inline static const int FLIP_V = 10;
-    inline static const int FLIP_B = 11;
-    inline static const int SUMIMG = 12;
-
     //--------------------------------------------------------------
     // components---------------------------------------------------
     //--------------------------------------------------------------
@@ -148,6 +135,10 @@ private:
     void
         ApplyAlgorithm(F& f, bool Gray, int kernel_size);
 
+    template<typename F>
+    void
+        ApplyBaseOperationsOnExistent(F& f, bool Gray = true, int kernel_size = 3);
+
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
     //---------------------------------------------------------------
@@ -169,6 +160,45 @@ private:
     void onFlipA(wxCommandEvent& event);
 
     void onSumImages(wxCommandEvent& event);
+    void onSubImages(wxCommandEvent& event);
+    void onXorImages(wxCommandEvent& event);
+
+    inline static const int ALGO_NODE_REC = 1;
+    inline static const int ALGO_GRAY_C = 2;
+    inline static const int ALGO_EQUALIZE = 3;
+    inline static const int ALGO_LAPLACIAN = 4;
+    inline static const int ALGO_BLUR33 = 5;
+    inline static const int ALGO_BLUR55 = 6;
+    inline static const int ALGO_GAUSSIAN = 7;
+    inline static const int ALGO_MEDIAN = 8;
+    inline static const int FLIP_H = 9;
+    inline static const int FLIP_V = 10;
+    inline static const int FLIP_B = 11;
+    inline static const int SUMIMG = 12;
+    inline static const int SUBIMG = 13;
+    inline static const int XORIMG = 14;
+
+    void BinAllEvents()
+    {
+        Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
+        Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
+        Bind(wxEVT_MENU, &MyFrame::OnDoGrayScale, this, ALGO_GRAY_C);
+        Bind(wxEVT_MENU, &MyFrame::OnDoEqualize, this, ALGO_EQUALIZE);
+        Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN);
+        Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel33, this, ALGO_BLUR33);
+        Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
+        Bind(wxEVT_MENU, &MyFrame::onMedian, this, ALGO_MEDIAN);
+        Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
+        Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE);
+        Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+        Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
+        Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
+        Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
+        Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
+        Bind(wxEVT_MENU, &MyFrame::onSumImages, this, SUMIMG);
+        Bind(wxEVT_MENU, &MyFrame::onSubImages, this, SUBIMG);
+        Bind(wxEVT_MENU, &MyFrame::onXorImages, this, XORIMG);
+    }
 };
 
 

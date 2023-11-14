@@ -45,6 +45,9 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
     auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
     auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
+    auto menuSub = menuAlgo->Append(SUBIMG, "Subtrack Images", "Subtrack Images");
+    auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");
+    auto menuXApplySeveral = menuAlgo->Append(SEV, "Apply algos in batch", "Apply algos in batch");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -62,25 +65,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     // -----------------------------------------------------------------------------  
     // Menu Events
     // -----------------------------------------------------------------------------
-    Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
-    Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
-    Bind(wxEVT_MENU, &MyFrame::OnDoGrayScale, this, ALGO_GRAY_C);
-    Bind(wxEVT_MENU, &MyFrame::OnDoEqualize, this, ALGO_EQUALIZE);
-    Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN); 
-    Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel33, this, ALGO_BLUR33);
-    Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
-    Bind(wxEVT_MENU, &MyFrame::onMedian, this, ALGO_MEDIAN);
-    Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
-    Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE); 
-    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
-    Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
-    Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
-    Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
-    Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
-    Bind(wxEVT_MENU, &MyFrame::onSumImages, this, SUMIMG);
-    
-
-
+    BinAllEvents();
     SetMenuBar(mainMenu);
    
     // -----------------------------------------------------------------------------
@@ -312,26 +297,51 @@ void MyFrame::onFlipA(wxCommandEvent& event)
     ApplyAlgorithm(flipImage, false);
 }
 
-void MyFrame::onSumImages(wxCommandEvent& event)
+template<typename F>
+void
+MyFrame::ApplyBaseOperationsOnExistent(F& f, bool Gray, int kernel_size )
 {
-    if (ImageHelper.getOriginalImageInitiated() && ImageHelper.getFinallImageInitiated())
+    if (ImageHelper.getFinalGray() == true)
     {
-        Mat out = SumImages(ImageHelper.getOrginalImageOpenCV(), ImageHelper.getFinalImageOpenCV());
-
-        if (out.empty() == false)
+        if (ImageHelper.getOriginalImageInitiated() && ImageHelper.getFinallImageInitiated())
         {
-            ImageHelper.setFinalImageOpenCV(out);
-            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
-            outxt.writeTo("Algorithm applied correctly\n");
-            ImageHelper.setFinalGray(true);
+            Mat out = f(ImageHelper.getOrginalImageOpenCV(), ImageHelper.getFinalImageOpenCV());
+
+            if (out.empty() == false)
+            {
+                ImageHelper.setFinalImageOpenCV(out);
+                showImage(ImageHelper.getFinalImageOpenCV(), "Final");
+                outxt.writeTo("Algorithm applied correctly\n");
+                ImageHelper.setFinalGray(true);
+            }
+            else
+            {
+                outxt.writeTo("Error\n");
+            }
         }
         else
         {
-            outxt.writeTo("Error\n");
+            outxt.writeTo("Images not loaded\n");
         }
     }
     else
     {
-        outxt.writeTo("Images not loaded\n");
+        outxt.writeTo("Only supports gray scaled images as the second operand\n");
     }
 }
+
+void MyFrame::onSumImages(wxCommandEvent& event)
+{
+    ApplyBaseOperationsOnExistent(SumImages);
+}
+
+void MyFrame::onSubImages(wxCommandEvent& event)
+{
+    ApplyBaseOperationsOnExistent(SubImages);
+}
+
+void MyFrame::onXorImages(wxCommandEvent& event)
+{
+    ApplyBaseOperationsOnExistent(XorImages);
+}
+
