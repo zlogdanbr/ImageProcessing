@@ -85,6 +85,7 @@ void MyFrame::OnSave(wxCommandEvent& event)
 -------------------------------------------------------------------------------------------------
 ## References:
 
+- https://www.ogemarques.com/wp-content/uploads/2014/11/pdi99.pdf
 - https://www.imageprocessingplace.com
 - https://www.codtronic.com/blog/windows/building-wxwidgets-applications-using-microsoft-visual-studio/
 - https://zetcode.com/gui/wxwidgets/
