@@ -41,7 +41,7 @@ Mat XorImages(const Mat& img1, const Mat& img2);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
-Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel, int ddepth, Point& anchor, double delta);
+Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel);
 Mat laplacian(Mat& src);
 Mat convertRectoImg(Rect& r, Mat& img);
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);

@@ -1,11 +1,11 @@
 #include "childframe.h"
 
-CMyChildFrame::CMyChildFrame(wxFrame* parent) :wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1) }
+CMyChildFrame::CMyChildFrame(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1) }
 {
     button1->Bind(wxEVT_BUTTON,[&](wxCommandEvent& event)
     {
         // set values
-        auto Kernel = getGridData();
+        getGridData();
         Close();
     });
 
@@ -25,12 +25,18 @@ CMyChildFrame::CMyChildFrame(wxFrame* parent) :wxFrame{ parent, -1, "Custom Mask
 }
 
 
-std::vector<std::vector<double>> CMyChildFrame::getGridData() const
+void CMyChildFrame::getGridData() const
 {
 
-    wxGridTableBase* wxData = grid->GetTable();
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        outxt->writeTo("Image not loaded.\n");
+        return;
+    }
     std::vector<std::vector<double>> data;
 
+    wxGridTableBase* wxData = grid->GetTable();
+    
     for (int i = 0; i < wxData->GetRowsCount(); i++)
     {
         std::vector<double> tmp;
@@ -50,6 +56,36 @@ std::vector<std::vector<double>> CMyChildFrame::getGridData() const
         }
     }
 
-    return data;
-    
+    int kernel_size1 = data.size();
+    int kernel_size2 = data[0].size();
+    cv::Mat kernel(kernel_size1, kernel_size2, CV_32F, cv::Scalar(0.0));
+
+    if (kernel_size1 == kernel_size2)
+    {
+        for (int i = 0; i < kernel_size1; i++)
+        {
+            for (int j = 0; j < kernel_size1; j++)
+            {
+                kernel.at<float>(i, j) = data[i][j];
+            }
+        }
+
+        Mat img_orig  = imghelper->getOrginalImageOpenCV();
+        Mat out = ApplyCustom2Dfilter(img_orig, kernel);
+
+        if (out.empty() == false)
+        {
+            imghelper->setFinalImageOpenCV(out);
+            showImage(out, "Final");
+            imghelper->setFinalGray(true);
+        }
+        else
+        {
+            outxt->writeTo("Error appplying algo.\n");
+        }
+    } 
+    else
+    {
+        outxt->writeTo("Incorrect kernel size.\n");
+    }
 }

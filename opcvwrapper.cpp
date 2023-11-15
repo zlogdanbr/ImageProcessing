@@ -233,7 +233,7 @@ void drawSquaresAtImgFromRoi(Mat& img, Rect& roi)
 }
 
 // https://docs.opencv.org/4.x/d4/dbd/tutorial_filter_2d.html
-Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel, int ddepth, Point& anchor, double delta)
+Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel)
 {
     Mat final;
 
@@ -245,13 +245,11 @@ Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel, int ddepth, Point& anchor, 
     //  delta : A value to be added to each pixel during the correlation.By default it is 0
     //  BORDER_DEFAULT : We let this value by default (more details in the following tutorial)
 
-    filter2D(   img,            
-                final, 
-                ddepth, 
-                kernel, 
-                anchor, 
-                delta, 
-                BORDER_DEFAULT);
+    // image,result,image.depth(),kernel
+    filter2D(   img,
+                final,
+                img.depth(),
+                kernel);
     return final;
 }
 

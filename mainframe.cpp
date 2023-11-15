@@ -290,12 +290,23 @@ void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
 {
-    CMyChildFrame* MyDialog{ new CMyChildFrame(this) };
-    outxt.writeTo("Open Data Input dialog.\n");
-    MyDialog->Show(true);
-    auto KData = MyDialog->getGridData();
-    MyDialog->Destroy();
-    MyDialog = nullptr;
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        CMyChildFrame* MyDialog{ nullptr };
+        if (MyDialog == nullptr)
+        {
+            MyDialog = new CMyChildFrame(this);
+            MyDialog->setImageHelper(&ImageHelper);
+            MyDialog->setLogs(&outxt);
+            outxt.writeTo("Open Data Input dialog.\n");
+            MyDialog->Show(true);
+        }
+    }
+    else
+    {
+        outxt.writeTo("Image not loaded\n");
+    }
+
 }
 
 void MyFrame::OnDoGrayScale(wxCommandEvent& event)

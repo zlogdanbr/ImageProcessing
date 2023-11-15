@@ -1,21 +1,27 @@
 #pragma once
 #include "image_helper.h"
 #include <wx/grid.h>
+#include "opcvwrapper.h"
+#include "logs.h"
 
 class CMyChildFrame : public wxFrame
 {
 public:
 
     CMyChildFrame(wxFrame* parent);
-
-    std::vector<std::vector<double>> getGridData() const;
+    void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
+    void setLogs(CWriteLogs* l ) { outxt = l; };
+    void getGridData() const;
 
 private:
+
+    
 
     //--------------------------------------------------------------
     // components---------------------------------------------------
     //--------------------------------------------------------------
-
+    CImageHelper* imghelper;
+    CWriteLogs* outxt;
     wxPanel* panel{ new wxPanel(this) };
     wxButton* button1{ new wxButton(panel, wxID_ANY, "OK",      { 5,   10 }) };
     wxButton* button2{ new wxButton(panel, wxID_ANY, "Cancel",  { 100, 10 }) };

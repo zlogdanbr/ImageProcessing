@@ -150,6 +150,7 @@
     <ClInclude Include="childframe.h" />
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />
+    <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />
     <ClInclude Include="segmentation.h" />
