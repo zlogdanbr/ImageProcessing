@@ -8,6 +8,28 @@ There is another project I have here that shares the same code, but uses python,
 
 - https://github.com/zlogdanbr/images
 
+When I was in college I had a, hmm, I have no idea if this exists in USA or UK or outside of Brazil.
+Basically, I was paid to do a research while being an undergraduate student.
+
+So, my research was in Image Processing, especifically for x-ray scans of mamographies.
+
+My major was Electrical Engineering - electronics- but I did and I still don't like it.
+
+Because of this research I learned Delphi and C.
+I had access to the internet ( around 1996-1998 )
+I used a lot of IRC.
+I was part of many mailing lists.
+
+So, you can tell that besides all the math I learned, boolean logics, pascal and assembly, I own my career in great part to this. 
+
+Image Processing uses a lot of Math and discrete math. 
+If I won the lottery I would probably spend my time doing a master degree in Computer Vision.
+
+Back to reality however, this is how I have fun. It is mostly a hobby project just like some people do carpentry or gardening.
+
+Back in 1996 I had no idea if OpenCV existed or about libraries.
+
+
 ## Tips
 
 ### Adding new algorithms
@@ -39,8 +61,8 @@ images
 
 ### Image format
 
-I am working with jpgs images only now but I plan to add options for more formats. Actually you
-can change that option only by changing these lines:
+I am working with jpg/tif input images and only jpg only for the output, but I plan to add options for more formats. 
+Actually you can change that option only by changing these lines:
 
 void MyFrame::OnOpen(wxCommandEvent& event)
 
@@ -72,4 +94,7 @@ void MyFrame::OnSave(wxCommandEvent& event)
 - https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
 - https://stackoverflow.com/questions/8177747/converting-images-between-opencv-and-wxwidgets
 
--------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+_________________________________________________
+**2022, 2023 Daniel Vasconcelos Gomes**
+**You can use this freely but I don't take responsibility for whatever problems this will likely cause.**
