@@ -62,6 +62,7 @@
 // ---------------------------------------------------------------------------------------------
 
 #include "image_helper.h"
+#include "childframe.h"
 #include <chrono>
 
 class CWriteLogs
@@ -126,6 +127,8 @@ private:
                                         ) 
                         };
 
+    CMyChildFrame* MyDialog{ new CMyChildFrame(this) };
+
     CWriteLogs outxt{ textCtrl };
 
     template<typename F>
@@ -164,6 +167,8 @@ private:
     void onSubImages(wxCommandEvent& event);
     void onXorImages(wxCommandEvent& event);
 
+    void onCustomKernel(wxCommandEvent& event);
+
     enum  Opt {
             ALGO_NODE_REC = 1,
             ALGO_GRAY_C,
@@ -178,7 +183,8 @@ private:
             FLIP_B ,
             SUMIMG ,
             SUBIMG ,
-            XORIMG 
+            XORIMG,
+            CUSTKERNEL,
 
     };
 
@@ -202,6 +208,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onSumImages, this, SUMIMG);
         Bind(wxEVT_MENU, &MyFrame::onSubImages, this, SUBIMG);
         Bind(wxEVT_MENU, &MyFrame::onXorImages, this, XORIMG);
+        Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo);

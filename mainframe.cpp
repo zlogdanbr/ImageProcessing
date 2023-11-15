@@ -2,7 +2,7 @@
 #include "mainframe.h"
 
 
-MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
+MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
 {
     SetClientSize(640, 480);
     wxInitAllImageHandlers();
@@ -33,6 +33,12 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     auto menuAlgo = new wxMenu();
     AddSubitemsToMenu(menuAlgo);
 
+    // ------------------------------------------------------------------------------  
+    // menu   custom
+    // ------------------------------------------------------------------------------  
+    auto menuCustom = new wxMenu();
+    auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Input custom kernel", "Input custom kernel");
+
     // -----------------------------------------------------------------------------  
     // menu   help
     // -----------------------------------------------------------------------------
@@ -45,6 +51,7 @@ MyFrame::MyFrame():wxFrame(NULL, -1, "My SkeletonApp", wxPoint(-1, -1))
     mainMenu->Append(menuFile, "&File");
     mainMenu->Append(menuAlgo, "&Algorithms");
     mainMenu->Append(menuHelp, "&Help");
+    mainMenu->Append(menuCustom, "&Custom");
 
     // -----------------------------------------------------------------------------  
     // Menu Events
@@ -278,9 +285,15 @@ void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
     auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
     auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
     auto menuSub = menuAlgo->Append(SUBIMG, "Subtrack Images", "Subtrack Images");
-    auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");
+    auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");    
 }
 
+void MyFrame::onCustomKernel(wxCommandEvent& event)
+{
+    outxt.writeTo("Open Data Input dialog.\n");
+    MyDialog->Show(true);
+    outxt.writeTo("Closed Data Input dialog.\n");
+}
 
 void MyFrame::OnDoGrayScale(wxCommandEvent& event)
 {
