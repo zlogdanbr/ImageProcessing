@@ -138,6 +138,8 @@ private:
 
     void onCustomKernel(wxCommandEvent& event);
 
+    void onHelpFile(wxCommandEvent& event);
+
     enum  Opt {
             ALGO_NODE_REC = 1,
             ALGO_GRAY_C,
@@ -178,6 +180,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onSubImages, this, SUBIMG);
         Bind(wxEVT_MENU, &MyFrame::onXorImages, this, XORIMG);
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
+        Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo);

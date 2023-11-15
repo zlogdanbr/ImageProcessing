@@ -1,6 +1,6 @@
 #include "childframe.h"
 
-CMyChildFrame::CMyChildFrame(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1) }
+CGridInputDialog::CGridInputDialog(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1) }
 {
     button1->Bind(wxEVT_BUTTON,[&](wxCommandEvent& event)
     {
@@ -25,7 +25,7 @@ CMyChildFrame::CMyChildFrame(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask 
 }
 
 
-void CMyChildFrame::getGridData() const
+void CGridInputDialog::getGridData() const
 {
 
     if (imghelper->getOriginalImageInitiated() == false)

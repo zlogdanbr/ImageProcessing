@@ -37,7 +37,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // menu   custom
     // ------------------------------------------------------------------------------  
     auto menuCustom = new wxMenu();
-    auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Input custom kernel", "Input custom kernel");
+    auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Add kernel", "Input custom kernel");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -65,6 +65,20 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     outxt.writeTo("Application initiated.\n");
 
     Centre();
+}
+
+void MyFrame::onHelpFile(wxCommandEvent& event)
+{
+    std::stringstream os;
+    outxt.writeTo("Help instructions loaded.\n");
+    os << "Help information:\n";
+    os << "This application loads TIFF and JPG images and allows processing of them using\n";
+    os << "Image Processing algorithms\n";
+    os << "2023 Daniel Vasconcelos Gomes\n" ;
+    os << "zlogdan.wordpress.com\n";
+    outxt.writeInfo(os);
+
+    outxt.writeTo("Help instructions end.\n");
 }
 
 void MyFrame::OnExit(wxCommandEvent& event)
@@ -283,19 +297,20 @@ void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
     auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
     auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
-    auto menuSum = menuAlgo->Append(SUMIMG, "Sum Images", "Summing Images");
-    auto menuSub = menuAlgo->Append(SUBIMG, "Subtrack Images", "Subtrack Images");
-    auto menuXor = menuAlgo->Append(XORIMG, "Bitwise xor Images", "Bitwise xor Images");    
+    menuAlgo->AppendSeparator();
+    auto menuSum = menuAlgo->Append(SUMIMG, "Add Images", "Summing Images");
+    auto menuSub = menuAlgo->Append(SUBIMG, "Subtract Images", "subtract Images");
+    auto menuXor = menuAlgo->Append(XORIMG, "XOR Images", "Bitwise xor Images");    
 }
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
     {
-        CMyChildFrame* MyDialog{ nullptr };
+        CGridInputDialog* MyDialog{ nullptr };
         if (MyDialog == nullptr)
         {
-            MyDialog = new CMyChildFrame(this);
+            MyDialog = new CGridInputDialog(this);
             MyDialog->setImageHelper(&ImageHelper);
             MyDialog->setLogs(&outxt);
             outxt.writeTo("Open Data Input dialog.\n");

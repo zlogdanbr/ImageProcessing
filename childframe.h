@@ -4,11 +4,11 @@
 #include "opcvwrapper.h"
 #include "logs.h"
 
-class CMyChildFrame : public wxFrame
+class CGridInputDialog : public wxFrame
 {
 public:
 
-    CMyChildFrame(wxFrame* parent);
+    CGridInputDialog(wxFrame* parent);
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l ) { outxt = l; };
     void getGridData() const;
