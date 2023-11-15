@@ -127,7 +127,7 @@ private:
                                         ) 
                         };
 
-    CMyChildFrame* MyDialog{ new CMyChildFrame(this) };
+ 
 
     CWriteLogs outxt{ textCtrl };
 
@@ -142,6 +142,7 @@ private:
     template<typename F>
     void
         ApplyBaseOperationsOnExistent(F& f, bool Gray = true, int kernel_size = 3);
+
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------

@@ -8,6 +8,8 @@ public:
 
     CMyChildFrame(wxFrame* parent);
 
+    std::vector<std::vector<double>> getGridData() const;
+
 private:
 
     //--------------------------------------------------------------
@@ -28,4 +30,5 @@ private:
 
                                 )
                     };
+
 };

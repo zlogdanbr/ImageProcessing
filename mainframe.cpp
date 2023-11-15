@@ -50,8 +50,8 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // -----------------------------------------------------------------------------
     mainMenu->Append(menuFile, "&File");
     mainMenu->Append(menuAlgo, "&Algorithms");
-    mainMenu->Append(menuHelp, "&Help");
     mainMenu->Append(menuCustom, "&Custom");
+    mainMenu->Append(menuHelp, "&Help");    
 
     // -----------------------------------------------------------------------------  
     // Menu Events
@@ -290,9 +290,12 @@ void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
 {
+    CMyChildFrame* MyDialog{ new CMyChildFrame(this) };
     outxt.writeTo("Open Data Input dialog.\n");
     MyDialog->Show(true);
-    outxt.writeTo("Closed Data Input dialog.\n");
+    auto KData = MyDialog->getGridData();
+    MyDialog->Destroy();
+    MyDialog = nullptr;
 }
 
 void MyFrame::OnDoGrayScale(wxCommandEvent& event)
