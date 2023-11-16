@@ -142,6 +142,10 @@ private:
 
     void onHelpFile(wxCommandEvent& event);
 
+    void onCorners1(wxCommandEvent& event);
+
+    void onFastDetect(wxCommandEvent& event);
+
     enum  Opt {
             ALGO_NODE_REC = 1,
             ALGO_GRAY_C,
@@ -159,6 +163,8 @@ private:
             XORIMG,
             CUSTKERNEL,
             FACE_DETEC,
+            HARRIS_CORNERS,
+            FAST_DETECT
 
     };
 
@@ -173,6 +179,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
         Bind(wxEVT_MENU, &MyFrame::onMedian, this, ALGO_MEDIAN);
         Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
+        Bind(wxEVT_MENU, &MyFrame::onCorners1, this, HARRIS_CORNERS);
         Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE);
         Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
         Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
@@ -185,6 +192,8 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onFaces, this, FACE_DETEC);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
+        Bind(wxEVT_MENU, &MyFrame::onFastDetect, this, FAST_DETECT);
+        
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo);

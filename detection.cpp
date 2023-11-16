@@ -1,5 +1,16 @@
 #include "detection.h"
+#include "opcvwrapper.h"
 
+
+/* -------------------------------------------------------------------------------------------
+	 https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
+
+		It should work but only God knows why it is not
+		I had used these functions before using Windows 10 and Linux ( Lubuntu 18 )
+		I suspect that as I am running at windows 11, opencv simply does not like
+		it when it runs detector->detect(out, faces1);
+
+----------------------------------------------------------------------------------------------*/
 static
 void 
 visualize(Mat& input, int frame, Mat& faces,  int thickness)
@@ -31,6 +42,8 @@ Mat detectEyes(const Mat& image)
 
 	Mat empty;
 
+	cv::Mat imgclone = convertograyScale(image);
+
 	// this shared pointer is never initialized correctly
 	Ptr<FaceDetectorYN> detector = FaceDetectorYN::create(
 		fr_modelPath,
@@ -47,7 +60,7 @@ Mat detectEyes(const Mat& image)
 
 
 	Mat faces1;
-	Mat out = image.clone();
+	Mat out = imgclone.clone();
 
 	detector->detect(out, faces1);
 	if (faces1.rows < 1)
@@ -57,5 +70,78 @@ Mat detectEyes(const Mat& image)
 
 	visualize(out, -1, faces1 );
 	return out;
+}
+
+/* -------------------------------------------------------------------------------------------
+OpenCV 3 Computer Vision
+Application Programming
+Cookbook
+Third Edition
+Robert Laganiere
+Page [ 239 ]
+See page [245 ] for the math
+----------------------------------------------------------------------------------------------*/
+Mat detectCorners(const Mat& image)
+{
+
+	// Detect Harris Corners
+	cv::Mat cornerStrength;
+
+	// the book does not say but you need to convert to a gray scale image
+	cv::Mat imgclone = convertograyScale(image);
+
+	cv::cornerHarris(	imgclone, // input image
+						cornerStrength, // image of cornerness
+						3, // neighborhood size
+						3, // aperture size
+						0.01); // Harris parameter
+
+
+	// threshold the corner strengths
+	cv::Mat harrisCorners;
+	double threshold = 0.0001;
+	cv::threshold(cornerStrength,
+		harrisCorners,
+		threshold,
+		255,
+		cv::THRESH_BINARY);
+	return harrisCorners;
+}
+
+/* -------------------------------------------------------------------------------------------
+OpenCV 3 Computer Vision
+Application Programming
+Cookbook
+Third Edition
+Robert Laganiere
+Page [ 250 ]
+
+"As in the case with the Harris point detector, the FAST feature algorithm derives from the
+definition of what constitutes a corner. This time, this definition is based on the image
+intensity around a putative feature point. The decision to accept a keypoint is taken by
+examining a circle of pixels centered at a candidate point. If an arc of contiguous points of a
+length greater than three quarters of the circle perimeter in which all pixels significantly
+differ from the intensity of the center point (being all darker or all brighter) is found, then a
+keypoint is declared."
+----------------------------------------------------------------------------------------------*/
+Mat detect(const Mat& image)
+{
+	// the book does not say but you need to convert to a gray scale image
+	cv::Mat imgclone = convertograyScale(image);
+
+	// vector of keypoints
+	std::vector<cv::KeyPoint> keypoints;
+	// FAST detector with a threshold of 40
+	cv::Ptr<cv::FastFeatureDetector> ptrFAST =cv::FastFeatureDetector::create(40);
+	// detect the keypoints
+	ptrFAST->detect(imgclone, keypoints);
+
+	cv::drawKeypoints(image, // original image
+		keypoints, // vector of keypoints
+		imgclone, // the output image
+		cv::Scalar(255, 255, 255), // keypoint color
+		cv::DrawMatchesFlags::DRAW_OVER_OUTIMG);// drawing flag
+
+	return imgclone;
 }
 

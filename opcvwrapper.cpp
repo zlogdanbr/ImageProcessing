@@ -182,9 +182,9 @@ Mat laplacian(Mat& src)
 {
     // Declare the variables we are going to use
     Mat src_gray, dst;
-    int kernel_size = 3;
-    int scale = 1;
-    int delta = 0;
+    int kernel_size = 9;
+    int scale = 3;
+    int delta = 2;
     int ddepth = CV_16S;
 
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )

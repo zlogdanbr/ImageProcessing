@@ -37,6 +37,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // menu   custom
     // ------------------------------------------------------------------------------  
     auto menuCustom = new wxMenu();
+    auto menuItemNode = menuCustom->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours");
     auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
     auto menuDetecFaces = menuCustom->Append(FACE_DETEC, "Find Faces", "Find Faces");
 
@@ -175,15 +176,16 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
     {
         n.findContornos(155);
         n.HighlightRoi();
-        Mat out = n.getEdgesImg();
-
+        Mat out2 = n.getEdgesImg();
+        Mat out = n.getFinalImg();
         if (out.empty())
         {
             outxt.writeTo("Error applying algorithm\n");
             return;
         }
         ImageHelper.setFinalImageOpenCV(out);
-        showImage(ImageHelper.getFinalImageOpenCV(), "Final");
+        showImage(out2, "Final");
+        showImage(ImageHelper.getFinalImageOpenCV(), "Final2");
         outxt.writeTo("Algorithm applied correctly\n");
         ImageHelper.setFinalImage(spath);
     }
@@ -306,8 +308,7 @@ MyFrame::ApplyBaseOperationsOnExistent(F& f, bool Gray, int kernel_size)
 }
 
 void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
-{    
-    auto menuItemNode = menuAlgo->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours");
+{        
     auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C, "Gray Scale\tCTRL+G", "Converts to Gray");
     auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
     auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
@@ -315,7 +316,9 @@ void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
     auto menuItemBlur33 = menuAlgo->Append(ALGO_BLUR33, "Blur Kernel Size 3\tCTRL+B", "Blur Kernel Size 3");
     auto menuItemBlur55 = menuAlgo->Append(ALGO_BLUR55, "Blur Kernel Size 5\tCTRL+T", "Blur Kernel Size 5");
     auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
-    auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5");
+    auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5"); 
+    auto menuItemCorners = menuAlgo->Append(HARRIS_CORNERS, "Detect Corners", "Detect Corners");
+    auto menuItemFast = menuAlgo->Append(FAST_DETECT, "Fast Detect", "Fast Detect");
     menuAlgo->AppendSeparator();
     auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
@@ -385,6 +388,16 @@ void MyFrame::onMedian(wxCommandEvent& event)
 void MyFrame::onFlipV(wxCommandEvent& event)
 {
     ApplyAlgorithm(flipImageHorizontal, false);
+}
+
+void MyFrame::onCorners1(wxCommandEvent& event)
+{
+    ApplyAlgorithm(detectCorners, true);
+}
+
+void MyFrame::onFastDetect(wxCommandEvent& event)
+{
+    ApplyAlgorithm(detect, true);
 }
 
 void MyFrame::onFlipH(wxCommandEvent& event)
