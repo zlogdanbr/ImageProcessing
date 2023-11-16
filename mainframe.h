@@ -59,6 +59,7 @@
 // https://github.com/gammasoft71/Examples_wxWidgets/blob/master/src/MenusAndToolbars/MainMenu/MainMenu.cpp
 // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
 // https://stackoverflow.com/questions/8177747/converting-images-between-opencv-and-wxwidgets
+// https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
 // ---------------------------------------------------------------------------------------------
 
 #include "image_helper.h"
@@ -137,6 +138,7 @@ private:
     void onXorImages(wxCommandEvent& event);
 
     void onCustomKernel(wxCommandEvent& event);
+    void onFaces(wxCommandEvent& event);
 
     void onHelpFile(wxCommandEvent& event);
 
@@ -156,6 +158,7 @@ private:
             SUBIMG ,
             XORIMG,
             CUSTKERNEL,
+            FACE_DETEC,
 
     };
 
@@ -180,6 +183,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onSubImages, this, SUBIMG);
         Bind(wxEVT_MENU, &MyFrame::onXorImages, this, XORIMG);
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
+        Bind(wxEVT_MENU, &MyFrame::onFaces, this, FACE_DETEC);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
     }
 

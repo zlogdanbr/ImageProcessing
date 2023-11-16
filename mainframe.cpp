@@ -1,6 +1,6 @@
 
 #include "mainframe.h"
-
+#include "detection.h"
 
 MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
 {
@@ -38,6 +38,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // ------------------------------------------------------------------------------  
     auto menuCustom = new wxMenu();
     auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
+    auto menuDetecFaces = menuCustom->Append(FACE_DETEC, "Find Faces", "Find Faces");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -253,6 +254,22 @@ MyFrame::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
     {
         outxt.writeTo("Image not loaded\n");
     }
+}
+
+void MyFrame::onFaces(wxCommandEvent& event)
+{
+    // It should work but only God knows why it is not
+    try
+    {
+        ApplyAlgorithm(detectEyes, false);
+    }
+    catch (...)
+    {
+        outxt.writeTo("Only God knows why it does not work.\n");
+        outxt.writeTo("Maybe it is because of the OS.\n");
+        outxt.writeTo("Please, try with Windows 10.\n");
+    }
+    
 }
 
 template<typename F>

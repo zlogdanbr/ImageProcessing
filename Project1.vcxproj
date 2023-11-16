@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="childframe.cpp" />
+    <ClCompile Include="detection.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_helper.cpp" />
     <ClCompile Include="main.cpp" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframe.h" />
+    <ClInclude Include="detection.h" />
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />
     <ClInclude Include="logs.h" />
