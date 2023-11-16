@@ -37,15 +37,12 @@ Mat flipImage(const Mat& img);
 Mat SumImages(const Mat& img1, const Mat& img2);
 Mat SubImages(const Mat& img1, const Mat& img2);
 Mat XorImages(const Mat& img1, const Mat& img2);
-
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel);
 Mat laplacian(Mat& src);
 Mat convertRectoImg(Rect& r, Mat& img);
-void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
-void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
 std::vector<Mat> splitChannel(Mat& img);
 void segmentationOfROI(Mat& img, Rect& roi,int,int,int);
 int findcontours(const Mat& img, RoiAretype& contours, std::vector<Vec4i>& hierarchy, int thresh, Mat& edges);

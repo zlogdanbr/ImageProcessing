@@ -205,33 +205,6 @@ Mat laplacian(Mat& src)
 }
 
 
-// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
-void drawCirclesAtImgFromRoi(Mat& img,Rect& roi)
-{
-    Point Mycenter(     roi.x + roi.width/2, 
-                        roi.y + roi.height/2 );
-
-    int radius = cvRound( (roi.width + roi.height)*0.25 );
-    circle( img, Mycenter, radius, Scalar( 255, 0, 0 ), 4 );
-
-}
-
-// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
-void drawSquaresAtImgFromRoi(Mat& img, Rect& roi)
-{    
-    Scalar color = Scalar(255, 0, 0);
-    rectangle(img,
-        Point(cvRound(roi.x * 1),
-            cvRound(roi.y * 1)),
-        Point(cvRound((roi.x + roi.width - 1) * 1),
-            cvRound((roi.y + roi.height - 1) * 1)),
-        color,
-        3,
-        8,
-        0);
-
-}
-
 // https://docs.opencv.org/4.x/d4/dbd/tutorial_filter_2d.html
 Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel)
 {
