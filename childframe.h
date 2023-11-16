@@ -30,7 +30,7 @@ private:
                                     panel,
                                     -1,
                                     wxPoint(5, 50),
-                                    wxSize(1160, 270)
+                                    wxSize(1160, 290)
 
                                 )
                     };

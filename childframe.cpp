@@ -1,6 +1,6 @@
 #include "childframe.h"
 
-CGridInputDialog::CGridInputDialog(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1) }
+CGridInputDialog::CGridInputDialog(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1), wxSize(1160, 450) }
 {
     button1->Bind(wxEVT_BUTTON,[&](wxCommandEvent& event)
     {
