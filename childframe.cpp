@@ -42,13 +42,22 @@ void CGridInputDialog::getGridData() const
         std::vector<double> tmp;
         for (int j = 0; j < wxData->GetColsCount(); j++)
         {
-            auto v = wxData->GetValue(i, j);
-            if (wxData->IsEmptyCell(i, j) == false)
+            try
             {
-                std::stringstream ss;
-                ss << v;
-                tmp.push_back(std::stod(ss.str()));
+                auto v = wxData->GetValue(i, j);
+                if (wxData->IsEmptyCell(i, j) == false)
+                {
+                    std::stringstream ss;
+                    ss << v;
+                    tmp.push_back(std::stod(ss.str()));
+                }
             }
+            catch (...)
+            {
+                outxt->writeTo("Error in the kernel values.\n");
+                return;
+            }
+
         }
         if (tmp.size() != 0)
         {
@@ -58,31 +67,46 @@ void CGridInputDialog::getGridData() const
 
     int kernel_size1 = data.size();
     int kernel_size2 = data[0].size();
-    cv::Mat kernel(kernel_size1, kernel_size2, CV_32F, cv::Scalar(0.0));
+    cv::Mat kernel(kernel_size1, kernel_size2, CV_32F, cv::Scalar(0.0));    
 
     if (kernel_size1 == kernel_size2)
     {
-        for (int i = 0; i < kernel_size1; i++)
+        if (kernel_size1 % 2)
         {
-            for (int j = 0; j < kernel_size1; j++)
+            if (kernel_size1 > 2)
             {
-                kernel.at<float>(i, j) = data[i][j];
+                for (int i = 0; i < kernel_size1; i++)
+                {
+                    for (int j = 0; j < kernel_size1; j++)
+                    {
+                        kernel.at<float>(i, j) = data[i][j];
+                    }
+                }
+
+                Mat img_orig = imghelper->getOrginalImageOpenCV();
+                Mat out = ApplyCustom2Dfilter(img_orig, kernel);
+
+                if (out.empty() == false)
+                {
+                    imghelper->setFinalImageOpenCV(out);
+                    showImage(out, "Final");
+                    imghelper->setFinalGray(true);
+                }
+                else
+                {
+                    outxt->writeTo("Error appplying algo.\n");
+                }
             }
-        }
-
-        Mat img_orig  = imghelper->getOrginalImageOpenCV();
-        Mat out = ApplyCustom2Dfilter(img_orig, kernel);
-
-        if (out.empty() == false)
-        {
-            imghelper->setFinalImageOpenCV(out);
-            showImage(out, "Final");
-            imghelper->setFinalGray(true);
+            else
+            {
+                outxt->writeTo("Kernels dimension must be higher than 2.\n");
+            }
         }
         else
         {
-            outxt->writeTo("Error appplying algo.\n");
+            outxt->writeTo("Kernels must have odd sizes.\n");
         }
+
     } 
     else
     {

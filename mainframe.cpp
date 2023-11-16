@@ -37,7 +37,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // menu   custom
     // ------------------------------------------------------------------------------  
     auto menuCustom = new wxMenu();
-    auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Add kernel", "Input custom kernel");
+    auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
 
     // -----------------------------------------------------------------------------  
     // menu   help
@@ -75,7 +75,7 @@ void MyFrame::onHelpFile(wxCommandEvent& event)
     os << "This application loads TIFF and JPG images and allows processing of them using\n";
     os << "Image Processing algorithms\n";
     os << "2023 Daniel Vasconcelos Gomes\n" ;
-    os << "zlogdan.wordpress.com\n";
+    os << "zlogdan.wordpress.com";
     outxt.writeInfo(os);
 
     outxt.writeTo("Help instructions end.\n");
@@ -175,6 +175,12 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
         n.findContornos(155);
         n.HighlightRoi();
         Mat out = n.getEdgesImg();
+
+        if (out.empty())
+        {
+            outxt.writeTo("Error applying algorithm\n");
+            return;
+        }
         ImageHelper.setFinalImageOpenCV(out);
         showImage(ImageHelper.getFinalImageOpenCV(), "Final");
         outxt.writeTo("Algorithm applied correctly\n");
@@ -182,7 +188,7 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
     }
     else
     {
-        outxt.writeTo("Algorithm error\n");
+        outxt.writeTo("Error loading image\n");
     }
 
 }
