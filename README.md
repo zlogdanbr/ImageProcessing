@@ -29,6 +29,10 @@ Back to reality however, this is how I have fun. It is mostly a hobby project ju
 
 Back in 1996 I had no idea if OpenCV existed or about libraries.
 
+** WARNING **
+The algorithms for face detection are not working. I have no idea why or how.
+I am running Windows 11, maybe that is it.
+
 
 ## Tips
 
