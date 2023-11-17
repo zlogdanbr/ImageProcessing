@@ -98,21 +98,11 @@ private:
 
  
 
-    CWriteLogs outxt{ textCtrl };
-    
+    CWriteLogs outxt{ textCtrl };    
 
     template<typename F>
     void
         ApplyAlgorithm(F& f, bool Gray);
-
-    template<typename F>
-    void
-        ApplyAlgorithm(F& f, bool Gray, int kernel_size);
-
-    template<typename F>
-    void
-        ApplyBaseOperationsOnExistent(F& f, bool Gray = true, int kernel_size = 3);
-
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
@@ -122,14 +112,6 @@ private:
     void OnExit(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
     void OnNoduleRec(wxCommandEvent& event);
-    void OnDoGrayScale(wxCommandEvent& event);
-    void OnDoEqualize(wxCommandEvent& event);
-    void OnDoLaplacian(wxCommandEvent& event);
-    void onImageBlurKernel33(wxCommandEvent& event);
-    void onImageBlurKernel55(wxCommandEvent& event);
-    void onGaussian(wxCommandEvent& event);
-    void onMedian(wxCommandEvent& event);
-
     void onFlipV(wxCommandEvent& event);
     void onFlipH(wxCommandEvent& event);
     void onFlipA(wxCommandEvent& event);
@@ -139,44 +121,23 @@ private:
 
     void onHelpFile(wxCommandEvent& event);
 
-    void onCorners1(wxCommandEvent& event);
+    void onAllMenu(wxCommandEvent& event);
 
-    void onFastDetect(wxCommandEvent& event);
-
-    enum  Opt {
+    enum  Opt 
+    {
             ALGO_NODE_REC = 1,
-            ALGO_GRAY_C,
-            ALGO_EQUALIZE,
-            ALGO_LAPLACIAN,
-            ALGO_BLUR33 ,
-            ALGO_BLUR55 ,
-            ALGO_GAUSSIAN ,
-            ALGO_MEDIAN ,
             FLIP_H ,
             FLIP_V ,
             FLIP_B ,
-            SUMIMG ,
-            SUBIMG ,
-            XORIMG,
             CUSTKERNEL,
             FACE_DETEC,
-            HARRIS_CORNERS,
-            FAST_DETECT
-
+            ONE_ID_TO_ALL
     };
 
     void BinAllEvents()
     {
         Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
         Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
-        Bind(wxEVT_MENU, &MyFrame::OnDoGrayScale, this, ALGO_GRAY_C);
-        Bind(wxEVT_MENU, &MyFrame::OnDoEqualize, this, ALGO_EQUALIZE);
-        Bind(wxEVT_MENU, &MyFrame::OnDoLaplacian, this, ALGO_LAPLACIAN);
-        Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel33, this, ALGO_BLUR33);
-        Bind(wxEVT_MENU, &MyFrame::onImageBlurKernel55, this, ALGO_BLUR55);
-        Bind(wxEVT_MENU, &MyFrame::onMedian, this, ALGO_MEDIAN);
-        Bind(wxEVT_MENU, &MyFrame::onGaussian, this, ALGO_GAUSSIAN);
-        Bind(wxEVT_MENU, &MyFrame::onCorners1, this, HARRIS_CORNERS);
         Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE);
         Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
         Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
@@ -184,10 +145,8 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
         Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
-        Bind(wxEVT_MENU, &MyFrame::onFaces, this, FACE_DETEC);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
-        Bind(wxEVT_MENU, &MyFrame::onFastDetect, this, FAST_DETECT);
-        
+        Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);        
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo);

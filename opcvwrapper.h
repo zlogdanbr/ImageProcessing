@@ -28,20 +28,25 @@ using RoiAretype = std::vector< std::vector<Point> >;
 bool loadImage(const std::string& image_path, Mat& img);
 void showImage(const Mat& img, const std::string& title);
 bool saveImage(const std::string& image_path, Mat& img);
+
 Mat convertograyScale(const Mat& img);
 Mat equalizeGrayImage(const Mat& img);
 Mat equalizeColorImage(const Mat& img);
+Mat laplacian(const Mat& src);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
-Mat flipImage(const Mat& img);
-Mat SumImages(const Mat& img1, const Mat& img2);
-Mat SubImages(const Mat& img1, const Mat& img2);
-Mat XorImages(const Mat& img1, const Mat& img2);
+
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel);
-Mat laplacian(Mat& src);
+
+
+Mat flipImage(const Mat& img);
+Mat SumImages(const Mat& img1, const Mat& img2);
+Mat SubImages(const Mat& img1, const Mat& img2);
+Mat XorImages(const Mat& img1, const Mat& img2);
+
 Mat convertRectoImg(Rect& r, Mat& img);
 std::vector<Mat> splitChannel(Mat& img);
 void segmentationOfROI(Mat& img, Rect& roi,int,int,int);

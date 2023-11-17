@@ -2,18 +2,20 @@
 #include "image_helper.h"
 #include <wx/grid.h>
 #include "opcvwrapper.h"
+#include "detection.h"
 #include "logs.h"
+#include <functional>
 
-class CGridInputDialog : public wxFrame
+
+class CInputDialogBase : public wxFrame
 {
 public:
 
-    CGridInputDialog(wxFrame* parent);
+    CInputDialogBase(wxFrame* parent, wxString name);
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
-    void setLogs(CWriteLogs* l ) { outxt = l; };
-    void getGridData() const;
+    void setLogs(CWriteLogs* l) { outxt = l; };
 
-private:
+protected:
 
     //--------------------------------------------------------------
     // Helpers
@@ -32,6 +34,25 @@ private:
     wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
     wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
 
+
+    // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
+    virtual void setControlslayout() = 0;
+
+};
+
+
+class CGridInputDialog : public CInputDialogBase
+{
+public:
+
+    CGridInputDialog(wxFrame* parent);
+    void getGridData() const;
+
+private:
+
+    //--------------------------------------------------------------
+    // Components
+    //-------------------------------------------------------------
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK")};
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel")};
     wxButton* button3{ new wxButton(panel1, wxID_ANY, "Clear")};
@@ -73,4 +94,182 @@ private:
         Center();
     }
 
+};
+
+
+class CInputDialog : public CInputDialogBase
+{
+public:
+
+    CInputDialog(wxFrame* parent);
+
+    std::function<Mat(Mat)> getAlgoFunctionSimple(wxString key)
+    {
+        if (fsimple.find(key) != fsimple.end())
+        {
+            return fsimple[key];
+        }
+        return nullptr;
+    }
+
+    std::function<Mat(Mat,int)> getAlgoFunctionMore(wxString key)
+    {
+        if (fmore.find(key) != fmore.end())
+        {
+            return fmore[key];
+        }
+        return nullptr;
+    }
+
+    wxString getSelectionText() { return SelectionText;};
+
+    void DoFunction()
+    {
+        wxString opt = getSelectionText();
+
+        std::function<Mat(Mat)> f1 = getAlgoFunctionSimple(opt);
+
+        if (f1 == nullptr)
+        {
+            std::function<Mat(Mat, int)> f2 = getAlgoFunctionMore(opt);
+            if (f2 == nullptr)
+            {
+                outxt->writeTo("Error while loading algos.\n");
+                return;
+            }
+
+            ApplyAlgorithm(f2, false, 5);
+        }
+        else
+        {
+            ApplyAlgorithm(f1, false);
+        }
+    }
+
+
+private:
+    wxString SelectionText;
+    wxComboBox* comboBox1{ new wxComboBox(panel1, wxID_ANY, wxEmptyString, { 10, 10 } )};
+    wxButton* button1{ new wxButton(panel1, wxID_ANY, "Select") };
+    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
+
+    void fillFSimple()
+    {
+        fsimple["Convert to Gray Scale"] = convertograyScale;
+        fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
+        fsimple["Equalize Color Scale Image"] = equalizeColorImage;
+        fsimple["Apply Laplacian"] = laplacian;
+        fsimple["Detect Corners"] = detectCorners;
+        fsimple["Detect features"] = detect;
+
+        comboBox1->Append("Convert to Gray Scale");
+        comboBox1->Append("Equalize Gray Scale Image");
+        comboBox1->Append("Equalize Color Scale Image");
+        comboBox1->Append("Apply Laplacian");
+
+
+        comboBox1->Append("Blur Image");
+        comboBox1->Append("Gaussian");
+        comboBox1->Append("Median");
+        comboBox1->Append("Detect Corners");
+        comboBox1->Append("Detect features");
+
+    }
+
+    void fillFMore()
+    {
+        fmore["Blur Image"] = blurImageSmooth;
+        fmore["Gaussian"] = GaussianImageSmooth;
+        fmore["Median"] = MedianImageSmooth;
+    }
+
+    void setControlslayout()
+    {
+        // set base sizer
+        basePanel->SetSizer(baseSizer);
+
+        // add buttons to the horizontal box
+        hbox1->Add(button1);
+        hbox1->Add(button2);
+
+        // add buttons to the horizontal box
+        hbox1->Add(comboBox1);
+
+        // set horizontal base sizer at panel1 and panel2
+        panel1->SetSizer(hbox1);
+
+        // add panel1 to the base sizer at the base panel
+        baseSizer->Add(panel1);
+
+        fillFSimple();
+        fillFMore();
+
+
+        Center();
+    }
+
+    std::map < wxString, std::function<Mat(Mat)>> fsimple;
+    std::map < wxString, std::function<Mat(Mat, int)>> fmore;
+
+    template<typename F>
+    void
+        ApplyAlgorithm(F& f, bool Gray)
+    {
+        auto spath = imghelper->getOriginalImage();
+        Mat img;
+        Mat out;
+        imghelper->setFinalGray(Gray);
+
+        if (loadImage(spath, img) == true)
+        {
+            out = f(img);
+            if (out.empty() == false)
+            {
+                imghelper->setFinalImageOpenCV(out);
+                showImage(imghelper->getFinalImageOpenCV(), "Final");
+                outxt->writeTo("Algorithm applied correctly\n");
+                imghelper->setFinalGray(true);
+                imghelper->setFinalImage(spath);
+            }
+            else
+            {
+                outxt->writeTo("Algorithm error\n");
+            }
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+
+    template<typename F>
+    void
+        ApplyAlgorithm(F& f, bool Gray, int kernel_size)
+    {
+        auto spath = imghelper->getOriginalImage();
+        Mat img;
+        Mat out;
+        imghelper->setFinalGray(Gray);
+
+        if (loadImage(spath, img) == true)
+        {
+            out = f(img, kernel_size);
+            if (out.empty() == false)
+            {
+                imghelper->setFinalImageOpenCV(out);
+                showImage(imghelper->getFinalImageOpenCV(), "Final");
+                outxt->writeTo("Algorithm applied correctly\n");
+                imghelper->setFinalGray(true);
+                imghelper->setFinalImage(spath);
+            }
+            else
+            {
+                outxt->writeTo("Algorithm error\n");
+            }
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
 };

@@ -1,6 +1,32 @@
 #include "childframe.h"
 
-CGridInputDialog::CGridInputDialog(wxFrame* parent):wxFrame{ parent, -1, "Custom Mask Input", wxPoint(-1, -1) }
+CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ parent, -1, name, wxPoint(-1, -1) }
+{
+
+}
+
+CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Algorithms Selection" }
+{
+    setControlslayout();
+
+    button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            // set values
+            int item = comboBox1->GetSelection();
+            SelectionText = comboBox1->GetValue();
+            DoFunction();
+            Close();
+        });
+
+    button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            // cancel
+            Close();
+        });
+
+}
+
+CGridInputDialog::CGridInputDialog(wxFrame* parent):CInputDialogBase{ parent,"Custom Kernel Input"}
 {
     setControlslayout();
 

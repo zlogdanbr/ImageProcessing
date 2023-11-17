@@ -178,7 +178,7 @@ Mat GaussianImageSmooth(const Mat& img, int kernel_size)
 
 
 // https://docs.opencv.org/3.4/d5/db5/tutorial_laplace_operator.html
-Mat laplacian(Mat& src)
+Mat laplacian(const Mat& src)
 {
     // Declare the variables we are going to use
     Mat src_gray, dst;

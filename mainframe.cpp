@@ -227,37 +227,6 @@ MyFrame::ApplyAlgorithm(F& f, bool Gray)
     }
 }
 
-template<typename F>
-void
-MyFrame::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
-{
-    auto spath = ImageHelper.getOriginalImage();
-    Mat img;
-    Mat out;
-    ImageHelper.setFinalGray(Gray);
-
-    if (loadImage(spath, img) == true)
-    {
-        out = f(img, kernel_size);
-        if (out.empty() == false)
-        {
-            ImageHelper.setFinalImageOpenCV(out);
-            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
-            outxt.writeTo("Algorithm applied correctly\n");
-            ImageHelper.setFinalGray(true);
-            ImageHelper.setFinalImage(spath);
-        }
-        else
-        {
-            outxt.writeTo("Algorithm error\n");
-        }
-    }
-    else
-    {
-        outxt.writeTo("Image not loaded\n");
-    }
-}
-
 void MyFrame::onFaces(wxCommandEvent& event)
 {
     // It should work but only God knows why it is not
@@ -274,70 +243,38 @@ void MyFrame::onFaces(wxCommandEvent& event)
     
 }
 
-template<typename F>
-void
-MyFrame::ApplyBaseOperationsOnExistent(F& f, bool Gray, int kernel_size)
-{
-    if (ImageHelper.getFinalGray() == true)
-    {
-        if (ImageHelper.getOriginalImageInitiated() && ImageHelper.getFinallImageInitiated())
-        {
-            Mat out = f(ImageHelper.getOrginalImageOpenCV(), ImageHelper.getFinalImageOpenCV());
-
-            if (out.empty() == false)
-            {
-                ImageHelper.setFinalImageOpenCV(out);
-                showImage(ImageHelper.getFinalImageOpenCV(), "Final");
-                outxt.writeTo("Algorithm applied correctly\n");
-                ImageHelper.setFinalGray(true);
-            }
-            else
-            {
-                outxt.writeTo("Error\n");
-            }
-        }
-        else
-        {
-            outxt.writeTo("Images not loaded\n");
-        }
-    }
-    else
-    {
-        outxt.writeTo("Only supports gray scaled images as the second operand\n");
-    }
-}
-
 void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
 {        
-    auto menuItemGray = menuAlgo->Append(ALGO_GRAY_C, "Gray Scale\tCTRL+G", "Converts to Gray");
-    auto menuItemHist = menuAlgo->Append(ALGO_EQUALIZE, "Equalize\tCTRL+E", "Equalize image");
-    auto menuItemLaplacian = menuAlgo->Append(ALGO_LAPLACIAN, "Laplacian\tCTRL+L", "Laplacian");
-    menuAlgo->AppendSeparator();
-    auto menuItemBlur33 = menuAlgo->Append(ALGO_BLUR33, "Blur Kernel Size 3\tCTRL+B", "Blur Kernel Size 3");
-    auto menuItemBlur55 = menuAlgo->Append(ALGO_BLUR55, "Blur Kernel Size 5\tCTRL+T", "Blur Kernel Size 5");
-    auto menuItemBlurGaussian = menuAlgo->Append(ALGO_GAUSSIAN, "Gaussian Kernel Size 5\tCTRL+A", "Gaussian Kernel Size 5");
-    auto menuItemMedian = menuAlgo->Append(ALGO_MEDIAN, "Median Filter\tCTRL+M", "Median Filter Size 5"); 
-    auto menuItemCorners = menuAlgo->Append(HARRIS_CORNERS, "Detect Corners", "Detect Corners");
-    auto menuItemFast = menuAlgo->Append(FAST_DETECT, "Fast Detect", "Fast Detect");
+    auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
     menuAlgo->AppendSeparator();
     auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
     auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");  
+    
+}
+
+void MyFrame::onAllMenu(wxCommandEvent& event)
+{
+    outxt.writeTo("Ao menu all.\n");
+    
+    CInputDialog* InputDialog = new CInputDialog(this);
+    InputDialog->setImageHelper(&ImageHelper);
+    InputDialog->setLogs(&outxt);
+    outxt.writeTo("Open Data Input dialog.\n");
+    InputDialog->Show(true);
+
 }
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
     {
-        CGridInputDialog* MyDialog{ nullptr };
-        if (MyDialog == nullptr)
-        {
-            MyDialog = new CGridInputDialog(this);
-            MyDialog->setImageHelper(&ImageHelper);
-            MyDialog->setLogs(&outxt);
-            outxt.writeTo("Open Data Input dialog.\n");
-            MyDialog->Show(true);
-        }
+        CGridInputDialog* MyDialog{ new CGridInputDialog(this)};
+        MyDialog->setImageHelper(&ImageHelper);
+        MyDialog->setLogs(&outxt);
+        outxt.writeTo("Open Data Input dialog.\n");
+        MyDialog->Show(true);
+
     }
     else
     {
@@ -346,54 +283,9 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
 
 }
 
-void MyFrame::OnDoGrayScale(wxCommandEvent& event)
-{
-    ApplyAlgorithm(convertograyScale, true);    
-}
-
-void MyFrame::OnDoEqualize(wxCommandEvent& event)
-{
-    ApplyAlgorithm(equalizeColorImage, false);
-}
-
-void MyFrame::OnDoLaplacian(wxCommandEvent& event)
-{
-    ApplyAlgorithm(laplacian, false);
-}
-
-void MyFrame::onImageBlurKernel33(wxCommandEvent& event)
-{
-    ApplyAlgorithm(blurImageSmooth, false, 3);
-}
-
-void MyFrame::onImageBlurKernel55(wxCommandEvent& event)
-{
-    ApplyAlgorithm(blurImageSmooth, false, 5);
-}
-
-void MyFrame::onGaussian(wxCommandEvent& event)
-{
-    ApplyAlgorithm(GaussianImageSmooth, false, 5);
-}
-
-void MyFrame::onMedian(wxCommandEvent& event)
-{
-    ApplyAlgorithm(MedianImageSmooth, false, 3);
-}
-
 void MyFrame::onFlipV(wxCommandEvent& event)
 {
     ApplyAlgorithm(flipImageHorizontal, false);
-}
-
-void MyFrame::onCorners1(wxCommandEvent& event)
-{
-    ApplyAlgorithm(detectCorners, true);
-}
-
-void MyFrame::onFastDetect(wxCommandEvent& event)
-{
-    ApplyAlgorithm(detect, true);
 }
 
 void MyFrame::onFlipH(wxCommandEvent& event)
