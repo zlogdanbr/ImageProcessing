@@ -1,4 +1,5 @@
 #include "childframe.h"
+#include "savekernel.h"
 
 CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ parent, -1, name, wxPoint(-1, -1) }
 {
@@ -47,6 +48,38 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent):CInputDialogBase{ parent,"Cu
     {
         // clear
         grid->ClearGrid();
+    });
+
+    button4->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+    {
+        wxFileDialog saveFileDialog(this, wxEmptyString, wxEmptyString, "kernel.dvg", "Text Files (*.dvg)|*.dvg|All Files (*.*)|*.*", wxFD_SAVE);
+        if (saveFileDialog.ShowModal() == wxID_OK)
+        {
+            wxString spath = saveFileDialog.GetPath();
+            std::string path = convertWxStringToString(spath);
+            SaveDataToFile(path, grid);
+        }
+        
+    });
+
+    button5->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+    {
+        wxFileDialog openFileDialog(    this,
+                                    wxEmptyString,
+                                    wxEmptyString,
+                                    wxEmptyString,
+                                    "dvg files(*.dvg) | *.dvg",
+                                    wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+        if (openFileDialog.ShowModal() == wxID_OK)
+        {
+            wxString path = openFileDialog.GetPath();
+            std::string spath = convertWxStringToString(path);
+            std::vector<std::vector<double>> obs;
+            readCSV(obs, spath);
+            LoadDataToFile(obs, grid);
+        }
+
     });
 
 }

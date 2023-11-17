@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
+    <ClCompile Include="savekernel.cpp" />
     <ClCompile Include="segmentation.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />
+    <ClInclude Include="savekernel.h" />
     <ClInclude Include="segmentation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

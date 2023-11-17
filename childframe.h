@@ -56,6 +56,8 @@ private:
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK")};
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel")};
     wxButton* button3{ new wxButton(panel1, wxID_ANY, "Clear")};
+    wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };
+    wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
 
     // https://docs.wxwidgets.org/3.0/overview_grid.html
     wxGrid* grid = { new wxGrid(
@@ -77,6 +79,8 @@ private:
         hbox1->Add(button1);
         hbox1->Add(button2);
         hbox1->Add(button3);
+        hbox1->Add(button4);
+        hbox1->Add(button5);
 
         // add buttons to the horizontal box
         hbox2->Add(grid);
