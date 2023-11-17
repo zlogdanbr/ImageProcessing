@@ -60,6 +60,7 @@
 // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
 // https://stackoverflow.com/questions/8177747/converting-images-between-opencv-and-wxwidgets
 // https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
+// https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
 // ---------------------------------------------------------------------------------------------
 
 #include "image_helper.h"

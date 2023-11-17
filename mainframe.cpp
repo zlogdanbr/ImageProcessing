@@ -52,7 +52,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // -----------------------------------------------------------------------------
     mainMenu->Append(menuFile, "&File");
     mainMenu->Append(menuAlgo, "&Algorithms");
-    mainMenu->Append(menuCustom, "&Custom");
+    mainMenu->Append(menuCustom, "A&dvanced");
     mainMenu->Append(menuHelp, "&Help");    
 
     // -----------------------------------------------------------------------------  

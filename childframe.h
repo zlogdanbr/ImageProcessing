@@ -18,8 +18,8 @@ private:
     //--------------------------------------------------------------
     // Helpers
     //--------------------------------------------------------------
-    CImageHelper* imghelper;
-    CWriteLogs* outxt;
+    CImageHelper* imghelper{ nullptr };
+    CWriteLogs* outxt{ nullptr };
 
     //--------------------------------------------------------------
     // Components
@@ -45,7 +45,8 @@ private:
                                     wxEXPAND
                                 )
                     };
-
+    
+    // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
     void setControlslayout()
     {
         // set base sizer
