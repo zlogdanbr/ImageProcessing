@@ -133,10 +133,6 @@ private:
     void onFlipH(wxCommandEvent& event);
     void onFlipA(wxCommandEvent& event);
 
-    void onSumImages(wxCommandEvent& event);
-    void onSubImages(wxCommandEvent& event);
-    void onXorImages(wxCommandEvent& event);
-
     void onCustomKernel(wxCommandEvent& event);
     void onFaces(wxCommandEvent& event);
 
@@ -186,9 +182,6 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
         Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
         Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
-        Bind(wxEVT_MENU, &MyFrame::onSumImages, this, SUMIMG);
-        Bind(wxEVT_MENU, &MyFrame::onSubImages, this, SUBIMG);
-        Bind(wxEVT_MENU, &MyFrame::onXorImages, this, XORIMG);
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onFaces, this, FACE_DETEC);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);

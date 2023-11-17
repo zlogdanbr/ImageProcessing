@@ -322,11 +322,7 @@ void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
     menuAlgo->AppendSeparator();
     auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
-    auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
-    menuAlgo->AppendSeparator();
-    auto menuSum = menuAlgo->Append(SUMIMG, "Add Images", "Summing Images");
-    auto menuSub = menuAlgo->Append(SUBIMG, "Subtract Images", "subtract Images");
-    auto menuXor = menuAlgo->Append(XORIMG, "XOR Images", "Bitwise xor Images");    
+    auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");  
 }
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
@@ -408,20 +404,5 @@ void MyFrame::onFlipH(wxCommandEvent& event)
 void MyFrame::onFlipA(wxCommandEvent& event)
 {
     ApplyAlgorithm(flipImage, false);
-}
-
-void MyFrame::onSumImages(wxCommandEvent& event)
-{
-    ApplyBaseOperationsOnExistent(SumImages);
-}
-
-void MyFrame::onSubImages(wxCommandEvent& event)
-{
-    ApplyBaseOperationsOnExistent(SubImages);
-}
-
-void MyFrame::onXorImages(wxCommandEvent& event)
-{
-    ApplyBaseOperationsOnExistent(XorImages);
 }
 
