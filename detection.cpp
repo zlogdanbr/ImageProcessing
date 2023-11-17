@@ -145,3 +145,14 @@ Mat detect(const Mat& image)
 	return imgclone;
 }
 
+Mat custom_algo(const Mat& image)
+{
+	Mat inter = image.clone();
+
+	inter = detect(inter);
+
+	
+	return inter;
+}
+
+

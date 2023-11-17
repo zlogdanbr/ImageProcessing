@@ -119,9 +119,18 @@ Mat convertograyScale(const Mat& img)
 //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html
 Mat equalizeGrayImage(const Mat& img)
 {
-    Mat hist_equalized_image;
-    equalizeHist(img, hist_equalized_image);
-    return hist_equalized_image;
+    try
+    {
+        Mat hist_equalized_image;
+        equalizeHist(img, hist_equalized_image);
+        return hist_equalized_image;
+    }
+    catch(...)
+    {
+        Mat out = equalizeColorImage(img);
+        return out;
+    }
+
 }
 
 //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html

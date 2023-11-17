@@ -77,7 +77,7 @@ void MyFrame::onHelpFile(wxCommandEvent& event)
     os << "This application loads TIFF and JPG images and allows processing of them using\n";
     os << "Image Processing algorithms\n";
     os << "2023 Daniel Vasconcelos Gomes\n" ;
-    os << "zlogdan.wordpress.com";
+    os << "zlogdan.wordpress.com\n";
     outxt.writeInfo(os);
 
     outxt.writeTo("Help instructions end.\n");

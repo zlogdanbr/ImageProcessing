@@ -38,29 +38,21 @@ I am running Windows 11, maybe that is it.
 
 ### Adding new algorithms
 
-If you would like to add a new algorithm to the menu do the following
+The menu Algorithms->Basic Algorithms Selection allows you to choose between several algorithms.
 
-1- Create the ID using:
-inline static const int ALGO_NODE_REC = 1;
+So, edit the sources detect.h and detect.cpp adding a function with the signature cv::Mat foo( cv::Mat& m ).
 
-2- Define the event handler
-void OnNoduleRec(wxCommandEvent& event);
+Do all your processing inside this function then at childframe add the following:
 
-Inside this method you may either call
- ApplyAlgorithm(F& f, bool Gray);
- ApplyAlgorithm(F& f, bool Gray, int kernel_size);
+    void fillFSimple()
+    {
+        fsimple["my foo"] = foo;
+        comboBox1->Append("my foo");
+    }
+	
 
-- set Gray to True if the final image is a gray scale image because the application will use OpenCV
-functions to save. For reasons I am not aware, the OpenCV save functions were not working for colored
-images
-- use the second method if the algorithm you would like to implement uses a kernel
-( see opcvwrapper.h )
+Now the menu Algorithms->Basic Algorithms Selection contains foo.
 
-3- Add the event to event table
- Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
-
-4- Add the new menu item
- auto menuItemNode= menuAlgo->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours")
 
 
 ### Image format

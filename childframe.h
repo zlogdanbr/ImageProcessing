@@ -161,18 +161,19 @@ private:
         fsimple["Apply Laplacian"] = laplacian;
         fsimple["Detect Corners"] = detectCorners;
         fsimple["Detect features"] = detect;
+        fsimple["Custom Algo"] = custom_algo;
 
         comboBox1->Append("Convert to Gray Scale");
         comboBox1->Append("Equalize Gray Scale Image");
         comboBox1->Append("Equalize Color Scale Image");
         comboBox1->Append("Apply Laplacian");
 
-
         comboBox1->Append("Blur Image");
         comboBox1->Append("Gaussian");
         comboBox1->Append("Median");
         comboBox1->Append("Detect Corners");
         comboBox1->Append("Detect features");
+        comboBox1->Append("Custom Algo");
 
     }
 
