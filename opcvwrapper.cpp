@@ -185,6 +185,17 @@ Mat GaussianImageSmooth(const Mat& img, int kernel_size)
     return Blurred;
 }
 
+Mat ApplyThreShold(const Mat& img, double threshold)
+{
+    cv::Mat out;
+    cv::threshold(img,
+        out,
+        threshold,
+        255,
+        cv::THRESH_BINARY);
+    return out;
+}
+
 
 // https://docs.opencv.org/3.4/d5/db5/tutorial_laplace_operator.html
 Mat laplacian(const Mat& src)

@@ -73,14 +73,9 @@ void MyFrame::onHelpFile(wxCommandEvent& event)
 {
     std::stringstream os;
     outxt.writeTo("Help instructions loaded.\n");
-    os << "Help information:\n";
-    os << "This application loads TIFF and JPG images and allows processing of them using\n";
-    os << "Image Processing algorithms\n";
     os << "2023 Daniel Vasconcelos Gomes\n" ;
     os << "zlogdan.wordpress.com\n";
     outxt.writeInfo(os);
-
-    outxt.writeTo("Help instructions end.\n");
 }
 
 void MyFrame::OnExit(wxCommandEvent& event)
@@ -183,8 +178,8 @@ void MyFrame::OnNoduleRec(wxCommandEvent& event)
             outxt.writeTo("Error applying algorithm\n");
             return;
         }
-        ImageHelper.setFinalImageOpenCV(out);
-        showImage(out2, "Final");
+        ImageHelper.setFinalImageOpenCV(out2);
+        showImage(out, "Final");
         showImage(ImageHelper.getFinalImageOpenCV(), "Final2");
         outxt.writeTo("Algorithm applied correctly\n");
         ImageHelper.setFinalImage(spath);
@@ -227,6 +222,24 @@ MyFrame::ApplyAlgorithm(F& f, bool Gray)
     }
 }
 
+void MyFrame::onThreshold(wxCommandEvent& event)
+{
+    if (ImageHelper.getFinallImageInitiated() == true)
+    {
+        Mat out  = ImageHelper.getFinalImageOpenCV();
+        if (out.empty() == false)
+        {
+            out = ApplyThreShold(out, 0.0001);
+            ImageHelper.setFinalImageOpenCV(out);
+            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
+            outxt.writeTo("Algorithm applied correctly\n");
+            ImageHelper.setFinalGray(true);
+            return;
+        }
+    }
+    outxt.writeTo("Final image not yet set\n");
+}
+
 void MyFrame::onFaces(wxCommandEvent& event)
 {
     // It should work but only God knows why it is not
@@ -246,6 +259,7 @@ void MyFrame::onFaces(wxCommandEvent& event)
 void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
 {        
     auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
+    auto menuThresholdL = menuAlgo->Append(THRESHOLD_FINAL, "Apply Threshold", "Apply Threshold");
     menuAlgo->AppendSeparator();
     auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
     auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");

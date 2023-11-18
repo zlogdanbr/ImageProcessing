@@ -71,6 +71,7 @@ private:
     void onFlipV(wxCommandEvent& event);
     void onFlipH(wxCommandEvent& event);
     void onFlipA(wxCommandEvent& event);
+    void onThreshold(wxCommandEvent& event);
 
     void onCustomKernel(wxCommandEvent& event);
     void onFaces(wxCommandEvent& event);
@@ -87,7 +88,8 @@ private:
             FLIP_B ,
             CUSTKERNEL,
             FACE_DETEC,
-            ONE_ID_TO_ALL
+            ONE_ID_TO_ALL,
+            THRESHOLD_FINAL
     };
 
     void BinAllEvents()
@@ -100,6 +102,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
         Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
         Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
+        Bind(wxEVT_MENU, &MyFrame::onThreshold, this, THRESHOLD_FINAL);
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);        

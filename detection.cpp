@@ -145,14 +145,57 @@ Mat detect(const Mat& image)
 	return imgclone;
 }
 
+Mat detect2(const Mat& image)
+{
+	// the book does not say but you need to convert to a gray scale image
+	cv::Mat imgclone = image.clone();
+
+	// vector of keypoints
+	std::vector<cv::KeyPoint> keypoints;
+	// FAST detector with a threshold of 40
+	cv::Ptr<cv::FastFeatureDetector> ptrFAST = cv::FastFeatureDetector::create(40);
+	// detect the keypoints
+	ptrFAST->detect(imgclone, keypoints);
+
+	cv::drawKeypoints(image, // original image
+		keypoints, // vector of keypoints
+		imgclone, // the output image
+		cv::Scalar(255, 255, 255), // keypoint color
+		cv::DrawMatchesFlags::DRAW_OVER_OUTIMG);// drawing flag
+
+	return imgclone;
+}
+
 Mat custom_algo(const Mat& image)
 {
-	Mat inter = image.clone();
 
-	inter = detect(inter);
+	Mat img2 = convertograyScale(image);
+	showImage(image, "Original Image");
 
-	
-	return inter;
+	img2 = blurImageSmooth(img2, 3);
+	if (img2.empty() == false)
+	{
+		showImage(img2, "Image blurrer 3x3 Kernel");
+	}
+
+	img2 = blurImageSmooth(img2, 5);
+	if (img2.empty() == false)
+	{
+		showImage(img2, "Image blurrer 5x5 Kernel");
+	}
+
+	img2 = GaussianImageSmooth(img2, 5);
+	if (img2.empty() == false)
+	{
+		showImage(img2, "Gaussian 5x5 Kernel");
+	}
+
+	img2 = detect2(img2);
+	if (img2.empty() == false)
+	{
+		showImage(img2, "Detected");
+	}
+	return img2;
 }
 
 

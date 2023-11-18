@@ -32,9 +32,12 @@ bool saveImage(const std::string& image_path, Mat& img);
 Mat convertograyScale(const Mat& img);
 Mat equalizeGrayImage(const Mat& img);
 Mat equalizeColorImage(const Mat& img);
+
+
 Mat laplacian(const Mat& src);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
+Mat ApplyThreShold(const Mat& img, double threshold);
 
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
