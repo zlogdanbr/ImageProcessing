@@ -94,7 +94,6 @@ bool saveImage(const std::string& image_path, Mat& img)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 void showImage(const Mat& img, const std::string& title)
 {
-
     cv::namedWindow(title, cv::WINDOW_NORMAL);
     cv::resizeWindow(title, 400, 400);
     imshow(title, img);
@@ -203,8 +202,8 @@ Mat laplacian(const Mat& src)
     // Declare the variables we are going to use
     Mat src_gray, dst;
     int kernel_size = 9;
-    int scale = 3;
-    int delta = 2;
+    int scale = 1;
+    int delta = -1;
     int ddepth = CV_16S;
 
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
