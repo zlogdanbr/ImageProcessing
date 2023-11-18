@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _DETECT_ALGO_FILE_
+#define _DETECT_ALGO_FILE_
 
 #include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
@@ -14,3 +15,5 @@ Mat detectCorners(const Mat& image);
 Mat detect(const Mat& image);
 Mat detect2(const Mat& image);
 Mat custom_algo(const Mat& image);
+
+#endif

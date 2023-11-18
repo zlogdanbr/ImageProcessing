@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _MAIN_FRAME_MY_APP_DVG_
+#define _MAIN_FRAME_MY_APP_DVG_
 
 //--------------------------------------------------------------------------------------------------
 // Main frame of the application, a rather simple WxWigets UI
@@ -80,6 +81,9 @@ private:
 
     void onAllMenu(wxCommandEvent& event);
 
+    void onKeepFinalActive(wxCommandEvent& event);
+    void onNoKeepFinalActive(wxCommandEvent& event);
+
     enum  Opt 
     {
             ALGO_NODE_REC = 1,
@@ -89,7 +93,9 @@ private:
             CUSTKERNEL,
             FACE_DETEC,
             ONE_ID_TO_ALL,
-            THRESHOLD_FINAL
+            THRESHOLD_FINAL,
+            FINAL_KEEP,
+            FINAl_KEEP_NO
     };
 
     void BinAllEvents()
@@ -101,14 +107,26 @@ private:
         Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
         Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
         Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
-        Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);
+        Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);       
+        Bind(wxEVT_MENU, &MyFrame::onKeepFinalActive, this, FINAL_KEEP);
+        Bind(wxEVT_MENU, &MyFrame::onNoKeepFinalActive, this, FINAl_KEEP_NO);
         Bind(wxEVT_MENU, &MyFrame::onThreshold, this, THRESHOLD_FINAL);
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);        
     }
 
-    void AddSubitemsToMenu(wxMenu* menuAlgo);
+    void AddSubitemsToMenu(wxMenu* menuAlgo)
+    {
+        auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
+        auto menuThresholdL = menuAlgo->Append(THRESHOLD_FINAL, "Apply Threshold", "Apply Threshold");
+        menuAlgo->AppendSeparator();
+        auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
+        auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
+        auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
+        auto menuKeep = menuAlgo->Append(FINAL_KEEP, "Keep Final Active", "Keep Final Active");
+        auto menuNoKeep = menuAlgo->Append(FINAl_KEEP_NO, "Do not Keep Final Active", "Do not Keep Final Active");
+
+    }
 };
-
-
+#endif

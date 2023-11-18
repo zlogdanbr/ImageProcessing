@@ -78,6 +78,18 @@ void MyFrame::onHelpFile(wxCommandEvent& event)
     outxt.writeInfo(os);
 }
 
+void MyFrame::onKeepFinalActive(wxCommandEvent& event)
+{
+    ImageHelper.setKeepFinal(true);
+    outxt.writeTo("Keep Final Image Set\n");
+}
+
+void MyFrame::onNoKeepFinalActive(wxCommandEvent& event)
+{
+    ImageHelper.setKeepFinal(false);
+    outxt.writeTo("Do not keep Final Image Set\n");
+}
+
 void MyFrame::OnExit(wxCommandEvent& event)
 {
     Close();
@@ -107,6 +119,21 @@ void MyFrame::OnSave(wxCommandEvent& event)
                 outxt.writeTo(spath + "\n");
                 destroyAllWindows();
                 ImageHelper.clean();
+
+                if (ImageHelper.getKeepFinal() == true)
+                {
+                    Mat f = ImageHelper.getFinalImageOpenCV();
+                    destroyAllWindows();
+                    ImageHelper.clean();
+                    ImageHelper.setOrginalImageOpenCV(f);
+                    ImageHelper.setOriginalImage(path);
+                    showImage(f, "Original");
+                }
+                else
+                {
+                    destroyAllWindows();
+                    ImageHelper.clean();
+                }
             }
             else
             {
@@ -253,17 +280,6 @@ void MyFrame::onFaces(wxCommandEvent& event)
         outxt.writeTo("Maybe it is because of the OS.\n");
         outxt.writeTo("Please, try with Windows 10.\n");
     }
-    
-}
-
-void MyFrame::AddSubitemsToMenu(wxMenu* menuAlgo)
-{        
-    auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
-    auto menuThresholdL = menuAlgo->Append(THRESHOLD_FINAL, "Apply Threshold", "Apply Threshold");
-    menuAlgo->AppendSeparator();
-    auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
-    auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
-    auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");  
     
 }
 

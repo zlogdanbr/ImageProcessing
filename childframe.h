@@ -1,4 +1,7 @@
-#pragma once
+#ifndef _CHILD_FRAME_DEFS_
+#define _CHILD_FRAME_DEFS_
+
+
 #include "image_helper.h"
 #include <wx/grid.h>
 #include "opcvwrapper.h"
@@ -278,3 +281,5 @@ private:
         }
     }
 };
+
+#endif

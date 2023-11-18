@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _MY_APP_LOGS_
+#define _MY_APP_LOGS_
 
 #include "image_helper.h"
 #include "childframe.h"
@@ -42,3 +43,5 @@ private:
 
 
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _IMAGE_HELPER_FUNC_
+#define _IMAGE_HELPER_FUNC_
 //--------------------------------------------------------------------------------------------------
 // Helper class for converting images, manipulating them and storing
 // author: Daniel Vasconcelos Gomes 2023
@@ -90,6 +91,9 @@ public:
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };
 
+    void setKeepFinal(bool v) { keep_final = v; };
+    bool getKeepFinal() const { return keep_final; };
+
 private:
 
     CImageHelper(CImageHelper&) = delete;
@@ -103,6 +107,7 @@ private:
 
     bool original_initiated = false;
     bool final_initiated = false;
+    bool keep_final = false;
 
     bool final_isgray = false;
 
@@ -113,4 +118,5 @@ private:
 
 
 };
+#endif
 //--------------------------------------------------------------------------------------------------

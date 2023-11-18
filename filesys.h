@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _MYFILESYS_FUNC_
+#define _MYFILESYS_FUNC_
 //--------------------------------------------------------------------------------------------------
 // Wrapper functions over c++17 filesystem libray
 // author: Daniel Vasconcelos Gomes 2023
@@ -19,4 +20,5 @@ bool is_file(const std::string& _directory);
 bool create_dir(const std::string& _directory);
 uintmax_t getFileSize(const std::string& _file);
 
+#endif
 //--------------------------------------------------------------------------------------------------
