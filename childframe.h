@@ -163,7 +163,7 @@ private:
     wxPanel* basePanel = new wxPanel(this, -1);
     wxPanel* panel1{ new wxPanel(basePanel) };
 
-    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* baseSizer{ new wxBoxSizer(wxHORIZONTAL) };
     wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
 
     wxComboBox* comboBox1{ new wxComboBox(panel1, wxID_ANY, wxEmptyString, { 10, 10 } )};
@@ -210,8 +210,10 @@ private:
 
     void setControlslayout()
     {
+        this->SetSize(350, 70);
         // set base sizer
-        basePanel->SetSizer(baseSizer);
+        basePanel->SetSize(350, 70);
+        basePanel->SetSizer(baseSizer);    
 
         // add buttons to the horizontal box
         hbox1->Add(button1);
@@ -220,7 +222,8 @@ private:
         // add buttons to the horizontal box
         hbox1->Add(comboBox1);
 
-        // set horizontal base sizer at panel1 and panel2
+        // set horizontal base sizer at panel1
+        panel1->SetSize(350, 70);
         panel1->SetSizer(hbox1);
 
         // add panel1 to the base sizer at the base panel
