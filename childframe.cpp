@@ -6,9 +6,8 @@ CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ par
 
 }
 
-template<typename F>
 void
-CInputDialogBase::ApplyAlgorithm(F& f, bool Gray)
+CInputDialogBase::ApplyAlgorithm(Function1Parameter& f, bool Gray)
 {
 
     if (imghelper->getOriginalImageInitiated() == false)
@@ -56,9 +55,8 @@ CInputDialogBase::ApplyAlgorithm(F& f, bool Gray)
 
 }
 
-template<typename F>
 void
-CInputDialogBase::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
+CInputDialogBase::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {

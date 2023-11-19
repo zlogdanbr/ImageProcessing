@@ -9,6 +9,10 @@
 #include "logs.h"
 #include <functional>
 
+using Function1Parameter = std::function<Mat(Mat)>;
+using Function2Parameter = std::function<Mat(Mat, int)>;
+using Function1ParContainer = std::map < wxString, Function1Parameter >;
+using Function2ParContainer = std::map < wxString, Function2Parameter >;
 
 class CInputDialogBase : public wxFrame
 {
@@ -26,26 +30,8 @@ protected:
     CImageHelper* imghelper{ nullptr };
     CWriteLogs* outxt{ nullptr };
 
-    //--------------------------------------------------------------
-    // Components
-    //--------------------------------------------------------------
-    wxPanel* basePanel = new wxPanel(this, -1);
-    wxPanel* panel1{ new wxPanel(basePanel) };
-    wxPanel* panel2{ new wxPanel(basePanel, -1) };
-
-    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
-    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
-    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
-
-
-    template<typename F>
-    void
-        ApplyAlgorithm(F& f, bool Gray);
-
-    template<typename F>
-    void
-        ApplyAlgorithm(F& f, bool Gray, int kernel_size);
-
+    void ApplyAlgorithm(Function1Parameter& f, bool Gray);
+    void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
 
 
     // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
@@ -65,7 +51,15 @@ private:
 
     //--------------------------------------------------------------
     // Components
-    //-------------------------------------------------------------
+    //--------------------------------------------------------------
+    wxPanel* basePanel = new wxPanel(this, -1);
+    wxPanel* panel1{ new wxPanel(basePanel) };
+    wxPanel* panel2{ new wxPanel(basePanel, -1) };
+
+    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
+    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
+
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK")};
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel")};
     wxButton* button3{ new wxButton(panel1, wxID_ANY, "Clear")};
@@ -166,11 +160,17 @@ public:
 
 private:
     wxString SelectionText;
+    wxPanel* basePanel = new wxPanel(this, -1);
+    wxPanel* panel1{ new wxPanel(basePanel) };
+
+    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
+
     wxComboBox* comboBox1{ new wxComboBox(panel1, wxID_ANY, wxEmptyString, { 10, 10 } )};
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "Select") };
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
 
-    void fillFSimple()
+    void fillComboInfo()
     {
         fsimple["Convert to Gray Scale"] = convertograyScale;
         fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
@@ -182,16 +182,19 @@ private:
         fsimple["Detect Corners"] = detectCorners;
         fsimple["Detect features"] = detect;
         fsimple["Custom Algo"] = custom_algo;
-
         fsimple["Flip Image Horizontally"] = flipImageHorizontal;
         fsimple["Flip Image Vertically"] = flipImageVertical;
         fsimple["Flip Image"] = flipImage;
+
+        fmore["Blur Image"] = blurImageSmooth;
+        fmore["Gaussian"] = GaussianImageSmooth;
+        fmore["Median"] = MedianImageSmooth;
+        fmore["Apply Threshold"] = ApplyThreShold;
 
         comboBox1->Append("Convert to Gray Scale");
         comboBox1->Append("Equalize Gray Scale Image");
         comboBox1->Append("Equalize Color Scale Image");
         comboBox1->Append("Apply Laplacian");
-
         comboBox1->Append("Blur Image");
         comboBox1->Append("Gaussian");
         comboBox1->Append("Median");
@@ -203,14 +206,6 @@ private:
         comboBox1->Append("Flip Image Vertically");
         comboBox1->Append("Flip Image");
 
-    }
-
-    void fillFMore()
-    {
-        fmore["Blur Image"] = blurImageSmooth;
-        fmore["Gaussian"] = GaussianImageSmooth;
-        fmore["Median"] = MedianImageSmooth;
-        fmore["Apply Threshold"] = ApplyThreShold;
     }
 
     void setControlslayout()
@@ -231,15 +226,13 @@ private:
         // add panel1 to the base sizer at the base panel
         baseSizer->Add(panel1);
 
-        fillFSimple();
-        fillFMore();
-
+        fillComboInfo();
 
         Center();
     }
 
-    std::map < wxString, std::function<Mat(Mat)>> fsimple;
-    std::map < wxString, std::function<Mat(Mat, int)>> fmore;
+    Function1ParContainer fsimple;
+    Function2ParContainer fmore;
 
 
 };

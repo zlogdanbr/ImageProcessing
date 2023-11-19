@@ -49,38 +49,11 @@ public:
     void setFinalImageOpenCV(Mat& m) { Final_ImageOpenCVFormat = m; };
     bool getOriginalImageInitiated() const { return original_initiated; };
 
-    void clean()
-    {
-        original_initiated = false;
-
-        if (Final_ImageOpenCVFormat.empty() == false)
-        {
-            Final_ImageOpenCVFormat.deallocate();
-        }
-        if (Original_ImageOpenCVFormat.empty() == false)
-        {
-            Original_ImageOpenCVFormat.deallocate();
-        }
-    }
-
+    void clean();
     bool SaveImage(std::string& Path);
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };
-
-
-    void SetOriginalNew()
-    {
-        Mat savefinal =  Final_ImageOpenCVFormat.clone();
-        Mat saveOriginal = Original_ImageOpenCVFormat.clone();
-        destroyAllWindows();
-        clean();
-
-        setOrginalImageOpenCV(savefinal);
-        original_initiated = true;
-
-        showImage(savefinal, "Final");
-        
-    }
+    void SetOriginalNew();
 
 private:
 

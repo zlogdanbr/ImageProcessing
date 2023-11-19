@@ -7,6 +7,33 @@ std::string convertWxStringToString(const wxString wsx)
     return s.str();
 }
 
+void CImageHelper::clean()
+{
+    original_initiated = false;
+
+    if (Final_ImageOpenCVFormat.empty() == false)
+    {
+        Final_ImageOpenCVFormat.deallocate();
+    }
+    if (Original_ImageOpenCVFormat.empty() == false)
+    {
+        Original_ImageOpenCVFormat.deallocate();
+    }
+}
+
+void CImageHelper::SetOriginalNew()
+{
+    Mat savefinal = Final_ImageOpenCVFormat.clone();
+    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+    destroyAllWindows();
+    clean();
+
+    setOrginalImageOpenCV(savefinal);
+    original_initiated = true;
+
+    showImage(savefinal, "Final");
+
+}
 
 bool CImageHelper::SaveImage(std::string& Path)
 {
@@ -59,7 +86,6 @@ bool CImageHelper::convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
                     mixChannels(&cvImg, 1, &cvRGBImg, 1, mapping, 3);
                 } 
                 break;
-
             default:
                 break;
         }
