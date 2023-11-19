@@ -10,61 +10,96 @@ template<typename F>
 void
 CInputDialogBase::ApplyAlgorithm(F& f, bool Gray)
 {
-    auto spath = imghelper->getOriginalImage();
-    Mat img;
-    Mat out;
-    imghelper->setFinalGray(Gray);
 
-    if (loadImage(spath, img) == true)
+    if (imghelper->getOriginalImageInitiated() == false)
     {
-        out = f(img);
+        auto spath = imghelper->getOriginalImage();
+        Mat img;
+        Mat out;
+        imghelper->setFinalGray(Gray);
+
+        if (loadImage(spath, img) == true)
+        {
+            out = f(img);
+            if (out.empty() == false)
+            {
+                imghelper->setFinalImageOpenCV(out);
+                outxt->writeTo("Algorithm applied correctly\n");
+                imghelper->SetOriginalNew();
+            }
+            else
+            {
+                outxt->writeTo("Algorithm error\n");
+            }
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV());
         if (out.empty() == false)
         {
             imghelper->setFinalImageOpenCV(out);
-            showImage(imghelper->getFinalImageOpenCV(), "Final");
             outxt->writeTo("Algorithm applied correctly\n");
-            imghelper->setFinalGray(true);
-            imghelper->setFinalImage(spath);
+            imghelper->SetOriginalNew();
         }
         else
         {
             outxt->writeTo("Algorithm error\n");
         }
     }
-    else
-    {
-        outxt->writeTo("Image not loaded\n");
-    }
+
+
 }
 
 template<typename F>
 void
 CInputDialogBase::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
 {
-    auto spath = imghelper->getOriginalImage();
-    Mat img;
-    Mat out;
-    imghelper->setFinalGray(Gray);
-
-    if (loadImage(spath, img) == true)
+    if (imghelper->getOriginalImageInitiated() == false)
     {
-        out = f(img, kernel_size);
+        auto spath = imghelper->getOriginalImage();
+        Mat img;
+        Mat out;
+        imghelper->setFinalGray(Gray);
+
+        if (loadImage(spath, img) == true)
+        {
+            out = f(img, kernel_size);
+            if (out.empty() == false)
+            {
+                imghelper->setFinalImageOpenCV(out);
+                outxt->writeTo("Algorithm applied correctly\n");
+                imghelper->SetOriginalNew();
+            }
+            else
+            {
+                outxt->writeTo("Algorithm error\n");
+            }
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), kernel_size);
         if (out.empty() == false)
         {
             imghelper->setFinalImageOpenCV(out);
-            showImage(imghelper->getFinalImageOpenCV(), "Final");
             outxt->writeTo("Algorithm applied correctly\n");
-            imghelper->setFinalGray(true);
-            imghelper->setFinalImage(spath);
+            imghelper->SetOriginalNew();
         }
         else
         {
             outxt->writeTo("Algorithm error\n");
         }
-    }
-    else
-    {
-        outxt->writeTo("Image not loaded\n");
     }
 }
 
@@ -73,20 +108,19 @@ CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Alg
     setControlslayout();
 
     button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
-        {
-            // set values
-            int item = comboBox1->GetSelection();
-            SelectionText = comboBox1->GetValue();
-            DoFunction();
-            Close();
-        });
+    {
+        // set values
+        int item = comboBox1->GetSelection();
+        SelectionText = comboBox1->GetValue();
+        DoFunction();
+        Close();
+    });
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
-        {
-            // cancel
-            Close();
-        });
-
+    {
+        // cancel
+        Close();
+    });
 }
 
 CGridInputDialog::CGridInputDialog(wxFrame* parent):CInputDialogBase{ parent,"Custom Kernel Input"}
@@ -114,7 +148,13 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent):CInputDialogBase{ parent,"Cu
 
     button4->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
     {
-        wxFileDialog saveFileDialog(this, wxEmptyString, wxEmptyString, "kernel.dvg", "Text Files (*.dvg)|*.dvg|All Files (*.*)|*.*", wxFD_SAVE);
+        wxFileDialog saveFileDialog(    this, 
+                                        wxEmptyString, 
+                                        wxEmptyString, 
+                                        "kernel.dvg", 
+                                        "Text Files (*.dvg)|*.dvg|All Files (*.*)|*.*", 
+                                        wxFD_SAVE);
+
         if (saveFileDialog.ShowModal() == wxID_OK)
         {
             wxString spath = saveFileDialog.GetPath();
@@ -127,11 +167,11 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent):CInputDialogBase{ parent,"Cu
     button5->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
     {
         wxFileDialog openFileDialog(    this,
-                                    wxEmptyString,
-                                    wxEmptyString,
-                                    wxEmptyString,
-                                    "dvg files(*.dvg) | *.dvg",
-                                    wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+                                        wxEmptyString,
+                                        wxEmptyString,
+                                        wxEmptyString,
+                                        "dvg files(*.dvg) | *.dvg",
+                                        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
         if (openFileDialog.ShowModal() == wxID_OK)
         {
@@ -213,6 +253,7 @@ void CGridInputDialog::getGridData() const
                     imghelper->setFinalImageOpenCV(out);
                     showImage(out, "Final");
                     imghelper->setFinalGray(true);
+                    imghelper->SetOriginalNew();
                 }
                 else
                 {

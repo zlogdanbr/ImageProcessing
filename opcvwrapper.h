@@ -37,6 +37,7 @@ Mat equalizeColorImage(const Mat& img);
 Mat laplacian(const Mat& src);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
+Mat flipImage(const Mat& img);
 Mat ApplyThreShold(const Mat& img, double threshold);
 
 Mat blurImageSmooth(const Mat& img, int kernel_size);
@@ -45,7 +46,7 @@ Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel);
 
 
-Mat flipImage(const Mat& img);
+
 Mat SumImages(const Mat& img1, const Mat& img2);
 Mat SubImages(const Mat& img1, const Mat& img2);
 Mat XorImages(const Mat& img1, const Mat& img2);

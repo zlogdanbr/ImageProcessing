@@ -53,13 +53,7 @@ private:
                                         ) 
                         };
 
- 
-
     CWriteLogs outxt{ textCtrl };    
-
-    template<typename F>
-    void
-        ApplyAlgorithm(F& f, bool Gray);
 
     //---------------------------------------------------------------
     // event handlers------------------------------------------------
@@ -68,49 +62,24 @@ private:
     void OnClose(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
-    void OnNoduleRec(wxCommandEvent& event);
-    void onFlipV(wxCommandEvent& event);
-    void onFlipH(wxCommandEvent& event);
-    void onFlipA(wxCommandEvent& event);
-    void onThreshold(wxCommandEvent& event);
-
     void onCustomKernel(wxCommandEvent& event);
-    void onFaces(wxCommandEvent& event);
-
+    void onAllMenu(wxCommandEvent& event);
     void onHelpFile(wxCommandEvent& event);
 
-    void onAllMenu(wxCommandEvent& event);
-
-    void onKeepFinalActive(wxCommandEvent& event);
-    void onNoKeepFinalActive(wxCommandEvent& event);
+    
 
     enum  Opt 
     {
-            ALGO_NODE_REC = 1,
-            FLIP_H ,
-            FLIP_V ,
-            FLIP_B ,
-            CUSTKERNEL,
-            FACE_DETEC,
-            ONE_ID_TO_ALL,
-            THRESHOLD_FINAL,
-            FINAL_KEEP,
-            FINAl_KEEP_NO
+        CUSTKERNEL,
+        ONE_ID_TO_ALL,
     };
 
     void BinAllEvents()
     {
         Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
-        Bind(wxEVT_MENU, &MyFrame::OnNoduleRec, this, ALGO_NODE_REC);
         Bind(wxEVT_MENU, &MyFrame::OnClose, this, wxID_CLOSE);
         Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
-        Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);
-        Bind(wxEVT_MENU, &MyFrame::onFlipV, this, FLIP_H);
-        Bind(wxEVT_MENU, &MyFrame::onFlipH, this, FLIP_V);
-        Bind(wxEVT_MENU, &MyFrame::onFlipA, this, FLIP_B);       
-        Bind(wxEVT_MENU, &MyFrame::onKeepFinalActive, this, FINAL_KEEP);
-        Bind(wxEVT_MENU, &MyFrame::onNoKeepFinalActive, this, FINAl_KEEP_NO);
-        Bind(wxEVT_MENU, &MyFrame::onThreshold, this, THRESHOLD_FINAL);
+        Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);     
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);        
@@ -119,14 +88,8 @@ private:
     void AddSubitemsToMenu(wxMenu* menuAlgo)
     {
         auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
-        auto menuThresholdL = menuAlgo->Append(THRESHOLD_FINAL, "Apply Threshold", "Apply Threshold");
-        menuAlgo->AppendSeparator();
-        auto menuFlipH = menuAlgo->Append(FLIP_H, "Flip Image Horizontal", "lip Image Horizontal");
-        auto menuFlipV = menuAlgo->Append(FLIP_V, "Flip Image Vertical", "Flip Image Vertical");
-        auto menuFlip = menuAlgo->Append(FLIP_B, "Flip Image", "Flip Image");
-        auto menuKeep = menuAlgo->Append(FINAL_KEEP, "Keep Final Active", "Keep Final Active");
-        auto menuNoKeep = menuAlgo->Append(FINAl_KEEP_NO, "Do not Keep Final Active", "Do not Keep Final Active");
-
+        auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
     }
+
 };
 #endif

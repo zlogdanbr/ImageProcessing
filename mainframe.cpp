@@ -33,14 +33,6 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     auto menuAlgo = new wxMenu();
     AddSubitemsToMenu(menuAlgo);
 
-    // ------------------------------------------------------------------------------  
-    // menu   custom
-    // ------------------------------------------------------------------------------  
-    auto menuCustom = new wxMenu();
-    auto menuItemNode = menuCustom->Append(ALGO_NODE_REC, "Find Contours\tCTRL+F", "Find Contours");
-    auto menuCtsKernl = menuCustom->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
-    auto menuDetecFaces = menuCustom->Append(FACE_DETEC, "Find Faces", "Find Faces");
-
     // -----------------------------------------------------------------------------  
     // menu   help
     // -----------------------------------------------------------------------------
@@ -52,7 +44,6 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // -----------------------------------------------------------------------------
     mainMenu->Append(menuFile, "&File");
     mainMenu->Append(menuAlgo, "&Algorithms");
-    mainMenu->Append(menuCustom, "A&dvanced");
     mainMenu->Append(menuHelp, "&Help");    
 
     // -----------------------------------------------------------------------------  
@@ -72,22 +63,8 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
 void MyFrame::onHelpFile(wxCommandEvent& event)
 {
     std::stringstream os;
-    outxt.writeTo("Help instructions loaded.\n");
-    os << "2023 Daniel Vasconcelos Gomes\n" ;
-    os << "zlogdan.wordpress.com\n";
+    os << "2023 Daniel Vasconcelos Gomes zlogdan.wordpress.com \n" ;
     outxt.writeInfo(os);
-}
-
-void MyFrame::onKeepFinalActive(wxCommandEvent& event)
-{
-    ImageHelper.setKeepFinal(true);
-    outxt.writeTo("Keep Final Image Set\n");
-}
-
-void MyFrame::onNoKeepFinalActive(wxCommandEvent& event)
-{
-    ImageHelper.setKeepFinal(false);
-    outxt.writeTo("Do not keep Final Image Set\n");
 }
 
 void MyFrame::OnExit(wxCommandEvent& event)
@@ -106,7 +83,11 @@ void MyFrame::OnSave(wxCommandEvent& event)
     if (ImageHelper.getOriginalImageInitiated() == true)
     {
 
-        wxFileDialog saveFileDialog(this, wxEmptyString, wxEmptyString, "MyFile.jpg", "Text Files (*.jpg)|*.jpg|All Files (*.*)|*.*", wxFD_SAVE);
+        wxFileDialog saveFileDialog(    this, 
+                                        wxEmptyString, 
+                                        wxEmptyString, 
+                                        "MyFile.jpg", "Text Files (*.jpg)|*.jpg|All Files (*.*)|*.*",
+                                        wxFD_SAVE);
         if (saveFileDialog.ShowModal() == wxID_OK) 
         {
 
@@ -117,23 +98,6 @@ void MyFrame::OnSave(wxCommandEvent& event)
             {
                 outxt.writeTo("Image sucessfully saved as:\n");
                 outxt.writeTo(spath + "\n");
-                destroyAllWindows();
-                ImageHelper.clean();
-
-                if (ImageHelper.getKeepFinal() == true)
-                {
-                    Mat f = ImageHelper.getFinalImageOpenCV();
-                    destroyAllWindows();
-                    ImageHelper.clean();
-                    ImageHelper.setOrginalImageOpenCV(f);
-                    ImageHelper.setOriginalImage(path);
-                    showImage(f, "Original");
-                }
-                else
-                {
-                    destroyAllWindows();
-                    ImageHelper.clean();
-                }
             }
             else
             {
@@ -172,9 +136,11 @@ void MyFrame::OnOpen(wxCommandEvent& event)
             Mat img;
             if (loadImage(spath, img) == true)
             {
+                ImageHelper.clean();
                 ImageHelper.setOrginalImageOpenCV(img);
                 showImage(ImageHelper.getOrginalImageOpenCV(), "Original");
                 outxt.writeTo("Image loaded correctly\n");
+                ImageHelper.setOriginalImage(spath);
             }
             else
             {
@@ -186,101 +152,6 @@ void MyFrame::OnOpen(wxCommandEvent& event)
             outxt.writeTo("Error loading Image\n");
         }
     }
-}
-
-void MyFrame::OnNoduleRec(wxCommandEvent& event)
-{
-    auto spath = ImageHelper.getOriginalImage();
-    ImageHelper.setFinalGray(true);
-    NoduleRec n{ spath };
-
-    if (n.ErrorInOriginalLoading() == false)
-    {
-        n.findContornos(155);
-        n.HighlightRoi();
-        Mat out2 = n.getEdgesImg();
-        Mat out = n.getFinalImg();
-        if (out.empty())
-        {
-            outxt.writeTo("Error applying algorithm\n");
-            return;
-        }
-        ImageHelper.setFinalImageOpenCV(out2);
-        showImage(out, "Final");
-        showImage(ImageHelper.getFinalImageOpenCV(), "Final2");
-        outxt.writeTo("Algorithm applied correctly\n");
-        ImageHelper.setFinalImage(spath);
-    }
-    else
-    {
-        outxt.writeTo("Error loading image\n");
-    }
-
-}
-
-template<typename F>
-void
-MyFrame::ApplyAlgorithm(F& f, bool Gray)
-{
-    auto spath = ImageHelper.getOriginalImage();
-    Mat img;
-    Mat out;
-    ImageHelper.setFinalGray(Gray);
-
-    if (loadImage(spath, img) == true)
-    {
-        out = f(img);
-        if (out.empty() == false)
-        {
-            ImageHelper.setFinalImageOpenCV(out);
-            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
-            outxt.writeTo("Algorithm applied correctly\n");
-            ImageHelper.setFinalGray(true);
-            ImageHelper.setFinalImage(spath);
-        }
-        else
-        {
-            outxt.writeTo("Algorithm error\n");
-        }
-    }
-    else
-    {
-        outxt.writeTo("Image not loaded\n");
-    }
-}
-
-void MyFrame::onThreshold(wxCommandEvent& event)
-{
-    if (ImageHelper.getFinallImageInitiated() == true)
-    {
-        Mat out  = ImageHelper.getFinalImageOpenCV();
-        if (out.empty() == false)
-        {
-            out = ApplyThreShold(out, 0.0001);
-            ImageHelper.setFinalImageOpenCV(out);
-            showImage(ImageHelper.getFinalImageOpenCV(), "Final");
-            outxt.writeTo("Algorithm applied correctly\n");
-            ImageHelper.setFinalGray(true);
-            return;
-        }
-    }
-    outxt.writeTo("Final image not yet set\n");
-}
-
-void MyFrame::onFaces(wxCommandEvent& event)
-{
-    // It should work but only God knows why it is not
-    try
-    {
-        ApplyAlgorithm(detectEyes, false);
-    }
-    catch (...)
-    {
-        outxt.writeTo("Only God knows why it does not work.\n");
-        outxt.writeTo("Maybe it is because of the OS.\n");
-        outxt.writeTo("Please, try with Windows 10.\n");
-    }
-    
 }
 
 void MyFrame::onAllMenu(wxCommandEvent& event)
@@ -311,20 +182,5 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
         outxt.writeTo("Image not loaded\n");
     }
 
-}
-
-void MyFrame::onFlipV(wxCommandEvent& event)
-{
-    ApplyAlgorithm(flipImageHorizontal, false);
-}
-
-void MyFrame::onFlipH(wxCommandEvent& event)
-{
-    ApplyAlgorithm(flipImageVertical, false);
-}
-
-void MyFrame::onFlipA(wxCommandEvent& event)
-{
-    ApplyAlgorithm(flipImage, false);
 }
 

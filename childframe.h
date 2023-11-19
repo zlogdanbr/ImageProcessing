@@ -179,6 +179,13 @@ private:
         fsimple["Detect Corners"] = detectCorners;
         fsimple["Detect features"] = detect;
         fsimple["Custom Algo"] = custom_algo;
+        fsimple["Detect Corners"] = detectCorners;
+        fsimple["Detect features"] = detect;
+        fsimple["Custom Algo"] = custom_algo;
+
+        fsimple["Flip Image Horizontally"] = flipImageHorizontal;
+        fsimple["Flip Image Vertically"] = flipImageVertical;
+        fsimple["Flip Image"] = flipImage;
 
         comboBox1->Append("Convert to Gray Scale");
         comboBox1->Append("Equalize Gray Scale Image");
@@ -191,6 +198,10 @@ private:
         comboBox1->Append("Detect Corners");
         comboBox1->Append("Detect features");
         comboBox1->Append("Custom Algo");
+        comboBox1->Append("Apply Threshold");
+        comboBox1->Append("Flip Image Horizontally");
+        comboBox1->Append("Flip Image Vertically");
+        comboBox1->Append("Flip Image");
 
     }
 
@@ -199,6 +210,7 @@ private:
         fmore["Blur Image"] = blurImageSmooth;
         fmore["Gaussian"] = GaussianImageSmooth;
         fmore["Median"] = MedianImageSmooth;
+        fmore["Apply Threshold"] = ApplyThreShold;
     }
 
     void setControlslayout()

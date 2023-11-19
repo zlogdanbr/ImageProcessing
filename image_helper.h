@@ -34,48 +34,25 @@ public:
         clean();
     }
 
-    wxFileName getImagePath(wxString& path)
-    {
-        wxFileName imagePath;
-        imagePath.SetFullName(path);
-        return imagePath;
-    }
-
     bool setOriginalImage(std::string& path)
     {
         original = path;
-        original_initiated = file_exists(original);
+        original_initiated = file_exists(path);
         return original_initiated;
     }
 
-    bool setFinalImage(std::string& path)
-    {
-        finalimage = path;
-        final_initiated = file_exists(finalimage);
-        return final_initiated;
-    }
-
-    std::string  getOriginalImage()const { return original; };
-    std::string  getFinalImage()const { return finalimage; };
+    std::string getOriginalImage() { return original; };
 
     Mat getOrginalImageOpenCV() const { return Original_ImageOpenCVFormat; };
     Mat getFinalImageOpenCV() const { return Final_ImageOpenCVFormat; };
-
     void setOrginalImageOpenCV(Mat& m) { Original_ImageOpenCVFormat = m; };
     void setFinalImageOpenCV(Mat& m) { Final_ImageOpenCVFormat = m; };
-
     bool getOriginalImageInitiated() const { return original_initiated; };
-    bool getFinallImageInitiated() const { return final_initiated; }
-
-    std::unique_ptr<unsigned char> getRawData(Mat& m) const;
 
     void clean()
     {
-        original.clear();
-        finalimage.clear();
         original_initiated = false;
-        final_initiated = false;
-        final_isgray = false;
+
         if (Final_ImageOpenCVFormat.empty() == false)
         {
             Final_ImageOpenCVFormat.deallocate();
@@ -87,29 +64,33 @@ public:
     }
 
     bool SaveImage(std::string& Path);
-
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };
 
-    void setKeepFinal(bool v) { keep_final = v; };
-    bool getKeepFinal() const { return keep_final; };
+
+    void SetOriginalNew()
+    {
+        Mat savefinal =  Final_ImageOpenCVFormat.clone();
+        Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+        destroyAllWindows();
+        clean();
+
+        setOrginalImageOpenCV(savefinal);
+        original_initiated = true;
+
+        showImage(savefinal, "Final");
+        
+    }
 
 private:
 
     CImageHelper(CImageHelper&) = delete;
     CImageHelper& operator=(CImageHelper&) = delete;
-
-    std::string  original;
-    std::string  finalimage;
-
     Mat Final_ImageOpenCVFormat;
     Mat Original_ImageOpenCVFormat;
-
     bool original_initiated = false;
-    bool final_initiated = false;
-    bool keep_final = false;
-
     bool final_isgray = false;
+    std::string original = "";
 
     // ------------------------------------------------------------------------------------------------------------
     // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
