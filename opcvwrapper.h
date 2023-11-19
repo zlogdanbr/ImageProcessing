@@ -50,11 +50,7 @@ Mat SumImages(const Mat& img1, const Mat& img2);
 Mat SubImages(const Mat& img1, const Mat& img2);
 Mat XorImages(const Mat& img1, const Mat& img2);
 
-Mat convertRectoImg(Rect& r, Mat& img);
-std::vector<Mat> splitChannel(Mat& img);
-void segmentationOfROI(Mat& img, Rect& roi,int,int,int);
-int findcontours(const Mat& img, RoiAretype& contours, std::vector<Vec4i>& hierarchy, int thresh, Mat& edges);
-void drawCountour(RoiAretype& contours, Mat& img, std::vector<Vec4i>& hierarchy);
+
 
 #endif
 

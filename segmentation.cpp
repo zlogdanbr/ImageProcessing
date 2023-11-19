@@ -1,5 +1,5 @@
 #include "segmentation.h"
-
+#include "detection.h"
 
 bool NoduleRec::findContornos(int threshold)
 {

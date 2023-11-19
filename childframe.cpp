@@ -6,6 +6,68 @@ CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ par
 
 }
 
+template<typename F>
+void
+CInputDialogBase::ApplyAlgorithm(F& f, bool Gray)
+{
+    auto spath = imghelper->getOriginalImage();
+    Mat img;
+    Mat out;
+    imghelper->setFinalGray(Gray);
+
+    if (loadImage(spath, img) == true)
+    {
+        out = f(img);
+        if (out.empty() == false)
+        {
+            imghelper->setFinalImageOpenCV(out);
+            showImage(imghelper->getFinalImageOpenCV(), "Final");
+            outxt->writeTo("Algorithm applied correctly\n");
+            imghelper->setFinalGray(true);
+            imghelper->setFinalImage(spath);
+        }
+        else
+        {
+            outxt->writeTo("Algorithm error\n");
+        }
+    }
+    else
+    {
+        outxt->writeTo("Image not loaded\n");
+    }
+}
+
+template<typename F>
+void
+CInputDialogBase::ApplyAlgorithm(F& f, bool Gray, int kernel_size)
+{
+    auto spath = imghelper->getOriginalImage();
+    Mat img;
+    Mat out;
+    imghelper->setFinalGray(Gray);
+
+    if (loadImage(spath, img) == true)
+    {
+        out = f(img, kernel_size);
+        if (out.empty() == false)
+        {
+            imghelper->setFinalImageOpenCV(out);
+            showImage(imghelper->getFinalImageOpenCV(), "Final");
+            outxt->writeTo("Algorithm applied correctly\n");
+            imghelper->setFinalGray(true);
+            imghelper->setFinalImage(spath);
+        }
+        else
+        {
+            outxt->writeTo("Algorithm error\n");
+        }
+    }
+    else
+    {
+        outxt->writeTo("Image not loaded\n");
+    }
+}
+
 CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Algorithms Selection" }
 {
     setControlslayout();

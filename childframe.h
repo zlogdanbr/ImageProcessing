@@ -38,6 +38,16 @@ protected:
     wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
 
 
+    template<typename F>
+    void
+        ApplyAlgorithm(F& f, bool Gray);
+
+    template<typename F>
+    void
+        ApplyAlgorithm(F& f, bool Gray, int kernel_size);
+
+
+
     // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
     virtual void setControlslayout() = 0;
 
@@ -219,67 +229,7 @@ private:
     std::map < wxString, std::function<Mat(Mat)>> fsimple;
     std::map < wxString, std::function<Mat(Mat, int)>> fmore;
 
-    template<typename F>
-    void
-        ApplyAlgorithm(F& f, bool Gray)
-    {
-        auto spath = imghelper->getOriginalImage();
-        Mat img;
-        Mat out;
-        imghelper->setFinalGray(Gray);
 
-        if (loadImage(spath, img) == true)
-        {
-            out = f(img);
-            if (out.empty() == false)
-            {
-                imghelper->setFinalImageOpenCV(out);
-                showImage(imghelper->getFinalImageOpenCV(), "Final");
-                outxt->writeTo("Algorithm applied correctly\n");
-                imghelper->setFinalGray(true);
-                imghelper->setFinalImage(spath);
-            }
-            else
-            {
-                outxt->writeTo("Algorithm error\n");
-            }
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-
-    template<typename F>
-    void
-        ApplyAlgorithm(F& f, bool Gray, int kernel_size)
-    {
-        auto spath = imghelper->getOriginalImage();
-        Mat img;
-        Mat out;
-        imghelper->setFinalGray(Gray);
-
-        if (loadImage(spath, img) == true)
-        {
-            out = f(img, kernel_size);
-            if (out.empty() == false)
-            {
-                imghelper->setFinalImageOpenCV(out);
-                showImage(imghelper->getFinalImageOpenCV(), "Final");
-                outxt->writeTo("Algorithm applied correctly\n");
-                imghelper->setFinalGray(true);
-                imghelper->setFinalImage(spath);
-            }
-            else
-            {
-                outxt->writeTo("Algorithm error\n");
-            }
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
 };
 
 #endif
