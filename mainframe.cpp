@@ -80,78 +80,14 @@ void MyFrame::OnClose(wxCommandEvent& event)
 
 void MyFrame::OnSave(wxCommandEvent& event)
 {
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-
-        wxFileDialog saveFileDialog(    this, 
-                                        wxEmptyString, 
-                                        wxEmptyString, 
-                                        "MyFile.jpg", "Text Files (*.jpg)|*.jpg|All Files (*.*)|*.*",
-                                        wxFD_SAVE);
-        if (saveFileDialog.ShowModal() == wxID_OK) 
-        {
-
-            wxString spath = saveFileDialog.GetPath();
-            std::string path = convertWxStringToString(spath);
-
-            if (ImageHelper.SaveImage(path))
-            {
-                outxt.writeTo("Image sucessfully saved as:\n");
-                outxt.writeTo(spath + "\n");
-            }
-            else
-            {
-                outxt.writeTo("Error saving image.\n");
-            }
-        }
-        else
-        {
-            outxt.writeTo("Error saving image.\n");
-            return;
-        }
-    }
-    else
-    {
-        outxt.writeTo("Image has not been loaded.\n");
-    }
+    CSaveImage* saveFileCustom{ new CSaveImage(&ImageHelper,&outxt) };
+    saveFileCustom->SaveFile(*this);
 }
 
 void MyFrame::OnOpen(wxCommandEvent& event)
 {
-    wxFileDialog openFileDialog(    this,
-                                    wxEmptyString,
-                                    wxEmptyString,
-                                    wxEmptyString,
-                                    "jpg and tif files(*.jpg; *.tif) | *.jpg; *.tif",
-                                    wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-
-    ImageHelper.clean();
-    openFileDialog.SetFilterIndex(0);
-    if (openFileDialog.ShowModal() == wxID_OK)
-    {     
-        wxString path =  openFileDialog.GetPath();
-        std::string spath = convertWxStringToString(path);
-        if (ImageHelper.setOriginalImage(spath))
-        {
-            Mat img;
-            if (loadImage(spath, img) == true)
-            {
-                ImageHelper.clean();
-                ImageHelper.setOrginalImageOpenCV(img);
-                showImage(ImageHelper.getOrginalImageOpenCV(), "Original");
-                outxt.writeTo("Image loaded correctly\n");
-                ImageHelper.setOriginalImage(spath);
-            }
-            else
-            {
-                outxt.writeTo("Error loading Image\n");
-            }
-        }
-        else
-        {
-            outxt.writeTo("Error loading Image\n");
-        }
-    }
+    COpenImage* openFileCustom { new COpenImage(&ImageHelper,&outxt)};
+    openFileCustom->OpenFile(*this);
 }
 
 void MyFrame::onAllMenu(wxCommandEvent& event)

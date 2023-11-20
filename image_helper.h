@@ -66,12 +66,6 @@ private:
     std::string original = "";
 
 
-    // ------------------------------------------------------------------------------------------------------------
-    // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
-    // ------------------------------------------------------------------------------------------------------------
-    bool convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const;
-
-
 };
 #endif
 //--------------------------------------------------------------------------------------------------

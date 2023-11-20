@@ -41,64 +41,12 @@ bool CImageHelper::SaveImage(std::string& Path)
 {
     wxString s = convertWxStringToString(Path);
     Mat final_image = getFinalImageOpenCV();
-    if (getFinalGray() == false)
+
+    std::string spath = convertWxStringToString(Path);        
+    if (saveImage(spath, final_image))
     {
-        wxImage ImgToSave;
-        if (convertOpenCVMatToWxImage(final_image, ImgToSave))
-        {
-            return ImgToSave.SaveFile(s);
-        }
-        return false;
+        return true;
     }
-    else
-    {
-        std::string spath = convertWxStringToString(Path);        
-        if (saveImage(spath, final_image))
-        {
-            return true;
-        }
-        return false;
-    }
-}
+    return false;
 
-bool CImageHelper::convertOpenCVMatToWxImage(Mat& cvImg, wxImage& wxImg) const
-{
-    try
-    {
-        // data dimension
-        int w = cvImg.cols;
-        int h = cvImg.rows;
-        int size = w * h * 3 * sizeof(unsigned char);
-
-        // allocate memory for internal wxImage data
-        std::unique_ptr<unsigned char> wxData{ new unsigned char(size) };
-
-        if (wxData == nullptr)
-        {
-            return false;
-        }
-
-        // the matrix stores BGR image for conversion
-        Mat cvRGBImg = Mat(h, w, CV_8UC3, wxData.get());
-        switch (cvImg.channels())
-        {
-            case 3: // 3-channel case: swap R&B channels
-                {
-                    int mapping[] = { 0,2,1,1,2,0 }; // CV(BGR) to WX(RGB)
-                    mixChannels(&cvImg, 1, &cvRGBImg, 1, mapping, 3);
-                } 
-                break;
-            default:
-                break;
-        }
-
-        wxImg.Destroy(); // free existing data if there's any
-        wxImg = wxImage(w, h, wxData.release());
-    }
-    catch (...)
-    {
-        return false;
-    }
-
-    return true;
 }

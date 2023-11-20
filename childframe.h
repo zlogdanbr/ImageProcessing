@@ -14,6 +14,42 @@ using Function2Parameter = std::function<Mat(Mat, int)>;
 using Function1ParContainer = std::map < wxString, Function1Parameter >;
 using Function2ParContainer = std::map < wxString, Function2Parameter >;
 
+class COpenImage
+{
+public:
+    COpenImage(CImageHelper* imghelper, CWriteLogs* outxt);
+    void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
+    void setLogs(CWriteLogs* l) { outxt = l; };
+
+    void OpenFile(wxFrame& frame);
+
+private:
+
+    //--------------------------------------------------------------
+    // Helpers
+    //--------------------------------------------------------------
+    CImageHelper* imghelper{ nullptr };
+    CWriteLogs* outxt{ nullptr };
+};
+
+class CSaveImage
+{
+public:
+    CSaveImage(CImageHelper* imghelper, CWriteLogs* outxt);
+    void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
+    void setLogs(CWriteLogs* l) { outxt = l; };
+
+    void SaveFile(wxFrame& frame);
+
+private:
+
+    //--------------------------------------------------------------
+    // Helpers
+    //--------------------------------------------------------------
+    CImageHelper* imghelper{ nullptr };
+    CWriteLogs* outxt{ nullptr };
+};
+
 class CInputDialogBase : public wxFrame
 {
 public:
