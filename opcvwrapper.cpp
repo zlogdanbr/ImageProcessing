@@ -1,5 +1,7 @@
 ﻿#include "opcvwrapper.h"
-#include <mutex> 
+#include "dmath.h"
+
+using namespace math_util;
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool loadImage(const std::string& image_path, Mat& img)
@@ -184,12 +186,12 @@ Mat GaussianImageSmooth(const Mat& img, int kernel_size)
     return Blurred;
 }
 
-Mat ApplyThreShold(const Mat& img, double threshold)
+Mat ApplyThreShold(const Mat& img)
 {
     cv::Mat out;
     cv::threshold(img,
         out,
-        threshold,
+        1,
         255,
         cv::THRESH_BINARY);
     return out;
@@ -243,4 +245,148 @@ Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel)
                 img.depth(),
                 kernel);
     return final;
+}
+
+/* -------------------------------------------------------------------------------------------
+OpenCV 3 Computer Vision
+Application Programming
+Cookbook
+Third Edition
+Robert Laganiere
+Page [ 188 ]
+----------------------------------------------------------------------------------------------*/
+Mat ApplySobelX(const Mat& img, int kernel_size)
+{
+    Mat sobelX;
+    cv::Sobel(img, // input
+        sobelX, // output
+        CV_8U, // image type
+        1, 0, // kernel specification
+        kernel_size, // size of the square kernel
+        0.4, 128); // scale and offset
+    return sobelX;
+}
+
+/* -------------------------------------------------------------------------------------------
+OpenCV 3 Computer Vision
+Application Programming
+Cookbook
+Third Edition
+Robert Laganiere
+Page [ 188 ]
+----------------------------------------------------------------------------------------------*/
+Mat ApplySobelY(const Mat& img, int kernel_size)
+{
+    Mat sobelY;
+
+    cv::Sobel(img, // input
+        sobelY, // output
+        CV_8U, // image type
+        0, 1, // kernel specification
+        kernel_size, // size of the square kernel
+        0.4, 128); // scale and offset
+
+    return sobelY;
+}
+
+/* -------------------------------------------------------------------------------------------
+OpenCV 3 Computer Vision
+Application Programming
+Cookbook
+Third Edition
+Robert Laganiere
+Page [ 189 ]
+Note: The author uses CV_16U so it will not work unless you match with the above calls
+----------------------------------------------------------------------------------------------*/
+Mat ApplySobel(const Mat& img, int kernel_size)
+{
+    // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
+    GaussianBlur(img, img, Size(3, 3), 0, 0, BORDER_DEFAULT);
+    Mat src_gray = convertograyScale(img);
+
+    Mat sobelX = ApplySobelX(src_gray, kernel_size);
+    Mat sobelY = ApplySobelY(src_gray, kernel_size);
+
+    // Compute norm of Sobel
+    cv::Sobel(src_gray, sobelX, CV_8U, 1, 0);
+    cv::Sobel(src_gray, sobelY, CV_8U, 0, 1);
+    cv::Mat sobel;
+    //compute the L1 norm
+    sobel = abs(sobelX) + abs(sobelY);
+    return sobel;
+}
+
+Mat ApplyCanny(const Mat& img)
+{
+    Mat contours;
+    //Apply Canny algorithm
+    cv::Canny(img, // gray-level image
+        contours, // output contours
+        125, // low threshold
+        350); // high threshold
+    return img;
+}
+
+
+//https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
+Mat ApplyHoughTransform(const Mat& img, int opt)
+{
+    Mat dst;
+    Mat cdst;
+    Mat cdstP;
+
+    // Apply Canny algorithm
+    cv::Mat contours;
+    Canny(img, dst, 50, 200, 3);
+
+    // Copy edges to the images that will display the results in BGR
+    cvtColor(dst, cdst, COLOR_GRAY2BGR);
+    cdstP = cdst.clone();
+    // Standard Hough Line Transform
+    std::vector<Vec2f> lines; // will hold the results of the detection
+    HoughLines(dst, lines, 1, CV_PI / 180, 150, 0, 0); // runs the actual detection
+    // Draw the lines
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        float rho = lines[i][0], theta = lines[i][1];
+        Point pt1, pt2;
+        double a = cos(theta), b = sin(theta);
+        double x0 = a * rho, y0 = b * rho;
+        pt1.x = cvRound(x0 + 1000 * (-b));
+        pt1.y = cvRound(y0 + 1000 * (a));
+        pt2.x = cvRound(x0 - 1000 * (-b));
+        pt2.y = cvRound(y0 - 1000 * (a));
+        line(cdst, pt1, pt2, Scalar(0, 0, 255), 3, LINE_AA);
+    }
+    // Probabilistic Line Transform
+    std::vector<Vec4i> linesP; // will hold the results of the detection
+    HoughLinesP(dst, linesP, 1, CV_PI / 180, 50, 50, 10); // runs the actual detection
+    // Draw the lines
+    for (size_t i = 0; i < linesP.size(); i++)
+    {
+        Vec4i l = linesP[i];
+        line(cdstP, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 3, LINE_AA);
+    }
+
+    if ( opt == 0 )
+    {
+        // Standard Hough Line Transform
+        return cdst;
+    }
+    else
+    {
+        // Probabilistic Line Transform
+        return cdstP;
+    }
+
+}
+
+Mat ApplyHoughTransformRegular(const Mat& img)
+{
+    return ApplyHoughTransform(img, 0);
+}
+
+Mat ApplyHoughTransformReProbabilistic(const Mat& img)
+{
+    return ApplyHoughTransform(img, 1);
 }

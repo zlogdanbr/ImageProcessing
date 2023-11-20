@@ -17,9 +17,9 @@ Mat detectCorners(const Mat& image);
 Mat detect(const Mat& image);
 Mat custom_algo(const Mat& image);
 Mat convertRectoImg(Rect& r, Mat& img);
+Mat findcontours(const Mat& img, RoiAretype& contours, std::vector<Vec4i>& hierarchy, int thresh);
 std::vector<Mat> splitChannel(Mat& img);
 void segmentationOfROI(Mat& img, Rect& roi, int, int, int);
-int findcontours(const Mat& img, RoiAretype& contours, std::vector<Vec4i>& hierarchy, int thresh, Mat& edges);
 void drawCountour(RoiAretype& contours, Mat& img, std::vector<Vec4i>& hierarchy);
 
 #endif

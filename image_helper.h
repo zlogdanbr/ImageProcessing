@@ -18,7 +18,8 @@
 #include <sstream>
 #include <string>
 #include "filesys.h"
-#include  "segmentation.h"
+#include "opcvwrapper.h"
+#include "detection.h"
 
 
 std::string convertWxStringToString(const wxString wsx);
@@ -64,6 +65,7 @@ private:
     bool original_initiated = false;
     bool final_isgray = false;
     std::string original = "";
+
 
 
 };

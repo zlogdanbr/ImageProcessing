@@ -37,12 +37,20 @@ Mat laplacian(const Mat& src);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
 Mat flipImage(const Mat& img);
-Mat ApplyThreShold(const Mat& img, double threshold);
+Mat ApplyThreShold(const Mat& img);
 
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel);
+Mat ApplyHoughTransform(const Mat& img, int opt);
+Mat ApplyHoughTransformRegular(const Mat& img);
+Mat ApplyHoughTransformReProbabilistic(const Mat& img);
+
+Mat ApplySobelX(const Mat& img, int kernel_size);
+Mat ApplySobelY(const Mat& img, int kernel_size);
+Mat ApplySobel(const Mat& img, int kernel_size);
+Mat ApplyCanny(const Mat& img);
 
 Mat SumImages(const Mat& img1, const Mat& img2);
 Mat SubImages(const Mat& img1, const Mat& img2);

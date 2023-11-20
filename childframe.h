@@ -200,11 +200,15 @@ private:
         fsimple["Flip Image Horizontally"] = flipImageHorizontal;
         fsimple["Flip Image Vertically"] = flipImageVertical;
         fsimple["Flip Image"] = flipImage;
-
+        fsimple["Apply Threshold"] = ApplyThreShold;
+        fsimple["Canny"] = ApplyCanny;
         fmore["Blur Image"] = blurImageSmooth;
         fmore["Gaussian"] = GaussianImageSmooth;
         fmore["Median"] = MedianImageSmooth;
-        fmore["Apply Threshold"] = ApplyThreShold;
+        fmore["Sobel"] = ApplySobel;
+
+        fsimple["Hough Transform"] = ApplyHoughTransformRegular; 
+        fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
 
         comboBox1->Append("Convert to Gray Scale");
         comboBox1->Append("Equalize Gray Scale Image");
@@ -217,6 +221,11 @@ private:
         comboBox1->Append("Detect features");
         comboBox1->Append("Custom Algo");
         comboBox1->Append("Apply Threshold");
+        comboBox1->Append("Sobel");
+        comboBox1->Append("Canny");
+        comboBox1->Append("Sobel");
+        comboBox1->Append("Hough Transform");
+        comboBox1->Append("Hough Transform Probabilistic");
         comboBox1->Append("Flip Image Horizontally");
         comboBox1->Append("Flip Image Vertically");
         comboBox1->Append("Flip Image");

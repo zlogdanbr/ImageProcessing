@@ -228,12 +228,12 @@ void segmentationOfROI(Mat& img, Rect& roi, int r, int g, int b)
 }
 
 // https://docs.opencv.org/4.x/df/d0d/tutorial_find_contours.html
-int findcontours(	const Mat& img,
+Mat findcontours(	const Mat& img,
 					RoiAretype& contours,
 					std::vector<Vec4i>& hierarchy,
-					int thresh,
-					Mat& edges)
+					int thresh )
 {
+	Mat edges;
 
 	if (img.type() != CV_8UC1)
 	{
@@ -255,7 +255,7 @@ int findcontours(	const Mat& img,
 					RETR_TREE,
 					CHAIN_APPROX_SIMPLE);
 
-	return 0;
+	return edges;
 }
 
 // https://docs.opencv.org/4.x/df/d0d/tutorial_find_contours.html

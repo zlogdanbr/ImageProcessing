@@ -24,9 +24,6 @@
     <ClCompile Include="opcvwrapper.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="segmentation.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="filesys.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
     <ClInclude Include="opcvwrapper.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="segmentation.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="filesys.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -69,6 +63,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="savekernel.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="dmath.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>
