@@ -173,26 +173,6 @@ Mat detect(const Mat& image)
 	return imgclone;
 }
 
-Mat detect2(const Mat& image)
-{
-	// the book does not say but you need to convert to a gray scale image
-	cv::Mat imgclone = image.clone();
-
-	// vector of keypoints
-	std::vector<cv::KeyPoint> keypoints;
-	// FAST detector with a threshold of 40
-	cv::Ptr<cv::FastFeatureDetector> ptrFAST = cv::FastFeatureDetector::create(40);
-	// detect the keypoints
-	ptrFAST->detect(imgclone, keypoints);
-
-	cv::drawKeypoints(image, // original image
-		keypoints, // vector of keypoints
-		imgclone, // the output image
-		cv::Scalar(255, 255, 255), // keypoint color
-		cv::DrawMatchesFlags::DRAW_OVER_OUTIMG);// drawing flag
-
-	return imgclone;
-}
 
 Mat custom_algo(const Mat& image)
 {
@@ -218,7 +198,7 @@ Mat custom_algo(const Mat& image)
 		showImage(img2, "Gaussian 5x5 Kernel");
 	}
 
-	img2 = detect2(img2);
+	img2 = detect(img2);
 	if (img2.empty() == false)
 	{
 		showImage(img2, "Detected");
