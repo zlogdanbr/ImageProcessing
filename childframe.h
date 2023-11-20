@@ -219,4 +219,59 @@ private:
 
 };
 
+
+// TODO Still in construction
+class CImageCustomDialog : public CInputDialogBase
+{
+public:
+
+    CImageCustomDialog(wxFrame* parent);
+
+    void loadImage();
+
+private:
+    wxPanel* basePanel = new wxPanel(this, -1);
+    wxPanel* panel1{ new wxPanel(basePanel) };
+    wxPanel* panel2{ new wxPanel(basePanel, -1) };
+
+    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
+    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
+
+    wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK") };
+    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
+    wxButton* button3{ new wxButton(panel1, wxID_ANY, "Clear") };
+    wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };
+    wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
+
+    wxImage image;
+    wxStaticBitmap* picture = new wxStaticBitmap(   panel2, wxID_ANY, wxNullBitmap, { -1,-1 }, {700,700}, wxBORDER_SUNKEN);
+
+    void setControlslayout()
+    {
+        // set base sizer
+        this->SetSize(710, 710);
+        basePanel->SetSize(710, 710);
+        basePanel->SetSizer(baseSizer);
+
+        // add buttons to the horizontal box
+        hbox1->Add(button1);
+        hbox1->Add(button2);
+        hbox1->Add(button3);
+        hbox1->Add(button4);
+        hbox1->Add(button5);
+        hbox2->Add(picture, wxALIGN_CENTER_VERTICAL);// wxALIGN_CENTER_HORIZONTAL
+
+        // set horizontal base sizer at panel1 and panel2
+        panel1->SetSizer(hbox1);
+        panel2->SetSizer(hbox2);
+
+        // add panel1 to the base sizer at the base panel
+        baseSizer->Add(panel1);
+        baseSizer->Add(panel2);
+
+        Center();
+    }
+};
+
 #endif

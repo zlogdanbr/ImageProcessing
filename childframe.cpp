@@ -3,7 +3,6 @@
 
 CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ parent, -1, name, wxPoint(-1, -1) }
 {
-
 }
 
 void CInputDialog::DoFunction()
@@ -123,6 +122,61 @@ CInputDialogBase::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_si
         }
     }
 }
+
+CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ parent,"Image Display" }
+{
+    setControlslayout();
+    button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            Close();
+        });
+
+    button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            // cancel
+            Close();
+        });
+
+    button3->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            // clear
+        });
+
+    button4->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+
+        });
+
+    button5->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            loadImage();
+
+        });
+}
+
+void CImageCustomDialog::loadImage()
+{
+    wxInitAllImageHandlers();
+
+    wxFileDialog openFileDialog(this,
+        wxEmptyString,
+        wxEmptyString,
+        wxEmptyString,
+        "jpg files(*.jpg) | *.jpg",
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (openFileDialog.ShowModal() == wxID_OK)
+    {
+        wxString path = openFileDialog.GetPath();
+        wxImage tmp(path);
+        image = tmp;
+
+        wxBitmap bitMap{ wxBitmap(image.Rescale(710, 710, wxIMAGE_QUALITY_HIGH)) };
+        picture->SetBitmap(bitMap);
+        picture->SetSize(710, 710);
+    }
+}
+
 
 CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Algorithms Selection" }
 {

@@ -65,6 +65,7 @@ private:
     void onCustomKernel(wxCommandEvent& event);
     void onAllMenu(wxCommandEvent& event);
     void onHelpFile(wxCommandEvent& event);
+    void onDisplayImage(wxCommandEvent& event);
 
     
 
@@ -72,6 +73,7 @@ private:
     {
         CUSTKERNEL,
         ONE_ID_TO_ALL,
+        IMAGE_DISPLAY,
     };
 
     void BinAllEvents()
@@ -82,13 +84,15 @@ private:
         Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);     
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
-        Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);        
+        Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
+        Bind(wxEVT_MENU, &MyFrame::onDisplayImage, this, IMAGE_DISPLAY);
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
     {
         auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
         auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
+        auto menuImage = menuAlgo->Append(IMAGE_DISPLAY, "Image Display", "Image Display");
     }
 
 };

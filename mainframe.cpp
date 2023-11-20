@@ -166,6 +166,12 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
 
 }
 
+void MyFrame::onDisplayImage(wxCommandEvent& event)
+{
+    CImageCustomDialog* ImageDialog = new CImageCustomDialog(this);
+    ImageDialog->Show(true);
+}
+
 void MyFrame::onCustomKernel(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
