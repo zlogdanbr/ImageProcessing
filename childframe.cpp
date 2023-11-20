@@ -231,6 +231,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
 
     button4->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
     {
+        SaveImage();
     });
 
     button5->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -260,6 +261,22 @@ void CImageCustomDialog::loadImage()
         wxBitmap bitMap{ wxBitmap(image.Rescale(710, 710, wxIMAGE_QUALITY_HIGH)) };
         picture->SetBitmap(bitMap);
         picture->SetSize(710, 710);
+    }
+}
+
+void CImageCustomDialog::SaveImage()
+{
+    wxFileDialog saveFileDialog(this,
+    wxEmptyString,
+    wxEmptyString,
+    "MyFile.jpg", "Text Files (*.jpg)|*.jpg|All Files (*.*)|*.*",
+    wxFD_SAVE);
+    if (saveFileDialog.ShowModal() == wxID_OK)
+    {
+        wxString path = saveFileDialog.GetPath();
+        wxImage tmp(path);
+        image.SaveFile(path, wxBITMAP_TYPE_JPEG);
+
     }
 }
 

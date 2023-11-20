@@ -264,6 +264,9 @@ public:
     CImageCustomDialog(wxFrame* parent);
 
     void loadImage();
+    void SaveImage();
+
+    wxImage getImage() { return image; };
 
 private:
     wxPanel* basePanel = new wxPanel(this, -1);
