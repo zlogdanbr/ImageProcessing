@@ -138,7 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="childframe.cpp" />
+    <ClCompile Include="childframes.cpp" />
     <ClCompile Include="detection.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_helper.cpp" />
@@ -148,7 +148,7 @@
     <ClCompile Include="savekernel.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="childframe.h" />
+    <ClInclude Include="childframes.h" />
     <ClInclude Include="detection.h" />
     <ClInclude Include="dmath.h" />
     <ClInclude Include="filesys.h" />

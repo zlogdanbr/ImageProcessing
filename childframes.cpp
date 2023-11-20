@@ -1,4 +1,4 @@
-#include "childframe.h"
+#include "childframes.h"
 #include "savekernel.h"
 
 
@@ -226,7 +226,32 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
 
     button3->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
     {
-        // clear
+        wxNumberEntryDialog dialog(this, "Message text", "Prompt text", "Caption text", 50, 10, 100);
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            auto scale  = static_cast<int>(dialog.GetValue()/10);
+            auto h      = image.GetHeight();
+            auto w      = image.GetWidth();
+            auto hn     = static_cast<int>(h / scale);
+            auto wn     = static_cast<int>(w / scale);
+
+            if (hn <= 0)
+            {
+                hn = h;
+            }
+
+            if (wn <= 0)
+            {
+                wn = w;
+            }
+
+            wxImage image2 = image.Scale(hn, wn);
+            image = image2.Copy();
+            image2.Clear();
+            reloadImage(hn);
+        }
+
     });
 
     button4->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -261,6 +286,16 @@ void CImageCustomDialog::loadImage()
         wxBitmap bitMap{ wxBitmap(image.Rescale(710, 710, wxIMAGE_QUALITY_HIGH)) };
         picture->SetBitmap(bitMap);
         picture->SetSize(710, 710);
+    }
+}
+
+void CImageCustomDialog::reloadImage(int factor)
+{
+    if (image.IsOk() == true)
+    {
+        wxBitmap bitMap{ wxBitmap(image.Rescale(factor, factor, wxIMAGE_QUALITY_HIGH)) };
+        picture->SetBitmap(bitMap);
+        picture->SetSize(factor, factor);
     }
 }
 

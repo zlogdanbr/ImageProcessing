@@ -2,7 +2,7 @@
 #define _MY_APP_LOGS_
 
 #include "image_helper.h"
-#include "childframe.h"
+#include "childframes.h"
 #include <chrono>
 
 class CWriteLogs

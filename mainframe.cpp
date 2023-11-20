@@ -102,12 +102,6 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
 
 }
 
-void MyFrame::onDisplayImage(wxCommandEvent& event)
-{
-    CImageCustomDialog* ImageDialog = new CImageCustomDialog(this);
-    ImageDialog->Show(true);
-}
-
 void MyFrame::onCustomKernel(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
@@ -124,5 +118,15 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
         outxt.writeTo("Image not loaded\n");
     }
 
+}
+
+/**
+* TODO: This will have some tools for editing images but xwWidgets methods will be used
+* instead
+*/
+void MyFrame::onDisplayImage(wxCommandEvent& event)
+{
+    CImageCustomDialog* ImageDialog = new CImageCustomDialog(this);
+    ImageDialog->Show(true);
 }
 

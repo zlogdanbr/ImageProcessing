@@ -8,6 +8,7 @@
 #include "detection.h"
 #include "logs.h"
 #include <functional>
+#include <wx/numdlg.h>
 
 using Function1Parameter = std::function<Mat(Mat)>;
 using Function2Parameter = std::function<Mat(Mat, int)>;
@@ -265,7 +266,10 @@ private:
 };
 
 
-// TODO Still in construction
+/**
+* TODO: This will have some tools for editing images but xwWidgets methods will be used
+* instead
+*/
 class CImageCustomDialog : public CInputDialogBase
 {
 public:
@@ -274,6 +278,7 @@ public:
 
     void loadImage();
     void SaveImage();
+    void reloadImage(int factor = 710);
 
     wxImage getImage() { return image; };
 
@@ -282,18 +287,25 @@ private:
     wxPanel* panel1{ new wxPanel(basePanel) };
     wxPanel* panel2{ new wxPanel(basePanel, -1) };
 
-    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
-    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
-    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
+    wxBoxSizer* baseSizer{ new wxBoxSizer(wxHORIZONTAL) };
+    wxBoxSizer* hbox1{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* hbox2{ new wxBoxSizer(wxVERTICAL) };
 
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK") };
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
-    wxButton* button3{ new wxButton(panel1, wxID_ANY, "Clear") };
+    wxButton* button3{ new wxButton(panel1, wxID_ANY, "Rescale") };
     wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };
     wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
+    wxButton* button6{ new wxButton(panel1, wxID_ANY, "Upsize") };
+    wxButton* button7{ new wxButton(panel1, wxID_ANY, "Mirror") };
+    wxButton* button8{ new wxButton(panel1, wxID_ANY, "Rotate 90 right") };
+    wxButton* button9{ new wxButton(panel1, wxID_ANY, "Rotate 90 left") };
+
 
     wxImage image;
     wxStaticBitmap* picture = new wxStaticBitmap(   panel2, wxID_ANY, wxNullBitmap, { -1,-1 }, {700,700}, wxBORDER_SUNKEN);
+
+    std::vector<int> resize_factor;
 
     void setControlslayout()
     {
@@ -308,6 +320,11 @@ private:
         hbox1->Add(button3);
         hbox1->Add(button4);
         hbox1->Add(button5);
+        hbox1->Add(button6);
+        hbox1->Add(button7);
+        hbox1->Add(button8);
+        hbox1->Add(button9);
+
         hbox2->Add(picture, wxALIGN_CENTER_VERTICAL);// wxALIGN_CENTER_HORIZONTAL
 
         // set horizontal base sizer at panel1 and panel2
