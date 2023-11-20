@@ -90,9 +90,9 @@ private:
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
     {
-        auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL, "Base Algorithms", "Base Algorithms");
-        auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL, "Apply customized kernel", "Input custom kernel");
-        auto menuImage = menuAlgo->Append(IMAGE_DISPLAY, "Image Display", "Image Display");
+        auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL,  "Algorithms", "Base Algorithms");
+        auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL,    "Kernels", "Input custom kernel");
+        auto menuImage = menuAlgo->Append(IMAGE_DISPLAY,    "Edit", "Image Display");
     }
 
 };

@@ -2,7 +2,7 @@
 #include "mainframe.h"
 #include "detection.h"
 
-MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
+MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
 {
     SetClientSize(640, 480);
     wxInitAllImageHandlers();
@@ -43,7 +43,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "Image Processing", wxPoint(-1, -1) }
     // Menu loaded
     // -----------------------------------------------------------------------------
     mainMenu->Append(menuFile, "&File");
-    mainMenu->Append(menuAlgo, "&Algorithms");
+    mainMenu->Append(menuAlgo, "&Tools");
     mainMenu->Append(menuHelp, "&Help");    
 
     // -----------------------------------------------------------------------------  

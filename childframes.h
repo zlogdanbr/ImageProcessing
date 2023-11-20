@@ -291,21 +291,22 @@ private:
     wxBoxSizer* hbox1{ new wxBoxSizer(wxVERTICAL) };
     wxBoxSizer* hbox2{ new wxBoxSizer(wxVERTICAL) };
 
-    wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK") };
-    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
-    wxButton* button3{ new wxButton(panel1, wxID_ANY, "Rescale") };
-    wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };
     wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
-    wxButton* button6{ new wxButton(panel1, wxID_ANY, "Upsize") };
+    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
+    wxButton* button3{ new wxButton(panel1, wxID_ANY, "Rescale-") };
+    wxButton* button6{ new wxButton(panel1, wxID_ANY, "Rescale+") };
+    wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };        
     wxButton* button7{ new wxButton(panel1, wxID_ANY, "Mirror") };
-    wxButton* button8{ new wxButton(panel1, wxID_ANY, "Rotate 90 right") };
-    wxButton* button9{ new wxButton(panel1, wxID_ANY, "Rotate 90 left") };
+    wxButton* button8{ new wxButton(panel1, wxID_ANY, "Rotate+") };
+    wxButton* button9{ new wxButton(panel1, wxID_ANY, "Rotate-") };
 
 
     wxImage image;
     wxStaticBitmap* picture = new wxStaticBitmap(   panel2, wxID_ANY, wxNullBitmap, { -1,-1 }, {700,700}, wxBORDER_SUNKEN);
 
     std::vector<int> resize_factor;
+
+    bool pog_mirror = false;
 
     void setControlslayout()
     {
@@ -315,12 +316,11 @@ private:
         basePanel->SetSizer(baseSizer);
 
         // add buttons to the horizontal box
-        hbox1->Add(button1);
+        hbox1->Add(button5);
         hbox1->Add(button2);
         hbox1->Add(button3);
-        hbox1->Add(button4);
-        hbox1->Add(button5);
         hbox1->Add(button6);
+        hbox1->Add(button4);                
         hbox1->Add(button7);
         hbox1->Add(button8);
         hbox1->Add(button9);
