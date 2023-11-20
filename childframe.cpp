@@ -6,6 +6,29 @@ CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ par
 
 }
 
+void CInputDialog::DoFunction()
+{
+    wxString opt = getSelectionText();
+
+    Function1Parameter f1 = getAlgoFunctionSimple(opt);
+
+    if (f1 == nullptr)
+    {
+        Function2Parameter f2 = getAlgoFunctionMore(opt);
+        if (f2 == nullptr)
+        {
+            outxt->writeTo("Error while loading algos.\n");
+            return;
+        }
+
+        ApplyAlgorithm(f2, true, 5);
+    }
+    else
+    {
+        ApplyAlgorithm(f1, true);
+    }
+}
+
 void
 CInputDialogBase::ApplyAlgorithm(Function1Parameter& f, bool Gray)
 {

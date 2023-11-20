@@ -25,12 +25,14 @@ void CImageHelper::SetOriginalNew()
 {
     Mat savefinal = Final_ImageOpenCVFormat.clone();
     Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+
     destroyAllWindows();
     clean();
 
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
 
+    showImage(saveOriginal, "Original");
     showImage(savefinal, "Final");
 
 }

@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WXUSINGDLL</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);WXUSINGDLL;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll\mswud</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>

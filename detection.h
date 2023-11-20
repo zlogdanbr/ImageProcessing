@@ -11,6 +11,7 @@ using namespace cv;
 
 static
 void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
+
 Mat detectEyes(const Mat& image);
 Mat detectCorners(const Mat& image);
 Mat detect(const Mat& image);

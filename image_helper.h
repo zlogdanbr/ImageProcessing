@@ -65,6 +65,7 @@ private:
     bool final_isgray = false;
     std::string original = "";
 
+
     // ------------------------------------------------------------------------------------------------------------
     // https://www.developpez.net/forums/d1491398/c-cpp/bibliotheques/wxwidgets/opencv-transformer-cv-mat-wximage/
     // ------------------------------------------------------------------------------------------------------------

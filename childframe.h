@@ -134,28 +134,7 @@ public:
 
     wxString getSelectionText() { return SelectionText;};
 
-    void DoFunction()
-    {
-        wxString opt = getSelectionText();
-
-        std::function<Mat(Mat)> f1 = getAlgoFunctionSimple(opt);
-
-        if (f1 == nullptr)
-        {
-            std::function<Mat(Mat, int)> f2 = getAlgoFunctionMore(opt);
-            if (f2 == nullptr)
-            {
-                outxt->writeTo("Error while loading algos.\n");
-                return;
-            }
-
-            ApplyAlgorithm(f2, false, 5);
-        }
-        else
-        {
-            ApplyAlgorithm(f1, false);
-        }
-    }
+    void DoFunction();
 
 
 private:

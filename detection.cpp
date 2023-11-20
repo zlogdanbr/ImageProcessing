@@ -86,9 +86,23 @@ Mat detectCorners(const Mat& image)
 
 	// Detect Harris Corners
 	cv::Mat cornerStrength;
+	cv::Mat imgclone;
 
 	// the book does not say but you need to convert to a gray scale image
-	cv::Mat imgclone = convertograyScale(image);
+	while(true)
+	{
+		try
+		{
+			imgclone = convertograyScale(image);
+			break;
+		}
+		catch (...)
+		{
+			imgclone = image.clone();
+			break;
+		}
+	}
+	 
 
 	cv::cornerHarris(	imgclone, // input image
 						cornerStrength, // image of cornerness
@@ -126,8 +140,22 @@ keypoint is declared."
 ----------------------------------------------------------------------------------------------*/
 Mat detect(const Mat& image)
 {
+	cv::Mat imgclone;
+
 	// the book does not say but you need to convert to a gray scale image
-	cv::Mat imgclone = convertograyScale(image);
+	while (true)
+	{
+		try
+		{
+			imgclone = convertograyScale(image);
+			break;
+		}
+		catch (...)
+		{
+			imgclone = image.clone();
+			break;
+		}
+	}
 
 	// vector of keypoints
 	std::vector<cv::KeyPoint> keypoints;
@@ -220,11 +248,11 @@ void segmentationOfROI(Mat& img, Rect& roi, int r, int g, int b)
 }
 
 // https://docs.opencv.org/4.x/df/d0d/tutorial_find_contours.html
-int findcontours(const Mat& img,
-	RoiAretype& contours,
-	std::vector<Vec4i>& hierarchy,
-	int thresh,
-	Mat& edges)
+int findcontours(	const Mat& img,
+					RoiAretype& contours,
+					std::vector<Vec4i>& hierarchy,
+					int thresh,
+					Mat& edges)
 {
 
 	if (img.type() != CV_8UC1)
@@ -232,17 +260,20 @@ int findcontours(const Mat& img,
 		cvtColor(img, edges, COLOR_BGR2GRAY);
 	}
 	else
+	{
 		edges = img;
+	}
+
 
 	blur(edges, edges, Size(3, 3));
 
 	// https://docs.opencv.org/4.x/da/d22/tutorial_py_canny.html
 	Canny(edges, edges, thresh, 350);
-	findContours(edges,
-		contours,
-		hierarchy,
-		RETR_TREE,
-		CHAIN_APPROX_SIMPLE);
+	findContours(	edges,
+					contours,
+					hierarchy,
+					RETR_TREE,
+					CHAIN_APPROX_SIMPLE);
 
 	return 0;
 }
