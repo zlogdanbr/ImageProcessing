@@ -36,8 +36,8 @@ Mat detectEyes(const Mat& image)
 	// https://github.com/opencv/opencv_zoo/tree/master/models/face_recognition_sface
 	std::string fr_modelPath = "C:\\Users\\Administrador\\Documents\\GitHub\\Image Data\\face_data2\\face_recognition_sface_2021dec.onnx";
 
-	float scoreThreshold = 0.9;
-	float nmsThreshold = 0.3;
+	float scoreThreshold = static_cast<float>(0.9);
+	float nmsThreshold = static_cast<float>(0.3);
 	int topK = 5000;
 
 	Mat empty;
@@ -179,33 +179,12 @@ AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints)
 	AbstractRegion  AbstractPoints;
 	for (const auto& p : keypoints)
 	{
-		int ix = p.pt.x;
-		int iy = p.pt.y;
+		int ix = static_cast<int>(p.pt.x);
+		int iy = static_cast<int>(p.pt.y);
 		std::pair<int, int> pr{ ix,iy };
 		AbstractPoints.push_back(pr);
 	}
 	return AbstractPoints;
-}
-
-void highlightFeature(Mat& img, Rect& roi, UBYTE r , UBYTE g , UBYTE b)
-{
-
-	for (int y = 0; y < img.rows; y++)
-	{
-		for (int x = 0; x < img.cols; x++)
-		{
-			Vec3b color = img.at<Vec3b>(Point(x, y));
-			if (roi.contains(Point(x, y)) == true)
-			{
-				color[0] = r;
-				color[1] = g;
-				color[2] = b;
-				//set pixel
-				img.at<Vec3b>(Point(x, y)) = color;
-			}
-		}
-	}
-
 }
 
 void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE g, UBYTE b)
@@ -253,58 +232,6 @@ Mat custom_algo(const Mat& image)
 	return imgclone;
 }
 
-/**
-OpenCV 3 Computer Vision
-Application Programming
-Cookbook
-Third Edition
-Robert Laganiere
-Page [ 85 ]
-
-*/
-
-Mat grabRegion(const Mat& img, cv::Rect& rectangle)
-{
-	cv::Mat result; // segmentation (4 possible values)
-	cv::Mat bgModel, fgModel; // the models (internally used)
-	// GrabCut segmentation
-	cv::grabCut(	img, // input image
-					result, // segmentation result
-					rectangle, // rectangle containing foreground
-					bgModel,
-					fgModel, // models
-					5, // number of iterations
-					cv::GC_INIT_WITH_RECT); // use rectangle
-	return result;
-}
-
-/*
-	cv::GC_BGD: This is the value of the pixels that certainly belong to the
-	background (for example, pixels outside the rectangle in our example)
-	cv::GC_FGD: This is the value of the pixels that certainly belong to the
-	foreground (there are none in our example)
-	cv::GC_PR_BGD: This is the value of the pixels that probably belong to the
-	background
-	cv::GC_PR_FGD: This is the value of the pixels that probably belong to the
-	foreground (that is, the initial value of the pixels inside the rectangle in our
-	example)
-*/
-Mat getFeature( const Mat& img, cv::Rect& rectangle)
-{
-	Mat original = img.clone();
-	Mat result = grabRegion(img, rectangle);
-
-	// Get the pixels marked as likely foreground
-	cv::compare(result, cv::GC_PR_FGD, result, cv::CMP_EQ);
-
-	// Generate output image
-	cv::Mat foreground(original.size(), CV_8UC3, cv::Scalar(255, 255, 255));
-	original.copyTo(foreground);// bg pixels are not copied 
-								//result);
-	
-	return original;
-
-}
 
 
 

@@ -3,6 +3,7 @@
 
 using namespace math_util;
 
+
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool loadImage(const std::string& image_path, Mat& img)
 {
