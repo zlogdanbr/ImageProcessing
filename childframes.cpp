@@ -320,7 +320,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
             image2.Clear();
             image2.Destroy();
             reloadImage();
-            }
+        }
     });
 
     button7->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -389,8 +389,9 @@ void CImageCustomDialog::SaveImage()
     if (saveFileDialog.ShowModal() == wxID_OK)
     {
         wxString path = saveFileDialog.GetPath();
-        wxImage tmp(path);
-        image.SaveFile(path, wxBITMAP_TYPE_JPEG);
+        wxImage tmp;
+        tmp = image.Copy();
+        tmp.SaveFile(path, wxBITMAP_TYPE_JPEG);
     }
 }
 

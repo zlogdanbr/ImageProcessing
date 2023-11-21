@@ -28,6 +28,7 @@ using RoiAretype = std::vector< std::vector<Point> >;
 bool loadImage(const std::string& image_path, Mat& img);
 void showImage(const Mat& img, const std::string& title);
 bool saveImage(const std::string& image_path, Mat& img);
+bool isGrayScaleImage(const Mat& img);
 
 Mat convertograyScale(const Mat& img);
 Mat equalizeGrayImage(const Mat& img);
@@ -51,10 +52,6 @@ Mat ApplySobelX(const Mat& img, int kernel_size);
 Mat ApplySobelY(const Mat& img, int kernel_size);
 Mat ApplySobel(const Mat& img, int kernel_size);
 Mat ApplyCanny(const Mat& img);
-
-Mat SumImages(const Mat& img1, const Mat& img2);
-Mat SubImages(const Mat& img1, const Mat& img2);
-Mat XorImages(const Mat& img1, const Mat& img2);
 
 
 

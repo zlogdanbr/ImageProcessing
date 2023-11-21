@@ -15,55 +15,9 @@ bool loadImage(const std::string& image_path, Mat& img)
     return true;
 }
 
-Mat SumImages(const Mat& img1, const Mat& img2)
-{ 
-    auto src_gray1 = convertograyScale(img1);
-    //auto src_gray2 = convertograyScale(img2);
-    Mat f;
-    try
-    {
-        f = src_gray1 + img2;
-    }
-    catch (...)
-    {
-        return f;
-    }
-    
-    return f;
-}
-
-Mat SubImages(const Mat& img1, const Mat& img2)
+bool isGrayScaleImage(const Mat& img)
 {
-    auto src_gray1 = convertograyScale(img1);
-    //auto src_gray2 = convertograyScale(img2);
-    Mat f;
-    try
-    {
-        f = src_gray1 - img2;
-    }
-    catch (...)
-    {
-        return f;
-    }
-
-    return f;
-}
-
-Mat XorImages(const Mat& img1, const Mat& img2)
-{
-    auto src_gray1 = convertograyScale(img1);
-    //auto src_gray2 = convertograyScale(img2);
-    Mat f;
-    try
-    {
-        f = src_gray1 ^ img2;
-    }
-    catch (...)
-    {
-        return f;
-    }
-
-    return f;
+    return  (img.channels() == 1) ? true : false;
 }
 
 Mat flipImageHorizontal(const Mat& img)
@@ -211,7 +165,16 @@ Mat laplacian(const Mat& src)
 
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(src, src, Size(3, 3), 0, 0, BORDER_DEFAULT);
-    src_gray = convertograyScale(src);
+
+    if (isGrayScaleImage(src))
+    {
+        src_gray = src;
+    }
+    else
+    {
+        src_gray = convertograyScale(src);
+    }
+     
     Mat abs_dst;
     Laplacian(  src_gray, 
                 dst, 
@@ -303,7 +266,16 @@ Mat ApplySobel(const Mat& img, int kernel_size)
 {
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(img, img, Size(3, 3), 0, 0, BORDER_DEFAULT);
-    Mat src_gray = convertograyScale(img);
+    Mat src_gray;
+    if (isGrayScaleImage(img))
+    {
+        src_gray = img;
+    }
+    else
+    {
+        src_gray = convertograyScale(img);
+    }
+
 
     Mat sobelX = ApplySobelX(src_gray, kernel_size);
     Mat sobelY = ApplySobelY(src_gray, kernel_size);
