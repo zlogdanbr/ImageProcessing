@@ -9,6 +9,7 @@
 #include "logs.h"
 #include <functional>
 #include <wx/numdlg.h>
+#include "filesys.h"
 
 using Function1Parameter = std::function<Mat(Mat)>;
 using Function2Parameter = std::function<Mat(Mat, int)>;

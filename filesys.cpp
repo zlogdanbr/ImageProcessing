@@ -1,6 +1,25 @@
 #include "filesys.h"
 namespace fs = std::filesystem;
 
+std::string getExtension(const std::string& _file)
+{
+	auto ext  = fs::path(_file).extension();
+	return ext.string();
+}
+
+std::string getFileName(const std::string& _file)
+{
+	auto fname = fs::path(_file).filename();
+	return fname.string();
+}
+
+std::string getPathOfFile(const std::string& _file)
+{
+	auto fpath = fs::path(_file).parent_path();
+	return fpath.string();
+}
+
+
 bool file_exists(const std::string& file)
 {
 	return fs::exists(file);

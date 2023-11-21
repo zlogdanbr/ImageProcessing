@@ -19,6 +19,10 @@ bool is_directory(const std::string& _directory);
 bool is_file(const std::string& _directory);
 bool create_dir(const std::string& _directory);
 uintmax_t getFileSize(const std::string& _file);
+std::string getExtension(const std::string& _file);
+std::string getFileName(const std::string& _file);
+std::string getPathOfFile(const std::string& _file);
+
 
 #endif
 //--------------------------------------------------------------------------------------------------
