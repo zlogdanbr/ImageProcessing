@@ -159,6 +159,7 @@ Mat detect(const Mat& image)
 
 	// vector of keypoints
 	std::vector<cv::KeyPoint> keypoints;
+
 	// FAST detector with a threshold of 40
 	cv::Ptr<cv::FastFeatureDetector> ptrFAST =cv::FastFeatureDetector::create(40);
 	// detect the keypoints
@@ -173,40 +174,20 @@ Mat detect(const Mat& image)
 	return imgclone;
 }
 
-
-Mat custom_algo(const Mat& image)
+AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints)
 {
-
-	Mat img2 = convertograyScale(image);
-	showImage(image, "Original Image");
-
-	img2 = blurImageSmooth(img2, 3);
-	if (img2.empty() == false)
+	AbstractRegion  AbstractPoints;
+	for (const auto& p : keypoints)
 	{
-		showImage(img2, "Image blurrer 3x3 Kernel");
+		int ix = p.pt.x;
+		int iy = p.pt.y;
+		std::pair<int, int> pr{ ix,iy };
+		AbstractPoints.push_back(pr);
 	}
-
-	img2 = blurImageSmooth(img2, 5);
-	if (img2.empty() == false)
-	{
-		showImage(img2, "Image blurrer 5x5 Kernel");
-	}
-
-	img2 = GaussianImageSmooth(img2, 5);
-	if (img2.empty() == false)
-	{
-		showImage(img2, "Gaussian 5x5 Kernel");
-	}
-
-	img2 = detect(img2);
-	if (img2.empty() == false)
-	{
-		showImage(img2, "Detected");
-	}
-	return img2;
+	return AbstractPoints;
 }
 
-void segmentationOfROI(Mat& img, Rect& roi, int r, int g, int b)
+void highlightFeature(Mat& img, Rect& roi, UBYTE r , UBYTE g , UBYTE b)
 {
 
 	for (int y = 0; y < img.rows; y++)
@@ -216,9 +197,9 @@ void segmentationOfROI(Mat& img, Rect& roi, int r, int g, int b)
 			Vec3b color = img.at<Vec3b>(Point(x, y));
 			if (roi.contains(Point(x, y)) == true)
 			{
-				color[0] = static_cast<unsigned char>(r);
-				color[1] = static_cast<unsigned char>(g);
-				color[2] = static_cast<unsigned char>(b);
+				color[0] = r;
+				color[1] = g;
+				color[2] = b;
 				//set pixel
 				img.at<Vec3b>(Point(x, y)) = color;
 			}
@@ -227,49 +208,103 @@ void segmentationOfROI(Mat& img, Rect& roi, int r, int g, int b)
 
 }
 
-// https://docs.opencv.org/4.x/df/d0d/tutorial_find_contours.html
-Mat findcontours(	const Mat& img,
-					RoiAretype& contours,
-					std::vector<Vec4i>& hierarchy,
-					int thresh )
+void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE g, UBYTE b)
 {
-	Mat edges;
-
-	if (img.type() != CV_8UC1)
+	for (int y = 0; y < img.rows; y++)
 	{
-		cvtColor(img, edges, COLOR_BGR2GRAY);
+		for (int x = 0; x < img.cols; x++)
+		{
+			Vec3b color = img.at<Vec3b>(Point(x, y));
+
+			std::pair<int, int> p{ x,y };
+			auto it = std::find(abstract_region.cbegin(), abstract_region.cend(), p);
+
+			if ( it != abstract_region.end())
+			{
+				color[0] = r;
+				color[1] = g;
+				color[2] = b;
+				//set pixel
+				img.at<Vec3b>(Point(x, y)) = color;
+			}
+		}
 	}
-	else
-	{
-		edges = img;
-	}
-
-
-	blur(edges, edges, Size(3, 3));
-
-	// https://docs.opencv.org/4.x/da/d22/tutorial_py_canny.html
-	Canny(edges, edges, thresh, 350);
-	findContours(	edges,
-					contours,
-					hierarchy,
-					RETR_TREE,
-					CHAIN_APPROX_SIMPLE);
-
-	return edges;
 }
 
-// https://docs.opencv.org/4.x/df/d0d/tutorial_find_contours.html
-void drawCountour(RoiAretype& contours, Mat& img, std::vector<Vec4i>& hierarchy)
+Mat custom_algo(const Mat& image)
 {
-	// https://docs.opencv.org/3.4/d1/dd6/classcv_1_1RNG.html#a2d2f54a5a1145e5b9f645b8983c6ae75
-	RNG rng(12345);
-	for (size_t i = 0; i < contours.size(); i++)
-	{
-		Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-		//https://docs.opencv.org/3.4/d6/d6e/group__imgproc__draw.html#ga746c0625f1781f1ffc9056259103edbc
-		drawContours(img, contours, (int)i, color, 2, LINE_8, hierarchy, 0);
-		//drawContours(img, contours, (int)i, color, 2, FILLED, hierarchy, 0);
-	}
+
+	cv::Mat imgclone;
+
+	imgclone = image.clone();
+
+	// vector of keypoints
+	std::vector<cv::KeyPoint> keypoints;
+
+	// FAST detector with a threshold of 40
+	cv::Ptr<cv::FastFeatureDetector> ptrFAST = cv::FastFeatureDetector::create(40);
+	// detect the keypoints
+	ptrFAST->detect(imgclone, keypoints);
+
+	AbstractRegion abstractPoints = convertKeyPointsToAbstract(keypoints);
+
+	highlightFeature(imgclone, abstractPoints, 0xFF, 0xFF, 0x00);
+
+	return imgclone;
 }
+
+/**
+OpenCV 3 Computer Vision
+Application Programming
+Cookbook
+Third Edition
+Robert Laganiere
+Page [ 85 ]
+
+*/
+
+Mat grabRegion(const Mat& img, cv::Rect& rectangle)
+{
+	cv::Mat result; // segmentation (4 possible values)
+	cv::Mat bgModel, fgModel; // the models (internally used)
+	// GrabCut segmentation
+	cv::grabCut(	img, // input image
+					result, // segmentation result
+					rectangle, // rectangle containing foreground
+					bgModel,
+					fgModel, // models
+					5, // number of iterations
+					cv::GC_INIT_WITH_RECT); // use rectangle
+	return result;
+}
+
+/*
+	cv::GC_BGD: This is the value of the pixels that certainly belong to the
+	background (for example, pixels outside the rectangle in our example)
+	cv::GC_FGD: This is the value of the pixels that certainly belong to the
+	foreground (there are none in our example)
+	cv::GC_PR_BGD: This is the value of the pixels that probably belong to the
+	background
+	cv::GC_PR_FGD: This is the value of the pixels that probably belong to the
+	foreground (that is, the initial value of the pixels inside the rectangle in our
+	example)
+*/
+Mat getFeature( const Mat& img, cv::Rect& rectangle)
+{
+	Mat original = img.clone();
+	Mat result = grabRegion(img, rectangle);
+
+	// Get the pixels marked as likely foreground
+	cv::compare(result, cv::GC_PR_FGD, result, cv::CMP_EQ);
+
+	// Generate output image
+	cv::Mat foreground(original.size(), CV_8UC3, cv::Scalar(255, 255, 255));
+	original.copyTo(foreground);// bg pixels are not copied 
+								//result);
+	
+	return original;
+
+}
+
 
 

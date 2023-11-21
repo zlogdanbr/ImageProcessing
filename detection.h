@@ -9,6 +9,9 @@
 #include "opcvwrapper.h"
 using namespace cv;
 
+using UBYTE = unsigned char;
+using AbstractRegion = std::vector<std::pair<int, int>>;
+
 static
 void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
 
@@ -17,9 +20,14 @@ Mat detectCorners(const Mat& image);
 Mat detect(const Mat& image);
 Mat custom_algo(const Mat& image);
 Mat convertRectoImg(Rect& r, Mat& img);
-Mat findcontours(const Mat& img, RoiAretype& contours, std::vector<Vec4i>& hierarchy, int thresh);
 std::vector<Mat> splitChannel(Mat& img);
-void segmentationOfROI(Mat& img, Rect& roi, int, int, int);
-void drawCountour(RoiAretype& contours, Mat& img, std::vector<Vec4i>& hierarchy);
+
+
+Mat grabRegion(const Mat& img, cv::Rect& rectangle);
+
+AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);
+
+void highlightFeature(Mat& img, Rect& roi, UBYTE, UBYTE, UBYTE);
+void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE, UBYTE, UBYTE);
 
 #endif
