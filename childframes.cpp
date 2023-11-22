@@ -229,19 +229,19 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
             if (dialog.ShowModal() == wxID_OK)
             {
                 auto scale = static_cast<int>(dialog.GetValue());
-                auto h = image.GetHeight();
-                auto w = image.GetWidth();
+                auto _h = image.GetHeight();
+                auto _w = image.GetWidth();
                 auto hn = static_cast<int>(h / scale);
                 auto wn = static_cast<int>(w / scale);
 
                 if (hn <= 0)
                 {
-                    hn = h;
+                    hn = _h;
                 }
 
                 if (wn <= 0)
                 {
-                    wn = w;
+                    wn = _w;
                 }
 
                 wxImage image2 = image.Scale(hn, wn);
@@ -262,19 +262,19 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
             if (dialog.ShowModal() == wxID_OK)
             {
                 auto scale = static_cast<int>(dialog.GetValue());
-                auto h = image.GetHeight();
-                auto w = image.GetWidth();
+                auto _h = image.GetHeight();
+                auto _w = image.GetWidth();
                 auto hn = static_cast<int>(h * scale);
                 auto wn = static_cast<int>(w * scale);
 
                 if (hn <= 0 || hn > 2000)
                 {
-                    hn = h;
+                    hn = _h;
                 }
 
                 if (wn <= 0 || wn > 2000)
                 {
-                    wn = w;
+                    wn = _w;
                 }
 
                 wxImage image2 = image.Scale(hn, wn);
@@ -307,7 +307,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
             image = image2.Copy();
             image2.Clear();
             image2.Destroy();
-            reloadImage();
+            reloadImage(-1);
         }
     });
 
@@ -319,7 +319,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
             image = image2.Copy();
             image2.Clear();
             image2.Destroy();
-            reloadImage();
+            reloadImage(-1);
         }
     });
 
@@ -363,9 +363,12 @@ void CImageCustomDialog::loadImage()
         wxImage tmp(path);
         image = tmp;
 
-        wxBitmap bitMap{ wxBitmap(image.Rescale(710, 710, wxIMAGE_QUALITY_HIGH)) };
+        w = image.GetWidth();
+        h = image.GetHeight();
+
+        wxBitmap bitMap{ wxBitmap(image.Rescale(w, h, wxIMAGE_QUALITY_HIGH)) };
         picture->SetBitmap(bitMap);
-        picture->SetSize(710, 710);
+        picture->SetSize(w, h);
     }
 }
 
@@ -373,9 +376,17 @@ void CImageCustomDialog::reloadImage(int factor)
 {
     if (image.IsOk() == true)
     {
-        wxBitmap bitMap{ wxBitmap(image.Rescale(factor, factor, wxIMAGE_QUALITY_HIGH)) };
+        if (factor > 0)
+        {
+           wxBitmap bitMap{ wxBitmap(image.Rescale(factor, factor, wxIMAGE_QUALITY_HIGH)) };
+           picture->SetBitmap(bitMap);
+           picture->SetSize(factor, factor);
+           return;
+        }
+
+        wxBitmap bitMap{ wxBitmap(image) };
         picture->SetBitmap(bitMap);
-        picture->SetSize(factor, factor);
+        
     }
 }
 

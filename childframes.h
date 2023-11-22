@@ -284,6 +284,10 @@ public:
     wxImage getImage() { return image; };
 
 private:
+
+    int w = 0;
+    int h = 0;
+
     wxPanel* basePanel = new wxPanel(this, -1);
     wxPanel* panel1{ new wxPanel(basePanel) };
     wxPanel* panel2{ new wxPanel(basePanel, -1) };
@@ -326,7 +330,7 @@ private:
         hbox1->Add(button8);
         hbox1->Add(button9);
 
-        hbox2->Add(picture, wxALIGN_CENTER_VERTICAL);// wxALIGN_CENTER_HORIZONTAL
+        hbox2->Add(picture, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);// wxALIGN_CENTER_HORIZONTAL
 
         // set horizontal base sizer at panel1 and panel2
         panel1->SetSizer(hbox1);
