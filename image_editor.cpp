@@ -1,5 +1,35 @@
 #include "childframes.h"
-#include "savekernel.h"
+
+void CImageCustomDialog::setControlslayout()
+{
+    // set base sizer
+    this->SetSize(710, 710);
+    basePanel->SetSize(710, 710);
+    basePanel->SetSizer(baseSizer);
+
+    // add buttons to the horizontal box
+    hbox1->Add(button5);
+    hbox1->Add(button2);
+    hbox1->Add(button3);
+    hbox1->Add(button6);
+    hbox1->Add(button4);
+    hbox1->Add(button7);
+    hbox1->Add(button8);
+    hbox1->Add(button9);
+
+    hbox2->Add(picture, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);// wxALIGN_CENTER_HORIZONTAL
+
+    // set horizontal base sizer at panel1 and panel2
+    panel1->SetSizer(hbox1);
+    panel2->SetSizer(hbox2);
+
+    // add panel1 to the base sizer at the base panel
+    baseSizer->Add(panel1);
+    baseSizer->Add(panel2);
+
+    Center();
+}
+
 
 CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ parent,"Image Editor" }
 {
@@ -22,8 +52,8 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
                     auto scale = static_cast<int>(dialog.GetValue());
                     auto _h = image.GetHeight();
                     auto _w = image.GetWidth();
-                    auto hn = static_cast<int>(h / scale);
-                    auto wn = static_cast<int>(w / scale);
+                    auto hn = static_cast<int>(_h / scale);
+                    auto wn = static_cast<int>(_w / scale);
 
                     if (hn <= 0)
                     {
@@ -55,18 +85,8 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
                     auto scale = static_cast<int>(dialog.GetValue());
                     auto _h = image.GetHeight();
                     auto _w = image.GetWidth();
-                    auto hn = static_cast<int>(h * scale);
-                    auto wn = static_cast<int>(w * scale);
-
-                    if (hn <= 0 || hn > 2000)
-                    {
-                        hn = _h;
-                    }
-
-                    if (wn <= 0 || wn > 2000)
-                    {
-                        wn = _w;
-                    }
+                    auto hn = static_cast<int>(_h * scale);
+                    auto wn = static_cast<int>(_w * scale);
 
                     wxImage image2 = image.Scale(hn, wn);
                     image = image2.Copy();

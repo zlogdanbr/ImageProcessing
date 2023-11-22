@@ -2,6 +2,33 @@
 #include "childframes.h"
 #include "savekernel.h"
 
+void CGridInputDialog::setControlslayout()
+{
+    // set base sizer
+    basePanel->SetSizer(baseSizer);
+
+    // add buttons to the horizontal box
+    hbox1->Add(button1);
+    hbox1->Add(button2);
+    hbox1->Add(button3);
+    hbox1->Add(button4);
+    hbox1->Add(button5);
+
+    // add buttons to the horizontal box
+    hbox2->Add(grid);
+
+    // set horizontal base sizer at panel1 and panel2
+    panel1->SetSizer(hbox1);
+    panel2->SetSizer(hbox2);
+
+    // add panel1 to the base sizer at the base panel
+    baseSizer->Add(panel1);
+    baseSizer->Add(panel2);
+
+    grid->CreateGrid(13, 13);
+
+    Center();
+}
 
 CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Custom Kernel Input" }
 {
@@ -35,12 +62,12 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"C
             "Text Files (*.dvg)|*.dvg|All Files (*.*)|*.*",
             wxFD_SAVE);
 
-    if (saveFileDialog.ShowModal() == wxID_OK)
-    {
-        wxString spath = saveFileDialog.GetPath();
-        std::string path = convertWxStringToString(spath);
-        SaveDataToFile(path, grid);
-    }
+            if (saveFileDialog.ShowModal() == wxID_OK)
+            {
+                wxString spath = saveFileDialog.GetPath();
+                std::string path = convertWxStringToString(spath);
+                SaveDataToFile(path, grid);
+            }
 
         });
 
@@ -53,14 +80,14 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"C
             "dvg files(*.dvg) | *.dvg",
             wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-    if (openFileDialog.ShowModal() == wxID_OK)
-    {
-        wxString path = openFileDialog.GetPath();
-        std::string spath = convertWxStringToString(path);
-        std::vector<std::vector<double>> obs;
-        readCSV(obs, spath);
-        LoadDataToFile(obs, grid);
-    }
+            if (openFileDialog.ShowModal() == wxID_OK)
+            {
+                wxString path = openFileDialog.GetPath();
+                std::string spath = convertWxStringToString(path);
+                std::vector<std::vector<double>> obs;
+                readCSV(obs, spath);
+                LoadDataToFile(obs, grid);
+            }
 
         });
 

@@ -1,5 +1,4 @@
 #include "childframes.h"
-#include "savekernel.h"
 
 COpenImage::COpenImage(CImageHelper* imghelper, CWriteLogs* outxt) :imghelper{ imghelper }, outxt{ outxt }
 {

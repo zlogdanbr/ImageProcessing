@@ -104,7 +104,6 @@ private:
     wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };
     wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
 
-    // https://docs.wxwidgets.org/3.0/overview_grid.html
     wxGrid* grid = { new wxGrid(
                                     panel2,
                                     -1,
@@ -113,35 +112,7 @@ private:
                                     wxEXPAND
                                 )
                     };
-    
-    // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
-    void setControlslayout()
-    {
-        // set base sizer
-        basePanel->SetSizer(baseSizer);
-
-        // add buttons to the horizontal box
-        hbox1->Add(button1);
-        hbox1->Add(button2);
-        hbox1->Add(button3);
-        hbox1->Add(button4);
-        hbox1->Add(button5);
-
-        // add buttons to the horizontal box
-        hbox2->Add(grid);
-
-        // set horizontal base sizer at panel1 and panel2
-        panel1->SetSizer(hbox1);
-        panel2->SetSizer(hbox2);
-
-        // add panel1 to the base sizer at the base panel
-        baseSizer->Add(panel1);
-        baseSizer->Add(panel2);
-
-        grid->CreateGrid(13, 13);
-
-        Center();
-    }
+    void setControlslayout();
 
 };
 
@@ -152,23 +123,8 @@ public:
 
     CInputDialog(wxFrame* parent);
 
-    std::function<Mat(Mat)> getAlgoFunctionSimple(wxString key)
-    {
-        if (fsimple.find(key) != fsimple.end())
-        {
-            return fsimple[key];
-        }
-        return nullptr;
-    }
-
-    std::function<Mat(Mat,int)> getAlgoFunctionMore(wxString key)
-    {
-        if (fmore.find(key) != fmore.end())
-        {
-            return fmore[key];
-        }
-        return nullptr;
-    }
+    std::function<Mat(Mat)> getAlgoFunctionSimple(wxString key);
+    std::function<Mat(Mat, int)> getAlgoFunctionMore(wxString key);
 
     wxString getSelectionText() { return SelectionText;};
 
@@ -187,78 +143,8 @@ private:
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "Select") };
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
 
-    void fillComboInfo()
-    {
-        fsimple["Convert to Gray Scale"] = convertograyScale;
-        fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
-        fsimple["Equalize Color Scale Image"] = equalizeColorImage;
-        fsimple["Apply Laplacian"] = laplacian;
-        fsimple["Detect Corners"] = detectCornersHarris;
-        fsimple["Detect features"] = fastDetectKeyPoints;
-        fsimple["Custom Algo"] = custom_algo;
-        fsimple["Detect Corners"] = detectCornersHarris;
-        fsimple["Detect features"] = fastDetectKeyPoints;
-        fsimple["Custom Algo"] = custom_algo;
-        fsimple["Flip Image Horizontally"] = flipImageHorizontal;
-        fsimple["Flip Image Vertically"] = flipImageVertical;
-        fsimple["Flip Image"] = flipImage;
-        fsimple["Apply Threshold"] = ApplyThreShold;
-        fsimple["Canny"] = ApplyCanny;
-        fmore["Blur Image"] = blurImageSmooth;
-        fmore["Gaussian"] = GaussianImageSmooth;
-        fmore["Median"] = MedianImageSmooth;
-        fmore["Sobel"] = ApplySobel;
-
-        fsimple["Hough Transform"] = ApplyHoughTransformRegular; 
-        fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
-
-        comboBox1->Append("Convert to Gray Scale");
-        comboBox1->Append("Equalize Gray Scale Image");
-        comboBox1->Append("Equalize Color Scale Image");
-        comboBox1->Append("Apply Laplacian");
-        comboBox1->Append("Blur Image");
-        comboBox1->Append("Gaussian");
-        comboBox1->Append("Median");
-        comboBox1->Append("Detect Corners");
-        comboBox1->Append("Detect features");
-        comboBox1->Append("Custom Algo");
-        comboBox1->Append("Apply Threshold");
-        comboBox1->Append("Sobel");
-        comboBox1->Append("Canny");
-        comboBox1->Append("Sobel");
-        comboBox1->Append("Hough Transform");
-        comboBox1->Append("Hough Transform Probabilistic");
-        comboBox1->Append("Flip Image Horizontally");
-        comboBox1->Append("Flip Image Vertically");
-        comboBox1->Append("Flip Image");
-
-    }
-
-    void setControlslayout()
-    {
-        this->SetSize(350, 70);
-        // set base sizer
-        basePanel->SetSize(350, 70);
-        basePanel->SetSizer(baseSizer);    
-
-        // add buttons to the horizontal box
-        hbox1->Add(button1);
-        hbox1->Add(button2);
-
-        // add buttons to the horizontal box
-        hbox1->Add(comboBox1);
-
-        // set horizontal base sizer at panel1
-        panel1->SetSize(350, 70);
-        panel1->SetSizer(hbox1);
-
-        // add panel1 to the base sizer at the base panel
-        baseSizer->Add(panel1);
-
-        fillComboInfo();
-
-        Center();
-    }
+    void fillComboInfo();
+    void setControlslayout();
 
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
@@ -313,35 +199,7 @@ private:
 
     bool pog_mirror = false;
 
-    void setControlslayout()
-    {
-        // set base sizer
-        this->SetSize(710, 710);
-        basePanel->SetSize(710, 710);
-        basePanel->SetSizer(baseSizer);
-
-        // add buttons to the horizontal box
-        hbox1->Add(button5);
-        hbox1->Add(button2);
-        hbox1->Add(button3);
-        hbox1->Add(button6);
-        hbox1->Add(button4);                
-        hbox1->Add(button7);
-        hbox1->Add(button8);
-        hbox1->Add(button9);
-
-        hbox2->Add(picture, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);// wxALIGN_CENTER_HORIZONTAL
-
-        // set horizontal base sizer at panel1 and panel2
-        panel1->SetSizer(hbox1);
-        panel2->SetSizer(hbox2);
-
-        // add panel1 to the base sizer at the base panel
-        baseSizer->Add(panel1);
-        baseSizer->Add(panel2);
-
-        Center();
-    }
+    void setControlslayout();
 };
 
 #endif
