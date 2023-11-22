@@ -193,11 +193,11 @@ private:
         fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
         fsimple["Equalize Color Scale Image"] = equalizeColorImage;
         fsimple["Apply Laplacian"] = laplacian;
-        fsimple["Detect Corners"] = detectCorners;
-        fsimple["Detect features"] = detect;
+        fsimple["Detect Corners"] = detectCornersHarris;
+        fsimple["Detect features"] = fastDetectKeyPoints;
         fsimple["Custom Algo"] = custom_algo;
-        fsimple["Detect Corners"] = detectCorners;
-        fsimple["Detect features"] = detect;
+        fsimple["Detect Corners"] = detectCornersHarris;
+        fsimple["Detect features"] = fastDetectKeyPoints;
         fsimple["Custom Algo"] = custom_algo;
         fsimple["Flip Image Horizontally"] = flipImageHorizontal;
         fsimple["Flip Image Vertically"] = flipImageVertical;

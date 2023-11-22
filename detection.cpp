@@ -81,28 +81,22 @@ Robert Laganiere
 Page [ 239 ]
 See page [245 ] for the math
 ----------------------------------------------------------------------------------------------*/
-Mat detectCorners(const Mat& image)
+Mat detectCornersHarris(const Mat& image)
 {
 
 	// Detect Harris Corners
 	cv::Mat cornerStrength;
 	cv::Mat imgclone;
 
-	// the book does not say but you need to convert to a gray scale image
-	while(true)
+	if (isGrayScaleImage(image))
 	{
-		try
-		{
-			imgclone = convertograyScale(image);
-			break;
-		}
-		catch (...)
-		{
-			imgclone = image.clone();
-			break;
-		}
+		imgclone = image.clone();
 	}
-	 
+	else
+	{
+		imgclone = convertograyScale(image);
+	}
+ 
 
 	cv::cornerHarris(	imgclone, // input image
 						cornerStrength, // image of cornerness
@@ -138,23 +132,17 @@ length greater than three quarters of the circle perimeter in which all pixels s
 differ from the intensity of the center point (being all darker or all brighter) is found, then a
 keypoint is declared."
 ----------------------------------------------------------------------------------------------*/
-Mat detect(const Mat& image)
+Mat fastDetectKeyPoints(const Mat& image)
 {
 	cv::Mat imgclone;
 
-	// the book does not say but you need to convert to a gray scale image
-	while (true)
+	if (isGrayScaleImage(image))
 	{
-		try
-		{
-			imgclone = convertograyScale(image);
-			break;
-		}
-		catch (...)
-		{
-			imgclone = image.clone();
-			break;
-		}
+		imgclone = image.clone();
+	}
+	else
+	{
+		imgclone = convertograyScale(image);
 	}
 
 	// vector of keypoints
@@ -187,7 +175,7 @@ AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints)
 	return AbstractPoints;
 }
 
-void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE g, UBYTE b)
+void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE g, UBYTE b, bool blank_bgr )
 {
 	for (int y = 0; y < img.rows; y++)
 	{
@@ -203,9 +191,17 @@ void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE 
 				color[0] = r;
 				color[1] = g;
 				color[2] = b;
-				//set pixel
-				img.at<Vec3b>(Point(x, y)) = color;
 			}
+			else
+			{
+				if (blank_bgr)
+				{
+					color[0] = 0xFF;
+					color[1] = 0xFF;
+					color[2] = 0xFF;
+				}
+			}
+			img.at<Vec3b>(Point(x, y)) = color;
 		}
 	}
 }
@@ -215,7 +211,14 @@ Mat custom_algo(const Mat& image)
 
 	cv::Mat imgclone;
 
-	imgclone = image.clone();
+	if (isGrayScaleImage(image))
+	{
+		imgclone = image.clone();
+	}
+	else
+	{
+		imgclone = convertograyScale(image);
+	}
 
 	// vector of keypoints
 	std::vector<cv::KeyPoint> keypoints;
