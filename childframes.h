@@ -9,6 +9,9 @@
 #include "logs.h"
 #include <functional>
 #include <wx/numdlg.h>
+#include <thread>
+#include <wx/wx.h>
+#include <wx/progdlg.h>
 #include "filesys.h"
 
 using Function1Parameter = std::function<Mat(Mat)>;
@@ -70,7 +73,6 @@ protected:
 
     void ApplyAlgorithm(Function1Parameter& f, bool Gray);
     void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
-
 
     // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
     virtual void setControlslayout() = 0;
@@ -145,9 +147,12 @@ private:
 
     void fillComboInfo();
     void setControlslayout();
+    void DoProgressDialog();
 
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
+
+    bool stop = false;
 
 
 };

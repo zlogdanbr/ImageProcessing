@@ -94,6 +94,35 @@ void CInputDialog::fillComboInfo()
 
 }
 
+// http://wxwidgets.blogspot.com/2013/01/about-benefits-of-procrastination.html
+// https://stackoverflow.com/questions/37475851/use-wxthread-to-update-content-of-wxframe-in-c
+/**
+A worker thread can't access any GUI object directly, so you need to post events to the main thread where you can define
+event handlers for them which will do whatever you need.
+There is a convenient base class for such events called wxThreadEvent that you may find useful.
+
+Alternatively, and especially if you use C++11, you could use CallAfter() which allows you to execute a
+callback in the main thread context. This is especially nice with C++11 lambdas because it allows you to
+keep all your code in the same place without having to extract it into a separate event handler.
+*/
+
+void CInputDialog::DoProgressDialog()
+{
+    using namespace std::literals;
+    wxProgressDialog progressDialog("Indeterminate process running", "Click \"Cancel\" to abort", 10, this, wxPD_APP_MODAL | wxPD_CAN_ABORT | wxPD_ELAPSED_TIME);
+    while (true)
+    {
+        progressDialog.Pulse();
+        std::this_thread::sleep_for(100ms);
+
+        if (stop == true)
+        {
+            stop = false;
+            break;
+        }
+    }
+}
+
 void CInputDialog::DoFunction()
 {
     wxString opt = getSelectionText();
@@ -106,6 +135,7 @@ void CInputDialog::DoFunction()
         if (f2 == nullptr)
         {
             outxt->writeTo("Error while loading algos.\n");
+            stop = true;
             return;
         }
 
@@ -115,6 +145,7 @@ void CInputDialog::DoFunction()
     {
         ApplyAlgorithm(f1, true);
     }
+    stop = true;
 }
 
 CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Algorithms Selection" }
@@ -125,8 +156,9 @@ CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Alg
         {
             // set values
             int item = comboBox1->GetSelection();
-            SelectionText = comboBox1->GetValue();
+            SelectionText = comboBox1->GetValue();            
             DoFunction();
+            CallAfter(&CInputDialog::DoProgressDialog);
             Close();
         });
 
