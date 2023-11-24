@@ -66,7 +66,14 @@ Mat convertRectoImg(Rect& r, Mat& img)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 Mat convertograyScale(const Mat& img)
 {
+
+    if (isGrayScaleImage(img) )
+    {
+        return img;
+    }
+
     Mat grayscaleimage;
+
     //change the color image to grayscale image
     cvtColor(img, grayscaleimage, COLOR_BGR2GRAY);
     return grayscaleimage;
@@ -166,14 +173,9 @@ Mat laplacian(const Mat& src)
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(src, src, Size(3, 3), 0, 0, BORDER_DEFAULT);
 
-    if (isGrayScaleImage(src))
-    {
-        src_gray = src;
-    }
-    else
-    {
-        src_gray = convertograyScale(src);
-    }
+
+    src_gray = convertograyScale(src);
+
      
     Mat abs_dst;
     Laplacian(  src_gray, 
@@ -267,16 +269,7 @@ Mat ApplySobel(const Mat& img, int kernel_size)
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(img, img, Size(3, 3), 0, 0, BORDER_DEFAULT);
     Mat src_gray;
-    if (isGrayScaleImage(img))
-    {
-        src_gray = img;
-    }
-    else
-    {
-        src_gray = convertograyScale(img);
-    }
-
-
+    src_gray = convertograyScale(img);
     Mat sobelX = ApplySobelX(src_gray, kernel_size);
     Mat sobelY = ApplySobelY(src_gray, kernel_size);
 

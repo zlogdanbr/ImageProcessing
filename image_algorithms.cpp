@@ -55,10 +55,9 @@ void CInputDialog::fillComboInfo()
     fsimple["Apply Laplacian"] = laplacian;
     fsimple["Detect Corners"] = detectCornersHarris;
     fsimple["Detect features"] = fastDetectKeyPoints;
-    fsimple["Custom Algo"] = custom_algo;
+    fsimple["Working Algorithm"] = workingAlgorithm;
     fsimple["Detect Corners"] = detectCornersHarris;
     fsimple["Detect features"] = fastDetectKeyPoints;
-    fsimple["Custom Algo"] = custom_algo;
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
@@ -72,6 +71,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
 
+    comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
     comboBox1->Append("Equalize Color Scale Image");
@@ -80,8 +80,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Gaussian");
     comboBox1->Append("Median");
     comboBox1->Append("Detect Corners");
-    comboBox1->Append("Detect features");
-    comboBox1->Append("Custom Algo");
+    comboBox1->Append("Detect features");    
     comboBox1->Append("Apply Threshold");
     comboBox1->Append("Sobel");
     comboBox1->Append("Canny");

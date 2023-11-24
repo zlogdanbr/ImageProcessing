@@ -70,6 +70,8 @@ protected:
     //--------------------------------------------------------------
     CImageHelper* imghelper{ nullptr };
     CWriteLogs* outxt{ nullptr };
+    std::string  setPath(bool Gray);
+    void  setFinalImg(Mat& out);
 
     void ApplyAlgorithm(Function1Parameter& f, bool Gray);
     void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
@@ -114,7 +116,7 @@ private:
                                     wxEXPAND
                                 )
                     };
-    void setControlslayout();
+    void setControlslayout() override;
 
 };
 
@@ -146,7 +148,7 @@ private:
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
 
     void fillComboInfo();
-    void setControlslayout();
+    void setControlslayout() override;
 
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
@@ -202,7 +204,7 @@ private:
 
     bool pog_mirror = false;
 
-    void setControlslayout();
+    void setControlslayout() override;
 };
 
 #endif

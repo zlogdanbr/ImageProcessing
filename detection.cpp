@@ -87,16 +87,7 @@ Mat detectCornersHarris(const Mat& image)
 	// Detect Harris Corners
 	cv::Mat cornerStrength;
 	cv::Mat imgclone;
-
-	if (isGrayScaleImage(image))
-	{
-		imgclone = image.clone();
-	}
-	else
-	{
-		imgclone = convertograyScale(image);
-	}
- 
+	imgclone = convertograyScale(image);
 
 	cv::cornerHarris(	imgclone, // input image
 						cornerStrength, // image of cornerness
@@ -136,14 +127,8 @@ Mat fastDetectKeyPoints(const Mat& image)
 {
 	cv::Mat imgclone;
 
-	if (isGrayScaleImage(image))
-	{
-		imgclone = image.clone();
-	}
-	else
-	{
-		imgclone = convertograyScale(image);
-	}
+	imgclone = convertograyScale(image);
+
 
 	// vector of keypoints
 	std::vector<cv::KeyPoint> keypoints;
@@ -206,33 +191,31 @@ void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE 
 	}
 }
 
-Mat custom_algo(const Mat& image)
+/**
+	This function is the one I use to test algorithms I am studing
+	and applying them together with other filters.
+*/
+Mat workingAlgorithm(const Mat& image)
 {
+	cv::Mat imgclone1;
+	cv::Mat imgclone2;
 
-	cv::Mat imgclone;
+	// Convert to gray scale
 
-	if (isGrayScaleImage(image))
-	{
-		imgclone = image.clone();
-	}
-	else
-	{
-		imgclone = convertograyScale(image);
-	}
+	imgclone1 = convertograyScale(image);
+	imgclone2 = convertograyScale(image);
 
-	// vector of keypoints
-	std::vector<cv::KeyPoint> keypoints;
 
-	// FAST detector with a threshold of 40
-	cv::Ptr<cv::FastFeatureDetector> ptrFAST = cv::FastFeatureDetector::create(40);
-	// detect the keypoints
-	ptrFAST->detect(imgclone, keypoints);
+	// Apply sobel
+	imgclone1 = ApplySobel(imgclone1, 5);
 
-	AbstractRegion abstractPoints = convertKeyPointsToAbstract(keypoints);
+	// Threshold both
+	Mat thr1 = ApplyThreShold(imgclone1);
+	Mat thr2 = ApplyThreShold(imgclone2);
 
-	highlightFeature(imgclone, abstractPoints, 0xFF, 0xFF, 0x00);
-
-	return imgclone;
+	// adjust contrast in 50% and subtract original image
+	// from Sobel
+	return 0.5*thr2 - thr1;
 }
 
 

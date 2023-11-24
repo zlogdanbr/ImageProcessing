@@ -18,7 +18,7 @@ void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
 Mat detectEyes(const Mat& image);
 Mat detectCornersHarris(const Mat& image);
 Mat fastDetectKeyPoints(const Mat& image);
-Mat custom_algo(const Mat& image);
+Mat workingAlgorithm(const Mat& image);
 Mat convertRectoImg(Rect& r, Mat& img);
 std::vector<Mat> splitChannel(Mat& img);
 
