@@ -170,7 +170,7 @@ public:
 
     void loadImage();
     void SaveImage();
-    void reloadImage(int factor = 710);
+    void reloadImage(int factor1 = 710, int factor2 = 710);
 
     wxImage getImage() { return image; };
 
@@ -184,15 +184,14 @@ private:
     wxPanel* panel2{ new wxPanel(basePanel, -1) };
 
     wxBoxSizer* baseSizer{ new wxBoxSizer(wxHORIZONTAL) };
-    wxBoxSizer* hbox1{ new wxBoxSizer(wxVERTICAL) };
-    wxBoxSizer* hbox2{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* vbox1{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* vbox2{ new wxBoxSizer(wxVERTICAL) };
 
     wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
     wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
     wxButton* button3{ new wxButton(panel1, wxID_ANY, "Rescale-") };
     wxButton* button6{ new wxButton(panel1, wxID_ANY, "Rescale+") };
     wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };        
-    wxButton* button7{ new wxButton(panel1, wxID_ANY, "Mirror") };
     wxButton* button8{ new wxButton(panel1, wxID_ANY, "Rotate+") };
     wxButton* button9{ new wxButton(panel1, wxID_ANY, "Rotate-") };
 
