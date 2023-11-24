@@ -147,7 +147,6 @@ private:
 
     void fillComboInfo();
     void setControlslayout();
-    void DoProgressDialog();
 
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
