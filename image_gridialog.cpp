@@ -153,7 +153,7 @@ void CGridInputDialog::getGridData() const
                 }
 
                 Mat img_orig = imghelper->getOrginalImageOpenCV();
-                Mat out = ApplyCustom2Dfilter(img_orig, kernel);
+                Mat out = ApplyCustomKernel(img_orig, kernel);
 
                 if (out.empty() == false)
                 {

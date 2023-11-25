@@ -5,30 +5,38 @@ CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ par
 {
 }
 
+std::string CInputDialogBase::setPath(bool Gray)
+{
+    auto spath = imghelper->getOriginalImage();    
+    imghelper->setFinalGray(Gray);
+    return spath;
+}
+
+void  CInputDialogBase::setFinalImg(Mat& out)
+{
+    if (out.empty() == false)
+    {
+        imghelper->setFinalImageOpenCV(out);
+        outxt->writeTo("Algorithm applied correctly\n");
+        imghelper->SetOriginalNew();
+    }
+    else
+    {
+        outxt->writeTo("Algorithm error\n");
+    }
+}
+
 void
 CInputDialogBase::ApplyAlgorithm(Function1Parameter& f, bool Gray)
 {
-
     if (imghelper->getOriginalImageInitiated() == false)
     {
-        auto spath = imghelper->getOriginalImage();
-        Mat img;
         Mat out;
-        imghelper->setFinalGray(Gray);
-
-        if (loadImage(spath, img) == true)
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
         {
             out = f(img);
-            if (out.empty() == false)
-            {
-                imghelper->setFinalImageOpenCV(out);
-                outxt->writeTo("Algorithm applied correctly\n");
-                imghelper->SetOriginalNew();
-            }
-            else
-            {
-                outxt->writeTo("Algorithm error\n");
-            }
+            setFinalImg(out);
         }
         else
         {
@@ -39,16 +47,7 @@ CInputDialogBase::ApplyAlgorithm(Function1Parameter& f, bool Gray)
     {
         Mat out;
         out = f(imghelper->getOrginalImageOpenCV());
-        if (out.empty() == false)
-        {
-            imghelper->setFinalImageOpenCV(out);
-            outxt->writeTo("Algorithm applied correctly\n");
-            imghelper->SetOriginalNew();
-        }
-        else
-        {
-            outxt->writeTo("Algorithm error\n");
-        }
+        setFinalImg(out);
     }
 }
 
@@ -57,24 +56,12 @@ CInputDialogBase::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_si
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
-        auto spath = imghelper->getOriginalImage();
-        Mat img;
         Mat out;
-        imghelper->setFinalGray(Gray);
-
-        if (loadImage(spath, img) == true)
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
         {
             out = f(img, kernel_size);
-            if (out.empty() == false)
-            {
-                imghelper->setFinalImageOpenCV(out);
-                outxt->writeTo("Algorithm applied correctly\n");
-                imghelper->SetOriginalNew();
-            }
-            else
-            {
-                outxt->writeTo("Algorithm error\n");
-            }
+            setFinalImg(out);
         }
         else
         {
@@ -85,15 +72,7 @@ CInputDialogBase::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_si
     {
         Mat out;
         out = f(imghelper->getOrginalImageOpenCV(), kernel_size);
-        if (out.empty() == false)
-        {
-            imghelper->setFinalImageOpenCV(out);
-            outxt->writeTo("Algorithm applied correctly\n");
-            imghelper->SetOriginalNew();
-        }
-        else
-        {
-            outxt->writeTo("Algorithm error\n");
-        }
+        setFinalImg(out);
     }
 }
+

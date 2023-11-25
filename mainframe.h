@@ -91,8 +91,13 @@ private:
     void AddSubitemsToMenu(wxMenu* menuAlgo)
     {
         auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL,  "Algorithms", "Base Algorithms");
+        menumenuALL->SetBitmap(wxArtProvider::GetBitmap( wxART_HELP_BOOK, wxART_MENU));
+        
         auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL,    "Kernels", "Input custom kernel");
+        menuCtsKernl->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_MENU));
+        
         auto menuImage = menuAlgo->Append(IMAGE_DISPLAY,    "Edit", "Image Display");
+        menuImage->SetBitmap(wxArtProvider::GetBitmap (wxART_INFORMATION, wxART_MENU));
     }
 
 };

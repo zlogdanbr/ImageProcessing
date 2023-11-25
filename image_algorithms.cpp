@@ -52,13 +52,12 @@ void CInputDialog::fillComboInfo()
     fsimple["Convert to Gray Scale"] = convertograyScale;
     fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
-    fsimple["Apply Laplacian"] = laplacian;
+    fsimple["Apply Laplacian"] = ApplyLaplacian;
     fsimple["Detect Corners"] = detectCornersHarris;
-    fsimple["Detect features"] = fastDetectKeyPoints;
-    fsimple["Custom Algo"] = custom_algo;
+    fsimple["Detect features"] = detectFastKeyPoints;
+    fsimple["Working Algorithm"] = workingAlgorithm;
     fsimple["Detect Corners"] = detectCornersHarris;
-    fsimple["Detect features"] = fastDetectKeyPoints;
-    fsimple["Custom Algo"] = custom_algo;
+    fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
@@ -71,7 +70,9 @@ void CInputDialog::fillComboInfo()
 
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
+    fsimple["Detect Faces"] = detectFaces;
 
+    comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
     comboBox1->Append("Equalize Color Scale Image");
@@ -80,8 +81,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Gaussian");
     comboBox1->Append("Median");
     comboBox1->Append("Detect Corners");
-    comboBox1->Append("Detect features");
-    comboBox1->Append("Custom Algo");
+    comboBox1->Append("Detect features");    
     comboBox1->Append("Apply Threshold");
     comboBox1->Append("Sobel");
     comboBox1->Append("Canny");
@@ -91,40 +91,13 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Flip Image Horizontally");
     comboBox1->Append("Flip Image Vertically");
     comboBox1->Append("Flip Image");
+    comboBox1->Append("Detect Faces");
 
-}
-
-// http://wxwidgets.blogspot.com/2013/01/about-benefits-of-procrastination.html
-// https://stackoverflow.com/questions/37475851/use-wxthread-to-update-content-of-wxframe-in-c
-/**
-A worker thread can't access any GUI object directly, so you need to post events to the main thread where you can define
-event handlers for them which will do whatever you need.
-There is a convenient base class for such events called wxThreadEvent that you may find useful.
-
-Alternatively, and especially if you use C++11, you could use CallAfter() which allows you to execute a
-callback in the main thread context. This is especially nice with C++11 lambdas because it allows you to
-keep all your code in the same place without having to extract it into a separate event handler.
-*/
-
-void CInputDialog::DoProgressDialog()
-{
-    using namespace std::literals;
-    wxProgressDialog progressDialog("Indeterminate process running", "Click \"Cancel\" to abort", 10, this, wxPD_APP_MODAL | wxPD_CAN_ABORT | wxPD_ELAPSED_TIME);
-    while (true)
-    {
-        progressDialog.Pulse();
-        std::this_thread::sleep_for(100ms);
-
-        if (stop == true)
-        {
-            stop = false;
-            break;
-        }
-    }
 }
 
 void CInputDialog::DoFunction()
 {
+    outxt->writeTo("Applying algorithm... please wait...\n");
     wxString opt = getSelectionText();
 
     Function1Parameter f1 = getAlgoFunctionSimple(opt);
@@ -158,7 +131,6 @@ CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Alg
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();            
             DoFunction();
-            CallAfter(&CInputDialog::DoProgressDialog);
             Close();
         });
 

@@ -25,33 +25,53 @@ using namespace cv;
 
 using RoiAretype = std::vector< std::vector<Point> >;
 
+
+/**
+* Helper functions
+*/
 bool loadImage(const std::string& image_path, Mat& img);
 void showImage(const Mat& img, const std::string& title);
 bool saveImage(const std::string& image_path, Mat& img);
-bool isGrayScaleImage(const Mat& img);
-
-Mat convertograyScale(const Mat& img);
-Mat equalizeGrayImage(const Mat& img);
-Mat equalizeColorImage(const Mat& img);
-
-Mat laplacian(const Mat& src);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
 Mat flipImage(const Mat& img);
-Mat ApplyThreShold(const Mat& img);
 
+/*
+* Gray Scale
+*/
+bool isGrayScaleImage(const Mat& img);
+Mat convertograyScale(const Mat& img);
+
+/*
+* Equalization
+*/
+Mat equalizeGrayImage(const Mat& img);
+Mat equalizeColorImage(const Mat& img);
+
+
+/*
+* Fiters
+*/
+Mat ApplyThreShold(const Mat& img);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
-Mat ApplyCustom2Dfilter(const Mat& img, Mat& kernel);
+Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
+
+/*
+* Hough Transform
+*/
 Mat ApplyHoughTransform(const Mat& img, int opt);
 Mat ApplyHoughTransformRegular(const Mat& img);
 Mat ApplyHoughTransformReProbabilistic(const Mat& img);
 
+/* 
+* Edge detectors
+*/
+Mat ApplyLaplacian(const Mat& src);
 Mat ApplySobelX(const Mat& img, int kernel_size);
 Mat ApplySobelY(const Mat& img, int kernel_size);
 Mat ApplySobel(const Mat& img, int kernel_size);
-Mat ApplyCanny(const Mat& img);
 
 
 
