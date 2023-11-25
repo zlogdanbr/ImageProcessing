@@ -52,12 +52,12 @@ void CInputDialog::fillComboInfo()
     fsimple["Convert to Gray Scale"] = convertograyScale;
     fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
-    fsimple["Apply Laplacian"] = laplacian;
+    fsimple["Apply Laplacian"] = ApplyLaplacian;
     fsimple["Detect Corners"] = detectCornersHarris;
-    fsimple["Detect features"] = fastDetectKeyPoints;
+    fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Working Algorithm"] = workingAlgorithm;
     fsimple["Detect Corners"] = detectCornersHarris;
-    fsimple["Detect features"] = fastDetectKeyPoints;
+    fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
@@ -70,6 +70,7 @@ void CInputDialog::fillComboInfo()
 
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
+    fsimple["Detect Faces"] = detectFaces;
 
     comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
@@ -90,6 +91,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Flip Image Horizontally");
     comboBox1->Append("Flip Image Vertically");
     comboBox1->Append("Flip Image");
+    comboBox1->Append("Detect Faces");
 
 }
 

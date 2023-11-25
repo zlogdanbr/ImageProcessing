@@ -12,17 +12,35 @@ using namespace cv;
 using UBYTE = unsigned char;
 using AbstractRegion = std::vector<std::pair<int, int>>;
 
+/*
+*  Helper functions
+*/
 static
 void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
-
-Mat detectEyes(const Mat& image);
-Mat detectCornersHarris(const Mat& image);
-Mat fastDetectKeyPoints(const Mat& image);
-Mat workingAlgorithm(const Mat& image);
-Mat convertRectoImg(Rect& r, Mat& img);
 std::vector<Mat> splitChannel(Mat& img);
-
 AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);;
 void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE, UBYTE, UBYTE, bool blank_bgr = false);
+Mat convertRectoImg(Rect& r, Mat& img);
+
+/* 
+*  Advanced Algorithms and detectors
+*/
+Mat detectFaces(const Mat& image);
+
+Mat detectCornersHarrisAlgoFull(	const Mat& image,
+									int neighborhood_size,
+									int aperture_size,
+									int threshold,
+									double Harris_parameter
+									);
+
+
+Mat detectCornersHarris(const Mat& image);
+Mat detectFastKeyPoints(const Mat& image);
+Mat workingAlgorithm(const Mat& image);
+
+Mat ApplyCanny(const Mat& img);
+Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 
 #endif
+

@@ -29,7 +29,7 @@ visualize(Mat& input, int frame, Mat& faces,  int thickness)
     }
 }
 
-Mat detectEyes(const Mat& image)
+Mat detectFaces(const Mat& image)
 {
 	// https://github.com/opencv/opencv_zoo/tree/master/models/face_detection_yunet
 	std::string fd_modelPath = "C:\\Users\\Administrador\\Documents\\GitHub\\Image Data\\face_data1\\face_detection_yunet_2023mar_int8.onnx";
@@ -81,30 +81,40 @@ Robert Laganiere
 Page [ 239 ]
 See page [245 ] for the math
 ----------------------------------------------------------------------------------------------*/
-Mat detectCornersHarris(const Mat& image)
-{
 
+Mat detectCornersHarrisAlgoFull(		const Mat& image, 
+										int neighborhood_size,
+										int aperture_size,
+										double threshold,
+										double Harris_parameter
+								)
+{
 	// Detect Harris Corners
 	cv::Mat cornerStrength;
 	cv::Mat imgclone;
 	imgclone = convertograyScale(image);
 
-	cv::cornerHarris(	imgclone, // input image
-						cornerStrength, // image of cornerness
-						3, // neighborhood size
-						3, // aperture size
-						0.01); // Harris parameter
+	cv::cornerHarris(imgclone, // input image
+		cornerStrength, // image of cornerness
+		neighborhood_size, // neighborhood size
+		aperture_size, // aperture size
+		Harris_parameter); // Harris parameter
 
+	cv::Mat harrisCorners;
 
 	// threshold the corner strengths
-	cv::Mat harrisCorners;
-	double threshold = 0.0001;
-	cv::threshold(cornerStrength,
-		harrisCorners,
-		threshold,
-		255,
-		cv::THRESH_BINARY);
+	cv::threshold(	cornerStrength,
+					harrisCorners,
+					threshold,
+					255,
+					cv::THRESH_BINARY);
+
 	return harrisCorners;
+}
+
+Mat detectCornersHarris(const Mat& image)
+{
+	return detectCornersHarrisAlgoFull(image, 3, 3, 0.0001, 0.01);
 }
 
 /* -------------------------------------------------------------------------------------------
@@ -123,12 +133,11 @@ length greater than three quarters of the circle perimeter in which all pixels s
 differ from the intensity of the center point (being all darker or all brighter) is found, then a
 keypoint is declared."
 ----------------------------------------------------------------------------------------------*/
-Mat fastDetectKeyPoints(const Mat& image)
+Mat detectFastKeyPoints(const Mat& image)
 {
 	cv::Mat imgclone;
 
 	imgclone = convertograyScale(image);
-
 
 	// vector of keypoints
 	std::vector<cv::KeyPoint> keypoints;
@@ -216,6 +225,24 @@ Mat workingAlgorithm(const Mat& image)
 	// adjust contrast in 50% and subtract original image
 	// from Sobel
 	return 0.5*thr2 - thr1;
+}
+
+Mat ApplyCanny(const Mat& img)
+{
+	Mat out = ApplyCannyAlgoFull(img, 125, 350);
+	return out;
+}
+
+Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)
+{
+	Mat contours;
+	Mat grayscale = convertograyScale(img);
+	//Apply Canny algorithm
+	cv::Canny(grayscale, // gray-level image
+		contours, // output contours
+		threshold, // low threshold
+		aperture); // high threshold
+	return contours;
 }
 
 
