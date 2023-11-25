@@ -43,6 +43,8 @@ public:
         return original_initiated;
     }
 
+    bool revert();
+
     std::string getOriginalImage() { return original; };
 
     Mat getOrginalImageOpenCV() const { return Original_ImageOpenCVFormat; };
@@ -71,6 +73,9 @@ private:
     bool original_initiated = false;
     bool final_isgray = false;
     std::string original = "";
+
+    Mat savefinal;
+    Mat saveOriginal;
 
     template<typename T1, typename T2>
     auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))

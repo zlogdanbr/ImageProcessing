@@ -164,3 +164,15 @@ void MyFrame::onAdjustContrast(wxCommandEvent& event)
     }
 }
 
+
+void MyFrame::onRevert(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        if (ImageHelper.revert() == false)
+        {
+            outxt.writeTo("Error, final image not loaded\n");
+        }
+
+    }
+}

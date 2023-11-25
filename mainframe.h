@@ -66,6 +66,7 @@ private:
     void onAllMenu(wxCommandEvent& event);
     void onHelpFile(wxCommandEvent& event);
     void onDisplayImage(wxCommandEvent& event);
+    void onRevert(wxCommandEvent& event);
 
     void onSumImage(wxCommandEvent& event);
     void onSubImage(wxCommandEvent& event);
@@ -81,7 +82,8 @@ private:
         IMAGE_DISPLAY,
         SUM_IMG_ID,
         SUB_IMG_ID,
-        CONTRAST_ID_IMG
+        CONTRAST_ID_IMG,
+        REVETR_IMG_ID
     };
 
     void BinAllEvents()
@@ -97,6 +99,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onSumImage, this, SUM_IMG_ID);
         Bind(wxEVT_MENU, &MyFrame::onSubImage, this, SUB_IMG_ID);
         Bind(wxEVT_MENU, &MyFrame::onAdjustContrast, this, CONTRAST_ID_IMG);
+        Bind(wxEVT_MENU, &MyFrame::onRevert, this, REVETR_IMG_ID);
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -113,6 +116,7 @@ private:
         auto menuSum = menuAlgo->Append(SUM_IMG_ID, "Sum images", "Sum images");
         auto menuSub = menuAlgo->Append(SUB_IMG_ID, "Subtrack images", "Subtrack images");
         auto menuContrast = menuAlgo->Append(CONTRAST_ID_IMG, "Adjust Contrast", "Adjust Contrast");
+        auto menuRevert = menuAlgo->Append(REVETR_IMG_ID, "Revert", "Revert");
     }
 
     int getContrastDialog()

@@ -9,14 +9,14 @@ std::string convertWxStringToString(const wxString wsx)
 }
 bool CImageHelper::SumImages()
 {
-    Mat savefinal = Final_ImageOpenCVFormat.clone();
+    savefinal = Final_ImageOpenCVFormat.clone();
 
     if (savefinal.empty())
     {
         return false;
     }
 
-    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+    saveOriginal = Original_ImageOpenCVFormat.clone();
 
     destroyAllWindows();
     clean();
@@ -33,14 +33,14 @@ bool CImageHelper::SumImages()
 
 bool CImageHelper::SubtractImages()
 {
-    Mat savefinal = Final_ImageOpenCVFormat.clone();
+    savefinal = Final_ImageOpenCVFormat.clone();
 
     if (savefinal.empty())
     {
         return false;
     }
 
-    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+    saveOriginal = Original_ImageOpenCVFormat.clone();
 
     destroyAllWindows();
     clean();
@@ -72,14 +72,14 @@ void CImageHelper::clean()
 
 bool CImageHelper::AdjustContrast(double scale)
 {
-    Mat savefinal = Final_ImageOpenCVFormat.clone();
+    savefinal = Final_ImageOpenCVFormat.clone();
 
     if (savefinal.empty())
     {
         return false;
     }
 
-    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+    saveOriginal = Original_ImageOpenCVFormat.clone();
 
     destroyAllWindows();
     clean();
@@ -95,10 +95,31 @@ bool CImageHelper::AdjustContrast(double scale)
     return true;
 }
 
+bool CImageHelper::revert()
+{
+    savefinal = Final_ImageOpenCVFormat.clone();
+
+    if (savefinal.empty() || saveOriginal.empty())
+    {
+        return false;
+    }
+
+    destroyAllWindows();
+    clean();
+
+    setOrginalImageOpenCV(saveOriginal);
+    showImage(saveOriginal, "Original");    
+    original_initiated = true;
+
+    savefinal.deallocate();
+
+    return true;
+
+}
 void CImageHelper::SetOriginalNew()
 {
-    Mat savefinal = Final_ImageOpenCVFormat.clone();
-    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+    savefinal = Final_ImageOpenCVFormat.clone();
+    saveOriginal = Original_ImageOpenCVFormat.clone();
 
     destroyAllWindows();
     clean();
