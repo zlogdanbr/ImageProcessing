@@ -20,6 +20,7 @@
 #include "filesys.h"
 #include "opcvwrapper.h"
 #include "detection.h"
+#include <functional>
 
 
 std::string convertWxStringToString(const wxString wsx);
@@ -56,6 +57,11 @@ public:
     const bool getFinalGray() const { return final_isgray; };
     void SetOriginalNew();
 
+    bool SumImages();
+    bool SubtractImages();
+ 
+    bool AdjustContrast(double scale);
+
 private:
 
     CImageHelper(CImageHelper&) = delete;
@@ -66,7 +72,17 @@ private:
     bool final_isgray = false;
     std::string original = "";
 
+    template<typename T1, typename T2>
+    auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))
+    {
+        return std::forward<T1>(t1) + std::forward<T2>(t2);
+    }
 
+    template<typename T1, typename T2>
+    auto Sub(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) - std::forward<T2>(t2))
+    {
+        return std::forward<T1>(t1) - std::forward<T2>(t2);
+    }
 
 };
 #endif

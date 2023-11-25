@@ -1,10 +1,59 @@
 #include "image_helper.h"
+#include <wx/numdlg.h>
 
 std::string convertWxStringToString(const wxString wsx)
 {
     std::stringstream s;
     s << wsx;
     return s.str();
+}
+bool CImageHelper::SumImages()
+{
+    Mat savefinal = Final_ImageOpenCVFormat.clone();
+
+    if (savefinal.empty())
+    {
+        return false;
+    }
+
+    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+
+    destroyAllWindows();
+    clean();
+
+    Mat final = Plus(savefinal,saveOriginal);
+    setOrginalImageOpenCV(final);
+    original_initiated = true;
+
+    showImage(saveOriginal, "Original");
+    showImage(savefinal, "Final");
+
+    return true;
+}
+
+bool CImageHelper::SubtractImages()
+{
+    Mat savefinal = Final_ImageOpenCVFormat.clone();
+
+    if (savefinal.empty())
+    {
+        return false;
+    }
+
+    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+
+    destroyAllWindows();
+    clean();
+
+    Mat final = Sub(savefinal, saveOriginal);
+
+    setOrginalImageOpenCV(final);
+    original_initiated = true;
+
+    showImage(saveOriginal, "Original");
+    showImage(savefinal, "Final");
+
+    return true;
 }
 
 void CImageHelper::clean()
@@ -19,6 +68,31 @@ void CImageHelper::clean()
     {
         Original_ImageOpenCVFormat.deallocate();
     }
+}
+
+bool CImageHelper::AdjustContrast(double scale)
+{
+    Mat savefinal = Final_ImageOpenCVFormat.clone();
+
+    if (savefinal.empty())
+    {
+        return false;
+    }
+
+    Mat saveOriginal = Original_ImageOpenCVFormat.clone();
+
+    destroyAllWindows();
+    clean();
+
+    savefinal = (scale/static_cast<double>(10)) * saveOriginal;
+
+    setOrginalImageOpenCV(savefinal);
+    original_initiated = true;
+
+    showImage(saveOriginal, "Original");
+    showImage(savefinal, "Final");
+
+    return true;
 }
 
 void CImageHelper::SetOriginalNew()

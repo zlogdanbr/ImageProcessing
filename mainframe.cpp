@@ -2,6 +2,7 @@
 #include "mainframe.h"
 #include "detection.h"
 
+
 MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
 {
     SetClientSize(640, 480);
@@ -120,13 +121,46 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
 
 }
 
-/**
-* TODO: This will have some tools for editing images but xwWidgets methods will be used
-* instead
-*/
+void MyFrame::onSumImage(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        if ( ImageHelper.SumImages() == false )
+        {
+            outxt.writeTo("Error, final image not loaded\n");
+        }
+    }
+}
+
+void MyFrame::onSubImage(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        if ( ImageHelper.SubtractImages() == false )
+        {
+            outxt.writeTo("Error, final image not loaded\n");
+        }
+    }
+}
+
 void MyFrame::onDisplayImage(wxCommandEvent& event)
 {
     CImageCustomDialog* ImageDialog = new CImageCustomDialog(this);
     ImageDialog->Show(true);
+}
+
+void MyFrame::onAdjustContrast(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        int contrast = getContrastDialog();
+
+        if (contrast <= 0)
+        {
+            outxt.writeTo("Error, final image not loaded\n");
+            return;
+        }
+        ImageHelper.AdjustContrast(contrast);
+    }
 }
 

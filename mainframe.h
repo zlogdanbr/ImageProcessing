@@ -67,6 +67,11 @@ private:
     void onHelpFile(wxCommandEvent& event);
     void onDisplayImage(wxCommandEvent& event);
 
+    void onSumImage(wxCommandEvent& event);
+    void onSubImage(wxCommandEvent& event);
+
+    void onAdjustContrast(wxCommandEvent& event);
+
     
 
     enum  Opt 
@@ -74,6 +79,9 @@ private:
         CUSTKERNEL,
         ONE_ID_TO_ALL,
         IMAGE_DISPLAY,
+        SUM_IMG_ID,
+        SUB_IMG_ID,
+        CONTRAST_ID_IMG
     };
 
     void BinAllEvents()
@@ -86,6 +94,9 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
         Bind(wxEVT_MENU, &MyFrame::onDisplayImage, this, IMAGE_DISPLAY);
+        Bind(wxEVT_MENU, &MyFrame::onSumImage, this, SUM_IMG_ID);
+        Bind(wxEVT_MENU, &MyFrame::onSubImage, this, SUB_IMG_ID);
+        Bind(wxEVT_MENU, &MyFrame::onAdjustContrast, this, CONTRAST_ID_IMG);
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -98,6 +109,23 @@ private:
         
         auto menuImage = menuAlgo->Append(IMAGE_DISPLAY,    "Edit", "Image Display");
         menuImage->SetBitmap(wxArtProvider::GetBitmap (wxART_INFORMATION, wxART_MENU));
+
+        auto menuSum = menuAlgo->Append(SUM_IMG_ID, "Sum images", "Sum images");
+        auto menuSub = menuAlgo->Append(SUB_IMG_ID, "Subtrack images", "Subtrack images");
+        auto menuContrast = menuAlgo->Append(CONTRAST_ID_IMG, "Adjust Contrast", "Adjust Contrast");
+    }
+
+    int getContrastDialog()
+    {
+        wxNumberEntryDialog dialog(this, "Contrast Adjustment", "Choose Contrast Adjustment", "Contrast Adjustmen Factor", 1, 1, 100);
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            auto scale = static_cast<int>(dialog.GetValue());
+            return scale;
+        }
+
+        return -1;
     }
 
 };
