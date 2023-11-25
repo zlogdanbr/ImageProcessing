@@ -63,6 +63,8 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image"] = flipImage;
     fsimple["Apply Threshold"] = ApplyThreShold;
     fsimple["Canny"] = ApplyCanny;
+    fsimple["Sharpening"] = Sharpening;
+    fsimple["Unsharp"] = Unsharp;
     fmore["Blur Image"] = blurImageSmooth;
     fmore["Gaussian"] = GaussianImageSmooth;
     fmore["Median"] = MedianImageSmooth;
@@ -86,6 +88,8 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Sobel");
     comboBox1->Append("Canny");
     comboBox1->Append("Sobel");
+    comboBox1->Append("Sharpening");
+    comboBox1->Append("Unsharp");
     comboBox1->Append("Hough Transform");
     comboBox1->Append("Hough Transform Probabilistic");
     comboBox1->Append("Flip Image Horizontally");

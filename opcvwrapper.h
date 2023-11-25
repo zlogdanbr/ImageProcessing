@@ -72,6 +72,8 @@ Mat ApplyLaplacian(const Mat& src);
 Mat ApplySobelX(const Mat& img, int kernel_size);
 Mat ApplySobelY(const Mat& img, int kernel_size);
 Mat ApplySobel(const Mat& img, int kernel_size);
+Mat Sharpening(const Mat& img);
+Mat Unsharp(const Mat& img);
 
 
 

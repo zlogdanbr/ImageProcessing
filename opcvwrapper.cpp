@@ -343,3 +343,16 @@ Mat ApplyHoughTransformReProbabilistic(const Mat& img)
 {
     return ApplyHoughTransform(img, 1);
 }
+Mat Sharpening(const Mat& img)
+{
+    Mat Iconv = 0.5 * ApplyLaplacian(img);
+    Mat igray = convertograyScale(img);
+    return igray - Iconv;
+}
+
+Mat Unsharp(const Mat& img)
+{
+    Mat Iconv = GaussianImageSmooth(img,3);
+    Mat igray = convertograyScale(img);
+    return (1.5) * igray - 0.5 * Iconv;
+}
