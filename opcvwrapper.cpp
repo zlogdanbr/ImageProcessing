@@ -3,6 +3,12 @@
 
 using namespace math_util;
 
+Mat InvertImage(const Mat& img)
+{
+    Mat out;
+    bitwise_not(img, out);
+    return out;
+}
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 bool loadImage(const std::string& image_path, Mat& img)

@@ -156,6 +156,24 @@ Mat detectFastKeyPoints(const Mat& image)
 	return imgclone;
 }
 
+std::pair<std::vector<int>, std::vector<int>> getXYFromAbstractRegion(AbstractRegion& AbstractPoints)
+{
+	std::pair<std::vector<int>, std::vector<int>> out;
+	std::vector<int> x;
+	std::vector<int> y;
+
+	for (const auto& point : AbstractPoints)
+	{
+		x.push_back(point.first);
+		y.push_back(point.second);
+	}
+
+	out = make_pair(x, y);
+
+	return out;
+
+}
+
 AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints)
 {
 	AbstractRegion  AbstractPoints;

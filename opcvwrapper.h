@@ -35,6 +35,7 @@ bool saveImage(const std::string& image_path, Mat& img);
 Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
 Mat flipImage(const Mat& img);
+Mat InvertImage(const Mat& img);
 
 /*
 * Gray Scale

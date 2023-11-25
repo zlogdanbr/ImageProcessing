@@ -58,6 +58,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Working Algorithm"] = workingAlgorithm;
     fsimple["Detect Corners"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
+    fsimple["Invert Image"] = InvertImage;
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
@@ -80,6 +81,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Equalize Color Scale Image");
     comboBox1->Append("Apply Laplacian");
     comboBox1->Append("Blur Image");
+    comboBox1->Append("Blur Image");
     comboBox1->Append("Gaussian");
     comboBox1->Append("Median");
     comboBox1->Append("Detect Corners");
@@ -87,7 +89,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Apply Threshold");
     comboBox1->Append("Sobel");
     comboBox1->Append("Canny");
-    comboBox1->Append("Sobel");
+    comboBox1->Append("Invert Image");
     comboBox1->Append("Sharpening");
     comboBox1->Append("Unsharp");
     comboBox1->Append("Hough Transform");

@@ -140,6 +140,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;opencv_world480.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage.exe C:\tools\diMage</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="childframes.cpp" />

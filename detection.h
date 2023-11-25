@@ -20,6 +20,7 @@ void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
 std::vector<Mat> splitChannel(Mat& img);
 AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);;
 void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE, UBYTE, UBYTE, bool blank_bgr = false);
+std::pair<std::vector<int>, std::vector<int>> getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
 Mat convertRectoImg(Rect& r, Mat& img);
 
 /* 
