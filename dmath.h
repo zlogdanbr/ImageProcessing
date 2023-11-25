@@ -31,8 +31,6 @@ namespace math_util
 	using cubic_spline = boost::math::interpolators::cardinal_cubic_b_spline<double>;
 	using quadradic_spline = boost::math::interpolators::cardinal_quintic_b_spline<double>;
 
-	using cubic_spline_int = boost::math::interpolators::cardinal_cubic_b_spline<int>;
-	using quadradic_spline_int = boost::math::interpolators::cardinal_quintic_b_spline<int>;
 
 	quadradic_spline quadradicspline(std::vector<double>& y, double t0, double time_step)
 	{
@@ -43,18 +41,6 @@ namespace math_util
 	cubic_spline cubicspline(std::vector<double>& y, double t0, double time_step)
 	{
 		cubic_spline p1(y.data(), y.size(), t0, time_step);
-		return p1;
-	}
-
-	quadradic_spline_int quadradicspline(std::vector<int>& y, double t0, double time_step)
-	{
-		quadradic_spline_int p1(y.data(), y.size(), t0, time_step);
-		return p1;
-	}
-
-	cubic_spline_int cubicspline(std::vector<int>& y, double t0, double time_step)
-	{
-		cubic_spline_int p1(y.data(), y.size(), t0, time_step);
 		return p1;
 	}
 
