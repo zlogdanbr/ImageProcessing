@@ -1,6 +1,6 @@
 #include "detection.h"
 #include "opcvwrapper.h"
-
+#include "filesys.h"
 
 /* -------------------------------------------------------------------------------------------
 	 https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
@@ -32,9 +32,10 @@ visualize(Mat& input, int frame, Mat& faces,  int thickness)
 Mat detectFaces(const Mat& image)
 {
 	// https://github.com/opencv/opencv_zoo/tree/master/models/face_detection_yunet
-	std::string fd_modelPath = "C:\\Users\\Administrador\\Documents\\GitHub\\Image Data\\face_data1\\face_detection_yunet_2023mar_int8.onnx";
+	std::string fd_modelPath = "face_data1\\face_detection_yunet_2023mar_int8.onnx";
 	// https://github.com/opencv/opencv_zoo/tree/master/models/face_recognition_sface
-	std::string fr_modelPath = "C:\\Users\\Administrador\\Documents\\GitHub\\Image Data\\face_data2\\face_recognition_sface_2021dec.onnx";
+	std::string fr_modelPath = "face_data2\\face_recognition_sface_2021dec.onnx";
+
 
 	float scoreThreshold = static_cast<float>(0.9);
 	float nmsThreshold = static_cast<float>(0.3);
@@ -156,9 +157,9 @@ Mat detectFastKeyPoints(const Mat& image)
 	return imgclone;
 }
 
-std::pair<std::vector<int>, std::vector<int>> getXYFromAbstractRegion(AbstractRegion& AbstractPoints)
+TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints)
 {
-	std::pair<std::vector<int>, std::vector<int>> out;
+	TargetPoints out;
 	std::vector<int> x;
 	std::vector<int> y;
 

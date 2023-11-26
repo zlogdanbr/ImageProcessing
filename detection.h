@@ -9,8 +9,10 @@
 #include "opcvwrapper.h"
 using namespace cv;
 
-using UBYTE = unsigned char;
-using AbstractRegion = std::vector<std::pair<int, int>>;
+using UBYTE					= unsigned char;
+using AbstractRegion		= std::vector<std::pair<int, int>>;
+using TargetPoints			= std::pair<std::vector<int>, std::vector<int>>;
+using TargetPointsDouble	= std::pair<std::vector<double>, std::vector<double>>;
 
 /*
 *  Helper functions
@@ -20,7 +22,7 @@ void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
 std::vector<Mat> splitChannel(Mat& img);
 AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);;
 void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE, UBYTE, UBYTE, bool blank_bgr = false);
-std::pair<std::vector<int>, std::vector<int>> getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
+TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
 Mat convertRectoImg(Rect& r, Mat& img);
 
 /* 

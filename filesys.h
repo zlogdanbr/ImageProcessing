@@ -12,6 +12,7 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+#include "wx/filefn.h"
 
 bool directory_exists(const std::string& _directory);
 bool file_exists(const std::string& );
@@ -22,6 +23,7 @@ uintmax_t getFileSize(const std::string& _file);
 std::string getExtension(const std::string& _file);
 std::string getFileName(const std::string& _file);
 std::string getPathOfFile(const std::string& _file);
+wxString getCurrentDir();
 
 
 #endif

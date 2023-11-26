@@ -1,6 +1,12 @@
 #include "filesys.h"
 namespace fs = std::filesystem;
 
+wxString getCurrentDir()
+{
+	wxString s = wxGetCwd();
+	return s;
+}
+
 std::string getExtension(const std::string& _file)
 {
 	auto ext  = fs::path(_file).extension();
