@@ -52,7 +52,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Convert to Gray Scale"] = convertograyScale;
     fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
-    fsimple["Apply Laplacian"] = ApplyLaplacian;
+    fsimple["Laplacian"] = ApplyLaplacian;
     fsimple["Detect Corners"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Working Algorithm"] = workingAlgorithm;
@@ -62,41 +62,40 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
-    fsimple["Apply Threshold"] = ApplyThreShold;
+    fsimple["Threshold"] = ApplyThreShold;
     fsimple["Canny"] = ApplyCanny;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
+    fsimple["Hough Transform"] = ApplyHoughTransformRegular;
+    fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
+    fsimple["Detect Faces"] = detectFaces;
+
     fmore["Blur Image"] = blurImageSmooth;
     fmore["Gaussian"] = GaussianImageSmooth;
     fmore["Median"] = MedianImageSmooth;
     fmore["Sobel"] = ApplySobel;
 
-    fsimple["Hough Transform"] = ApplyHoughTransformRegular;
-    fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
-    fsimple["Detect Faces"] = detectFaces;
-
     comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
-    comboBox1->Append("Equalize Color Scale Image");
-    comboBox1->Append("Apply Laplacian");
-    comboBox1->Append("Blur Image");
-    comboBox1->Append("Blur Image");
-    comboBox1->Append("Gaussian");
-    comboBox1->Append("Median");
-    comboBox1->Append("Detect Corners");
-    comboBox1->Append("Detect features");    
-    comboBox1->Append("Apply Threshold");
-    comboBox1->Append("Sobel");
-    comboBox1->Append("Canny");
-    comboBox1->Append("Invert Image");
-    comboBox1->Append("Sharpening");
-    comboBox1->Append("Unsharp");
-    comboBox1->Append("Hough Transform");
-    comboBox1->Append("Hough Transform Probabilistic");
+    comboBox1->Append("Equalize Color Scale Image");  
     comboBox1->Append("Flip Image Horizontally");
     comboBox1->Append("Flip Image Vertically");
     comboBox1->Append("Flip Image");
+    comboBox1->Append("Blur Image");
+    comboBox1->Append("Invert Image");
+    comboBox1->Append("Gaussian");
+    comboBox1->Append("Median");
+    comboBox1->Append("Sharpening");
+    comboBox1->Append("Unsharp");
+    comboBox1->Append("Threshold");
+    comboBox1->Append("Laplacian");
+    comboBox1->Append("Sobel");
+    comboBox1->Append("Canny");
+    comboBox1->Append("Detect Corners");
+    comboBox1->Append("Detect features");
+    comboBox1->Append("Hough Transform");
+    comboBox1->Append("Hough Transform Probabilistic");
     comboBox1->Append("Detect Faces");
 
 }
