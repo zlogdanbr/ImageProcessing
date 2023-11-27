@@ -19,7 +19,6 @@ using TargetPointsDouble	= std::pair<std::vector<double>, std::vector<double>>;
 */
 static
 void visualize(Mat& input, int frame, Mat& faces,  int thickness = 2);
-std::vector<Mat> splitChannel(Mat& img);
 AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);;
 void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE, UBYTE, UBYTE, bool blank_bgr = false);
 TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints);

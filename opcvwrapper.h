@@ -17,8 +17,8 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <cmath>
-
+#include "Eigen"
+#include "Dense"
 
 using namespace cv;
 
@@ -36,6 +36,8 @@ Mat flipImageHorizontal(const Mat& img);
 Mat flipImageVertical(const Mat& img);
 Mat flipImage(const Mat& img);
 Mat InvertImage(const Mat& img);
+std::vector<Mat> splitChannel(Mat& img);
+std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage);
 
 /*
 * Gray Scale

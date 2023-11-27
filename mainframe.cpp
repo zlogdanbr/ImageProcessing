@@ -173,6 +173,5 @@ void MyFrame::onRevert(wxCommandEvent& event)
         {
             outxt.writeTo("Error, final image not loaded\n");
         }
-
     }
 }

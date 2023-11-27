@@ -73,8 +73,6 @@ private:
 
     void onAdjustContrast(wxCommandEvent& event);
 
-    
-
     enum  Opt 
     {
         CUSTKERNEL,

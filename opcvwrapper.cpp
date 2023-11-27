@@ -1,7 +1,48 @@
 ﻿#include "opcvwrapper.h"
 #include "dmath.h"
 
-using namespace math_util;
+std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage)
+{
+    std::vector< Eigen::MatrixXd > ThreeChannels;
+
+    Eigen::MatrixXd channel1;
+    Eigen::MatrixXd channel2;
+    Eigen::MatrixXd channel3;
+
+    unsigned char* input = static_cast<unsigned char*>(OpenCVImage.data);
+
+    if (isGrayScaleImage(OpenCVImage))
+    {
+        for (int j = 0; j < OpenCVImage.rows; j++)
+        {
+            for (int i = 0; i < OpenCVImage.cols; i++)
+            {
+                channel1 << input[OpenCVImage.step * j + i];
+                channel2 << input[OpenCVImage.step * j + i + 1];
+                channel3 << input[OpenCVImage.step * j + i + 2];
+            }
+        }
+        ThreeChannels.push_back(channel1);
+    }
+    else
+    {
+
+        for (int j = 0; j < OpenCVImage.rows; j++)
+        {
+            for (int i = 0; i < OpenCVImage.cols; i++)
+            {
+                channel1 << input[OpenCVImage.step * j + i];
+                channel2 << input[OpenCVImage.step * j + i + 1];
+                channel3 << input[OpenCVImage.step * j + i + 2];
+            }
+        }
+        ThreeChannels.push_back(channel1);
+        ThreeChannels.push_back(channel2);
+        ThreeChannels.push_back(channel3);
+    }
+
+    return ThreeChannels;
+}
 
 Mat InvertImage(const Mat& img)
 {

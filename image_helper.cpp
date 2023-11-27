@@ -108,7 +108,8 @@ bool CImageHelper::revert()
     clean();
 
     setOrginalImageOpenCV(saveOriginal);
-    showImage(saveOriginal, "Original");    
+    showImage(saveOriginal, "Original");  
+    showImage(savefinal, "Final");
     original_initiated = true;
 
     savefinal.deallocate();
