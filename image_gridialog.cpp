@@ -161,6 +161,7 @@ void CGridInputDialog::getGridData() const
                     showImage(out, "Final");
                     imghelper->setFinalGray(true);
                     imghelper->SetOriginalNew();
+                    imghelper->addImageToCache(out);
                 }
                 else
                 {

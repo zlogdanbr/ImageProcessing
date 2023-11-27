@@ -37,6 +37,7 @@ CInputDialogBase::ApplyAlgorithm(Function1Parameter& f, bool Gray)
         {
             out = f(img);
             setFinalImg(out);
+            imghelper->addImageToCache(out);
         }
         else
         {
@@ -48,6 +49,7 @@ CInputDialogBase::ApplyAlgorithm(Function1Parameter& f, bool Gray)
         Mat out;
         out = f(imghelper->getOrginalImageOpenCV());
         setFinalImg(out);
+        imghelper->addImageToCache(out);
     }
 }
 
@@ -62,6 +64,7 @@ CInputDialogBase::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_si
         {
             out = f(img, kernel_size);
             setFinalImg(out);
+            imghelper->addImageToCache(out);
         }
         else
         {
@@ -73,6 +76,7 @@ CInputDialogBase::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_si
         Mat out;
         out = f(imghelper->getOrginalImageOpenCV(), kernel_size);
         setFinalImg(out);
+        imghelper->addImageToCache(out);
     }
 }
 

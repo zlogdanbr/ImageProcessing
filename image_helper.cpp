@@ -7,52 +7,22 @@ std::string convertWxStringToString(const wxString wsx)
     s << wsx;
     return s.str();
 }
+
+// TODO
 bool CImageHelper::SumImages()
 {
-    savefinal = Final_ImageOpenCVFormat.clone();
-
-    if (savefinal.empty())
-    {
-        return false;
-    }
-
-    saveOriginal = Original_ImageOpenCVFormat.clone();
-
-    destroyAllWindows();
-    clean();
-
-    Mat final = Plus(savefinal,saveOriginal);
-    setOrginalImageOpenCV(final);
-    original_initiated = true;
-
-    showImage(saveOriginal, "Original");
-    showImage(savefinal, "Final");
-
     return true;
 }
 
+// TODO
 bool CImageHelper::SubtractImages()
 {
-    savefinal = Final_ImageOpenCVFormat.clone();
+    return true;
+}
 
-    if (savefinal.empty())
-    {
-        return false;
-    }
-
-    saveOriginal = Original_ImageOpenCVFormat.clone();
-
-    destroyAllWindows();
-    clean();
-
-    Mat final = Sub(savefinal, saveOriginal);
-
-    setOrginalImageOpenCV(final);
-    original_initiated = true;
-
-    showImage(saveOriginal, "Original");
-    showImage(savefinal, "Final");
-
+// TODO
+bool CImageHelper::AdjustContrast(double scale)
+{
     return true;
 }
 
@@ -70,61 +40,47 @@ void CImageHelper::clean()
     }
 }
 
-bool CImageHelper::AdjustContrast(double scale)
-{
-    Mat target = Original_ImageOpenCVFormat.clone();
-   
-    destroyAllWindows();
-    clean();
-
-    savefinal = (scale/static_cast<double>(10)) * target;
-    saveOriginal = target.clone();
-
-    setOrginalImageOpenCV(target);
-    setFinalImageOpenCV(savefinal);
-
-    original_initiated = true;
-
-    showImage(target, "Original");
-    showImage(savefinal, "Final");
-
-    return true;
-}
-
 bool CImageHelper::revert()
 {
-    savefinal = Final_ImageOpenCVFormat.clone();
-
-    if (savefinal.empty() || saveOriginal.empty())
+    if (cache.size() == 0)
     {
         return false;
     }
 
+    Mat saved = cache.front();
+    cache.pop();
+
     destroyAllWindows();
     clean();
 
-    setOrginalImageOpenCV(saveOriginal);
-    showImage(saveOriginal, "Original");  
-    showImage(savefinal, "Final");
+    setOrginalImageOpenCV(saved);
     original_initiated = true;
 
-    savefinal.deallocate();
+    showImage(saved, "Final");
 
     return true;
 
 }
+
+
+void CImageHelper::addImageToCache(Mat& mat)
+{
+    cache.push(mat);
+}
+
 void CImageHelper::SetOriginalNew()
 {
+    Mat savefinal;
+
     savefinal = Final_ImageOpenCVFormat.clone();
-    saveOriginal = Original_ImageOpenCVFormat.clone();
 
     destroyAllWindows();
     clean();
 
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
+    cache.push(savefinal);
 
-    showImage(saveOriginal, "Original");
     showImage(savefinal, "Final");
 
 }

@@ -22,6 +22,7 @@
 #include <cmath>
 #include <boost/math/interpolators/cardinal_cubic_b_spline.hpp>
 #include <boost/math/interpolators/cardinal_quintic_b_spline.hpp>
+#include <boost/math/interpolators/bilinear_uniform.hpp>
 #include "Eigen"
 #include "Dense"
 
@@ -31,10 +32,10 @@ namespace math_util
 	using cubic_spline = boost::math::interpolators::cardinal_cubic_b_spline<double>;
 	using quadradic_spline = boost::math::interpolators::cardinal_quintic_b_spline<double>;
 
-
 	quadradic_spline quadradicspline(std::vector<double>& y, double t0, double time_step);
 	cubic_spline cubicspline(std::vector<double>& y, double t0, double time_step);
 
+	std::vector<double> mergeTwo(std::vector<double>& x, std::vector<double>& y);
 
 	// Adapted from
 	// https://www.codewithc.com/c-program-for-linear-exponential-curve-fitting/

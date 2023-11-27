@@ -111,14 +111,15 @@ private:
         auto menuImage = menuAlgo->Append(IMAGE_DISPLAY,    "Edit", "Image Display");
         menuImage->SetBitmap(wxArtProvider::GetBitmap (wxART_INFORMATION, wxART_MENU));
 
-        auto menuSum = menuAlgo->Append(SUM_IMG_ID, "Sum images", "Sum images");
-        menuSum->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_MENU));
+        // TODO
+        //auto menuSum = menuAlgo->Append(SUM_IMG_ID, "Sum images", "Sum images");
+        //menuSum->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_MENU));
 
-        auto menuSub = menuAlgo->Append(SUB_IMG_ID, "Subtrack images", "Subtrack images");
-        menuSub->SetBitmap(wxArtProvider::GetBitmap(wxART_MINUS, wxART_MENU));
+        //auto menuSub = menuAlgo->Append(SUB_IMG_ID, "Subtrack images", "Subtrack images");
+        //menuSub->SetBitmap(wxArtProvider::GetBitmap(wxART_MINUS, wxART_MENU));
 
-        auto menuContrast = menuAlgo->Append(CONTRAST_ID_IMG, "Adjust Contrast", "Adjust Contrast");
-        menuContrast->SetBitmap(wxArtProvider::GetBitmap(wxART_EDIT, wxART_MENU));
+        //auto menuContrast = menuAlgo->Append(CONTRAST_ID_IMG, "Adjust Contrast", "Adjust Contrast");
+        //menuContrast->SetBitmap(wxArtProvider::GetBitmap(wxART_EDIT, wxART_MENU));
 
         auto menuRevert = menuAlgo->Append(REVETR_IMG_ID, "Revert", "Revert");
         menuRevert->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_MENU));

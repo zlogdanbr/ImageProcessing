@@ -21,6 +21,8 @@
 #include "opcvwrapper.h"
 #include "detection.h"
 #include <functional>
+#include <queue>
+#include <stack>
 #include<opencv2/highgui/highgui.hpp>
 
 // setMouseCallback("Track", locator, NULL);//Mouse callback function on define window//
@@ -84,6 +86,8 @@ public:
  
     bool AdjustContrast(double scale);
 
+    void addImageToCache(Mat& mat);
+
 private:
 
     CImageHelper(CImageHelper&) = delete;
@@ -94,8 +98,7 @@ private:
     bool final_isgray = false;
     std::string original = "";
 
-    Mat savefinal;
-    Mat saveOriginal;
+    std::queue<Mat> cache;
 
     template<typename T1, typename T2>
     auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))

@@ -14,6 +14,17 @@ namespace math_util
 		return p1;
 	}
 
+	template<typename T1, typename T2>
+	auto Sub(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) - std::forward<T2>(t2))
+	{
+		return std::forward<T1>(t1) - std::forward<T2>(t2);
+	}
+
+	std::vector<double> mergeTwo(std::vector<double>& x, std::vector<double>& y)
+	{
+		std::vector<double> f;
+		return f;
+	}
 
 	// Adapted from
 	// https://www.codewithc.com/c-program-for-linear-exponential-curve-fitting/
