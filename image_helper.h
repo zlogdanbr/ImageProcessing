@@ -89,6 +89,12 @@ private:
         return std::forward<T1>(t1) - std::forward<T2>(t2);
     }
 
+    template<typename T1, typename T2, typename F>
+    auto GenericFunction(T1&& t1, T2&& t2,F&& f) -> decltype(std::forward<T2>(t2))
+    {
+        return F(t1);
+    }
+
 };
 #endif
 //--------------------------------------------------------------------------------------------------

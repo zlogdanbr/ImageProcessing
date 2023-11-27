@@ -72,24 +72,17 @@ void CImageHelper::clean()
 
 bool CImageHelper::AdjustContrast(double scale)
 {
-    savefinal = Final_ImageOpenCVFormat.clone();
-
-    if (savefinal.empty())
-    {
-        return false;
-    }
-
-    saveOriginal = Original_ImageOpenCVFormat.clone();
-
+    Mat target = Original_ImageOpenCVFormat.clone();
+   
     destroyAllWindows();
     clean();
 
-    savefinal = (scale/static_cast<double>(10)) * saveOriginal;
+    savefinal = (scale/static_cast<double>(10)) * target;
 
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
 
-    showImage(saveOriginal, "Original");
+    showImage(target, "Original");
     showImage(savefinal, "Final");
 
     return true;
