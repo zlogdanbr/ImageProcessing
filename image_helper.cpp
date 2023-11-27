@@ -78,8 +78,11 @@ bool CImageHelper::AdjustContrast(double scale)
     clean();
 
     savefinal = (scale/static_cast<double>(10)) * target;
+    saveOriginal = target.clone();
 
-    setOrginalImageOpenCV(savefinal);
+    setOrginalImageOpenCV(target);
+    setFinalImageOpenCV(savefinal);
+
     original_initiated = true;
 
     showImage(target, "Original");
