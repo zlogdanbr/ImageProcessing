@@ -70,6 +70,11 @@ void CInputDialog::fillComboInfo()
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
     fsimple["Detect Faces"] = detectFaces;
 
+    fsimple["Erode"] = ApplyErode;
+    fsimple["Dilate"] = ApplyDilate; 
+    fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
+    fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
+
     fmore["Blur Image"] = blurImageSmooth;
     fmore["Gaussian"] = GaussianImageSmooth;
     fmore["Median"] = MedianImageSmooth;
@@ -97,7 +102,10 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Hough Transform");
     comboBox1->Append("Hough Transform Probabilistic");
     comboBox1->Append("Detect Faces");
-
+    comboBox1->Append("Erode");
+    comboBox1->Append("Dilate");
+    comboBox1->Append("Morpholgical Gradient");
+    comboBox1->Append("Morphological Top Hat");
 }
 
 void CInputDialog::DoFunction()

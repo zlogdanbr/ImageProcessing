@@ -1,6 +1,7 @@
 ﻿#include "opcvwrapper.h"
 #include "dmath.h"
 
+
 std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage)
 {
     std::vector< Eigen::MatrixXd > ThreeChannels;
@@ -26,7 +27,6 @@ std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage)
     }
     else
     {
-
         for (int j = 0; j < OpenCVImage.rows; j++)
         {
             for (int i = 0; i < OpenCVImage.cols; i++)
@@ -402,4 +402,38 @@ Mat Unsharp(const Mat& img)
     Mat Iconv = GaussianImageSmooth(img,3);
     Mat igray = convertograyScale(img);
     return (1.5) * igray - 0.5 * Iconv;
+}
+
+Mat ApplyErode(const Mat& img)
+{
+    cv::Mat eroded; // the destination image
+    cv::erode(img, eroded, cv::Mat());
+    return eroded;
+}
+
+Mat ApplyDilate(const Mat& img)
+{
+    cv::Mat dilated; // the destination image
+    cv::dilate(img, dilated, cv::Mat());
+    return dilated;
+}
+
+Mat ApplyMorphGradient(const Mat& img)
+{
+
+    cv::Mat result;
+    cv::morphologyEx(img,
+        result,
+        cv::MORPH_GRADIENT,
+        cv::Mat());
+
+        return result;
+}
+
+Mat ApplyTopHatAlgo(const Mat& img)
+{
+    cv::Mat result;
+    cv::Mat element7(7, 7, CV_8U, cv::Scalar(1));
+    cv::morphologyEx(img, result, cv::MORPH_BLACKHAT, element7);
+    return result;
 }

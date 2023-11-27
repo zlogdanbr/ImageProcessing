@@ -78,8 +78,14 @@ Mat ApplySobel(const Mat& img, int kernel_size);
 Mat Sharpening(const Mat& img);
 Mat Unsharp(const Mat& img);
 
+/*
+*  Morphological
+*/
 
-
+Mat ApplyErode(const Mat& img);
+Mat ApplyDilate(const Mat& img);
+Mat ApplyMorphGradient(const Mat& img);
+Mat ApplyTopHatAlgo(const Mat& img);
 #endif
 
 //--------------------------------------------------------------------------------------------------
