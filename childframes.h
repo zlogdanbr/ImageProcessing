@@ -202,6 +202,7 @@ private:
     wxButton* button10{ new wxButton(panel1, wxID_ANY, "BlurH") };
     wxButton* button11{ new wxButton(panel1, wxID_ANY, "BlurV") };
     wxButton* button12{ new wxButton(panel1, wxID_ANY, "Blur") };
+    wxButton* button13{ new wxButton(panel1, wxID_ANY, "Gray") };
 
 
     wxImage image;

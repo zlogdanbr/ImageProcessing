@@ -19,6 +19,7 @@ void CImageCustomDialog::setControlslayout()
     vbox1->Add(button10);
     vbox1->Add(button11);
     vbox1->Add(button12);
+    vbox1->Add(button13);
 
     vbox2->Add(picture, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);// wxALIGN_CENTER_HORIZONTAL
 
@@ -124,7 +125,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
             int alpha = 30;
             if (image.IsOk())
             {
-                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 2, 10);
+                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 1, 100);
 
                 if (dialog.ShowModal() == wxID_OK)
                 {
@@ -142,7 +143,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
         {
             if (image.IsOk())
             {
-                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 2, 10);
+                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 1, 100);
                 if (dialog.ShowModal() == wxID_OK)
                 {
                     auto scale = static_cast<int>(dialog.GetValue());
@@ -158,7 +159,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
         {
             if (image.IsOk())
             {
-                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 2, 10);
+                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 1, 100);
                 if (dialog.ShowModal() == wxID_OK)
                 {
                     auto scale = static_cast<int>(dialog.GetValue());
@@ -167,6 +168,18 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
                     image2.Clear();
                     reloadImage(-1, -1);
                 }
+            }
+        });
+
+    button13->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            if (image.IsOk())
+            {
+                wxImage image2 = ConvertToGrayScale(image);
+                image = image2.Copy();
+                image2.Clear();
+                image2.Destroy();
+                reloadImage(-1, -1);
             }
         });
 
