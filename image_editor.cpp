@@ -1,4 +1,5 @@
 #include "childframes.h"
+#include "wxwimage_algos.h"
 
 void CImageCustomDialog::setControlslayout()
 {
@@ -15,6 +16,9 @@ void CImageCustomDialog::setControlslayout()
     vbox1->Add(button4);
     vbox1->Add(button8);
     vbox1->Add(button9);
+    vbox1->Add(button10);
+    vbox1->Add(button11);
+    vbox1->Add(button12);
 
     vbox2->Add(picture, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);// wxALIGN_CENTER_HORIZONTAL
 
@@ -49,25 +53,11 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
                 if (dialog.ShowModal() == wxID_OK)
                 {
                     auto scale = static_cast<int>(dialog.GetValue());
-                    auto _h = image.GetHeight();
-                    auto _w = image.GetWidth();
-                    auto hn = static_cast<int>(_h / scale);
-                    auto wn = static_cast<int>(_w / scale);
-
-                    if (hn <= 0)
-                    {
-                        hn = _h;
-                    }
-
-                    if (wn <= 0)
-                    {
-                        wn = _w;
-                    }
-
-                    wxImage image2 = image.Scale(hn, wn);
+                    Dimensions d;
+                    wxImage image2 = scaleLessImage(image, scale, d);
                     image = image2.Copy();
                     image2.Clear();
-                    reloadImage(hn,wn);
+                    reloadImage(d.first, d.second);
                 }
             }
 
@@ -81,16 +71,12 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
 
                 if (dialog.ShowModal() == wxID_OK)
                 {
-                    auto scale = static_cast<int>(dialog.GetValue());
-                    auto _h = image.GetHeight();
-                    auto _w = image.GetWidth();
-                    auto hn = static_cast<int>(_h * scale);
-                    auto wn = static_cast<int>(_w * scale);
-
-                    wxImage image2 = image.Scale(hn, wn);
+                    auto scale = static_cast<int>(dialog.GetValue());                    
+                    Dimensions d;
+                    wxImage image2 = scalePlusImage(image, scale, d);
                     image = image2.Copy();
                     image2.Clear();
-                    reloadImage(hn, wn);
+                    reloadImage(d.first, d.second);
                 }
             }
         });
@@ -125,11 +111,62 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
         {
             if (image.IsOk())
             {
-                wxImage image2 = image.Rotate90(false);
+                wxImage image2 = rotate_right(image);
                 image = image2.Copy();
                 image2.Clear();
                 image2.Destroy();
                 reloadImage(-1,-1);
+            }
+        });
+
+    button10->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            int alpha = 30;
+            if (image.IsOk())
+            {
+                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 2, 10);
+
+                if (dialog.ShowModal() == wxID_OK)
+                {
+                    auto scale = static_cast<int>(dialog.GetValue());
+                    wxImage image2 = BlurH(image, scale);
+                    image = image2.Copy();
+                    image2.Clear();
+                    reloadImage(-1, -1);
+                }
+            }
+            
+        });
+
+    button11->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            if (image.IsOk())
+            {
+                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 2, 10);
+                if (dialog.ShowModal() == wxID_OK)
+                {
+                    auto scale = static_cast<int>(dialog.GetValue());
+                    wxImage image2 = BlurV(image, scale);
+                    image = image2.Copy();
+                    image2.Clear();
+                    reloadImage(-1, -1);
+                }
+            }
+        });
+
+    button12->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            if (image.IsOk())
+            {
+                wxNumberEntryDialog dialog(this, "Scale Factor", "Choose Scale Factor", "Scale Factor", 2, 2, 10);
+                if (dialog.ShowModal() == wxID_OK)
+                {
+                    auto scale = static_cast<int>(dialog.GetValue());
+                    wxImage image2 = Blur(image, scale);
+                    image = image2.Copy();
+                    image2.Clear();
+                    reloadImage(-1, -1);
+                }
             }
         });
 

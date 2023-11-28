@@ -199,6 +199,9 @@ private:
     wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };        
     wxButton* button8{ new wxButton(panel1, wxID_ANY, "Rotate+") };
     wxButton* button9{ new wxButton(panel1, wxID_ANY, "Rotate-") };
+    wxButton* button10{ new wxButton(panel1, wxID_ANY, "BlurH") };
+    wxButton* button11{ new wxButton(panel1, wxID_ANY, "BlurV") };
+    wxButton* button12{ new wxButton(panel1, wxID_ANY, "Blur") };
 
 
     wxImage image;
