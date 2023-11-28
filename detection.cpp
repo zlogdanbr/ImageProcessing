@@ -2,14 +2,30 @@
 #include "opcvwrapper.h"
 #include "filesys.h"
 
+
+/**
+	This function is the one I use to test algorithms I am studing
+	and applying them together with other filters.
+*/
+Mat workingAlgorithm(const Mat& image)
+{
+	cv::Mat imgclone1;
+
+	// Convert to gray scale
+	imgclone1 = convertograyScale(image);
+
+	GaussianImageSmoothExtended(imgclone1, 5, 100, 25);
+
+	return imgclone1;
+}
+
+
 /* -------------------------------------------------------------------------------------------
-	 https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
-
-		It should work but only God knows why it is not
-		I had used these functions before using Windows 10 and Linux ( Lubuntu 18 )
-		I suspect that as I am running at windows 11, opencv simply does not like
-		it when it runs detector->detect(out, faces1);
-
+ https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
+It should work but only God knows why it is not
+I had used these functions before using Windows 10 and Linux ( Lubuntu 18 )
+I suspect that as I am running at windows 11, opencv simply does not like
+it when it runs detector->detect(out, faces1);
 ----------------------------------------------------------------------------------------------*/
 static
 void 
@@ -208,31 +224,6 @@ void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE 
 			img.at<Vec3b>(Point(x, y)) = color;
 		}
 	}
-}
-
-/**
-	This function is the one I use to test algorithms I am studing
-	and applying them together with other filters.
-*/
-Mat workingAlgorithm(const Mat& image)
-{
-	cv::Mat imgclone1;
-	cv::Mat imgclone2;
-
-	// Convert to gray scale
-	imgclone1 = convertograyScale(image);
-	imgclone2 = convertograyScale(image);
-
-	// Apply sobel
-	imgclone1 = ApplySobel(imgclone1, 5);
-
-	// Threshold both
-	Mat thr1 = ApplyThreShold(imgclone1);
-	Mat thr2 = ApplyThreShold(imgclone2);
-
-	// adjust contrast in 50% and subtract original image
-	// from Sobel
-	return 0.5*thr2 - thr1;
 }
 
 Mat ApplyCanny(const Mat& img)

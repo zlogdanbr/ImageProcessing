@@ -3,7 +3,6 @@
 // author: Daniel Vasconcelos Gomes 2023
 // if an external code has been used I indicate the sources
 //--------------------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------------------
 // References:
 // 
 // https://www.codtronic.com/blog/windows/building-wxwidgets-applications-using-microsoft-visual-studio/
