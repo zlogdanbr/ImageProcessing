@@ -76,6 +76,7 @@ void MyFrame::OnExit(wxCommandEvent& event)
 void MyFrame::OnClose(wxCommandEvent& event)
 {
     destroyAllWindows();
+    ImageHelper.clearCache();
     ImageHelper.clean();
 }
 

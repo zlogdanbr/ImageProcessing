@@ -23,6 +23,7 @@
 #include <functional>
 #include <queue>
 #include <stack>
+#include <deque>
 #include<opencv2/highgui/highgui.hpp>
 
 // setMouseCallback("Track", locator, NULL);//Mouse callback function on define window//
@@ -82,14 +83,36 @@ public:
     void SetOriginalNew();
 
     bool SumImages();
-    bool SubtractImages();
- 
+    bool SubtractImages(); 
     bool AdjustContrast(double scale);
 
-    void addImageToCache(Mat& mat);
+    void addtoCache(Mat& img)
+    {
+        cache.push(img);
+    }
+
+    Mat getLastCache()
+    {
+        Mat top;
+        cache.pop();
+        if (cache.empty())
+        {
+            return top;
+        }
+        top = cache.top();
+        return top;
+    }
+
+    void clearCache()
+    {
+        while (cache.empty() == false)
+        {
+            cache.pop();
+        }
+    }
 
 private:
-
+    int pog = 1;
     CImageHelper(CImageHelper&) = delete;
     CImageHelper& operator=(CImageHelper&) = delete;
     Mat Final_ImageOpenCVFormat;
@@ -98,7 +121,7 @@ private:
     bool final_isgray = false;
     std::string original = "";
 
-    std::queue<Mat> cache;
+    std::stack<Mat> cache;
 
     template<typename T1, typename T2>
     auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))

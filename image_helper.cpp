@@ -40,32 +40,26 @@ void CImageHelper::clean()
     }
 }
 
+
+// TODO
 bool CImageHelper::revert()
 {
-    if (cache.size() == 0)
+
+    if (cache.empty() || cache.size() == 1)
     {
         return false;
     }
 
-    Mat saved = cache.front();
-    cache.pop();
+    Mat tmp = getLastCache();
 
     destroyAllWindows();
     clean();
 
-    setOrginalImageOpenCV(saved);
+    setOrginalImageOpenCV(tmp);
     original_initiated = true;
-
-    showImage(saved, "Final");
+    showImage(tmp, "Final");
 
     return true;
-
-}
-
-
-void CImageHelper::addImageToCache(Mat& mat)
-{
-    cache.push(mat);
 }
 
 void CImageHelper::SetOriginalNew()
@@ -76,11 +70,9 @@ void CImageHelper::SetOriginalNew()
 
     destroyAllWindows();
     clean();
-
+    addtoCache(savefinal);
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
-    cache.push(savefinal);
-
     showImage(savefinal, "Final");
 
 }
