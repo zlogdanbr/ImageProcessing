@@ -58,6 +58,11 @@ Mat equalizeColorImage(const Mat& img);
 Mat ApplyThreShold(const Mat& img);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
+Mat GaussianImageSmoothExtended(    const Mat& img,
+                                    int kernel_size,
+                                    double sigmaX,
+                                    double sigmaY
+                                );
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
 
@@ -72,9 +77,34 @@ Mat ApplyHoughTransformReProbabilistic(const Mat& img);
 * Edge detectors
 */
 Mat ApplyLaplacian(const Mat& src);
+Mat ApplyLaplacianExtended(const Mat& src, int kernel_size = 3, int scale = 1, int delta = 0, int ddepth = CV_16S);
+
+
 Mat ApplySobelX(const Mat& img, int kernel_size);
 Mat ApplySobelY(const Mat& img, int kernel_size);
 Mat ApplySobel(const Mat& img, int kernel_size);
+
+Mat ApplySobelXExtended(const Mat& img,
+    int image_type,
+    int depth,
+    int type,
+    double delta,
+    int kernel_size);
+
+Mat ApplySobelYExtended(const Mat& img,
+    int image_type,
+    int depth,
+    int type,
+    double delta,
+    int kernel_size);
+
+Mat ApplySobelExtended(const Mat& img,
+    int image_type,
+    int depth,
+    int type,
+    double delta,
+    int kernel_size);
+
 Mat Sharpening(const Mat& img);
 Mat Unsharp(const Mat& img);
 
@@ -86,6 +116,7 @@ Mat ApplyErode(const Mat& img);
 Mat ApplyDilate(const Mat& img);
 Mat ApplyMorphGradient(const Mat& img);
 Mat ApplyTopHatAlgo(const Mat& img);
+
 #endif
 
 //--------------------------------------------------------------------------------------------------

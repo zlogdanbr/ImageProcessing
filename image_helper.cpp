@@ -41,7 +41,6 @@ void CImageHelper::clean()
 }
 
 
-// TODO
 bool CImageHelper::revert()
 {
 

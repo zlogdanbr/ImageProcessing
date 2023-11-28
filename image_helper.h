@@ -26,25 +26,6 @@
 #include <deque>
 #include<opencv2/highgui/highgui.hpp>
 
-// setMouseCallback("Track", locator, NULL);//Mouse callback function on define window//
-
-static void locator(int event, int x, int y, int flags, void* userdata) 
-{ 
-    //function to track mouse movement and click//
-    if (event == EVENT_LBUTTONDOWN) { //when left button clicked//
-        //cout << "Left click has been made, Position:(" << x << "," << y << ")" << endl;
-    }
-    else if (event == EVENT_RBUTTONDOWN) { //when right button clicked//
-        //cout << "Rightclick has been made, Position:(" << x << "," << y << ")" << endl;
-    }
-    else if (event == EVENT_MBUTTONDOWN) { //when middle button clicked//
-        //cout << "Middleclick has been made, Position:(" << x << "," << y << ")" << endl;
-    }
-    else if (event == EVENT_MOUSEMOVE) { //when mouse pointer moves//
-        //cout << "Current mouse position:(" << x << "," << y << ")" << endl;
-    }
-}
-
 
 std::string convertWxStringToString(const wxString wsx);
 

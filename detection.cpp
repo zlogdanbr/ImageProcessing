@@ -82,7 +82,6 @@ Robert Laganiere
 Page [ 239 ]
 See page [245 ] for the math
 ----------------------------------------------------------------------------------------------*/
-
 Mat detectCornersHarrisAlgoFull(		const Mat& image, 
 										int neighborhood_size,
 										int aperture_size,
@@ -125,14 +124,6 @@ Cookbook
 Third Edition
 Robert Laganiere
 Page [ 250 ]
-
-"As in the case with the Harris point detector, the FAST feature algorithm derives from the
-definition of what constitutes a corner. This time, this definition is based on the image
-intensity around a putative feature point. The decision to accept a keypoint is taken by
-examining a circle of pixels centered at a candidate point. If an arc of contiguous points of a
-length greater than three quarters of the circle perimeter in which all pixels significantly
-differ from the intensity of the center point (being all darker or all brighter) is found, then a
-keypoint is declared."
 ----------------------------------------------------------------------------------------------*/
 Mat detectFastKeyPoints(const Mat& image)
 {
@@ -229,10 +220,8 @@ Mat workingAlgorithm(const Mat& image)
 	cv::Mat imgclone2;
 
 	// Convert to gray scale
-
 	imgclone1 = convertograyScale(image);
 	imgclone2 = convertograyScale(image);
-
 
 	// Apply sobel
 	imgclone1 = ApplySobel(imgclone1, 5);

@@ -195,6 +195,24 @@ Mat GaussianImageSmooth(const Mat& img, int kernel_size)
     return Blurred;
 }
 
+Mat GaussianImageSmoothExtended(    const Mat& img, 
+                                    int kernel_size,
+                                    double sigmaX,
+                                    double sigmaY
+                                )
+{
+    Mat Blurred;
+    GaussianBlur(   
+                    img, 
+                    Blurred, 
+                    Size(kernel_size, kernel_size), 
+                    sigmaX, // sigmaX standard deviation in X direction
+                    sigmaY // sigmaY standard deviation in Y directiom 
+                       //if sigmaY is zero, it is set to be equal to sigma                    
+                );
+    return Blurred;
+}
+
 Mat ApplyThreShold(const Mat& img)
 {
     cv::Mat out;
@@ -206,7 +224,6 @@ Mat ApplyThreShold(const Mat& img)
     return out;
 }
 
-
 // https://docs.opencv.org/3.4/d5/db5/tutorial_laplace_operator.html
 Mat ApplyLaplacian(const Mat& src)
 {
@@ -217,11 +234,12 @@ Mat ApplyLaplacian(const Mat& src)
     int delta = 0;
     int ddepth = CV_16S;
 
-    // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
-    // GaussianBlur(src, src, Size(3, 3), 0, 0, BORDER_DEFAULT);
-
     src_gray = convertograyScale(src);
-     
+
+    // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
+    GaussianBlur(src_gray, src_gray, Size(3, 3), 0, 0, BORDER_DEFAULT);
+
+       
     Mat abs_dst;
     Laplacian(  src_gray, 
                 dst, 
@@ -234,6 +252,32 @@ Mat ApplyLaplacian(const Mat& src)
     // converting back to CV_8U
     convertScaleAbs(dst, abs_dst);
     return abs_dst;
+}
+
+Mat ApplyLaplacianExtended(const Mat& src, int kernel_size, int scale, int delta, int ddepth)
+{
+    // Declare the variables we are going to use
+    Mat src_gray, dst;
+
+    src_gray = convertograyScale(src);
+
+    // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
+    GaussianBlur(src_gray, src_gray, Size(3, 3), 0, 0, BORDER_DEFAULT);
+
+
+    Mat abs_dst;
+    Laplacian(src_gray,
+        dst,
+        ddepth,
+        kernel_size,
+        scale,
+        delta,
+        BORDER_DEFAULT);
+
+    // converting back to CV_8U
+    convertScaleAbs(dst, abs_dst);
+    return abs_dst;
+
 }
 
 
@@ -278,6 +322,27 @@ Mat ApplySobelX(const Mat& img, int kernel_size)
     return sobelX;
 }
 
+
+Mat ApplySobelXExtended(    const Mat& img,
+                    int image_type, 
+                    int depth, 
+                    int type,
+                    double delta,
+                    int kernel_size)
+{
+    Mat sobelX;
+    cv::Sobel(      img,            // input image
+                    sobelX,         // output
+                    CV_8U,          // ddepth
+                    1,              // dx order of the derivative x
+                    0,              // order of the derivative y.
+                    kernel_size,    // size of the square kernel
+                    delta,          // delta value that is added to the results prior to storing them in dst
+                    128             // #BorderTypes. #BORDER_WRAP is not supported.
+            ); 
+    return sobelX;
+}
+
 /* -------------------------------------------------------------------------------------------
 OpenCV 3 Computer Vision
 Application Programming
@@ -300,6 +365,28 @@ Mat ApplySobelY(const Mat& img, int kernel_size)
     return sobelY;
 }
 
+Mat ApplySobelYExtended(const Mat& img,
+                int image_type,
+                int depth,
+                int type,
+                double delta,
+                int kernel_size)
+{
+    Mat sobelY;
+
+    cv::Sobel(img,      // input image
+        sobelY,         // output
+        CV_8U,          // ddepth
+        0,              // dx order of the derivative x
+        1,              // order of the derivative y.
+        kernel_size,    // size of the square kernel
+        delta,          // delta value that is added to the results prior to storing them in dst
+        128             // #BorderTypes. #BORDER_WRAP is not supported.
+    );
+
+    return sobelY;
+}
+
 /* -------------------------------------------------------------------------------------------
 OpenCV 3 Computer Vision
 Application Programming
@@ -317,6 +404,29 @@ Mat ApplySobel(const Mat& img, int kernel_size)
     src_gray = convertograyScale(img);
     Mat sobelX = ApplySobelX(src_gray, kernel_size);
     Mat sobelY = ApplySobelY(src_gray, kernel_size);
+
+    // Compute norm of Sobel
+    cv::Sobel(src_gray, sobelX, CV_8U, 1, 0);
+    cv::Sobel(src_gray, sobelY, CV_8U, 0, 1);
+    cv::Mat sobel;
+    //compute the L1 norm
+    sobel = abs(sobelX) + abs(sobelY);
+    return sobel;
+}
+
+Mat ApplySobelExtended( const Mat& img,
+                int image_type,
+                int depth,
+                int type,
+                double delta,
+                int kernel_size)
+{
+    // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
+    GaussianBlur(img, img, Size(3, 3), 0, 0, BORDER_DEFAULT);
+    Mat src_gray;
+    src_gray = convertograyScale(img);
+    Mat sobelX = ApplySobelXExtended(src_gray, image_type, depth, type, delta, kernel_size);
+    Mat sobelY = ApplySobelYExtended(src_gray, image_type, depth, type, delta, kernel_size);
 
     // Compute norm of Sobel
     cv::Sobel(src_gray, sobelX, CV_8U, 1, 0);
