@@ -26,6 +26,7 @@ It should work but only God knows why it is not
 I had used these functions before using Windows 10 and Linux ( Lubuntu 18 )
 I suspect that as I am running at windows 11, opencv simply does not like
 it when it runs detector->detect(out, faces1);
+Tried with OpenCV 4.5 and 4.8
 ----------------------------------------------------------------------------------------------*/
 static
 void 
@@ -63,7 +64,7 @@ Mat detectFaces(const Mat& image)
 
 	// this shared pointer is never initialized correctly
 	Ptr<FaceDetectorYN> detector = FaceDetectorYN::create(
-		fr_modelPath,
+		fd_modelPath,
 		"",
 		Size(320, 320),
 		scoreThreshold,
@@ -242,6 +243,106 @@ Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)
 		threshold, // low threshold
 		aperture); // high threshold
 	return contours;
+}
+
+// https://docs.opencv.org/3.4/d2/dbd/tutorial_distance_transform.html
+Mat WaterShed(const Mat& img)
+{
+	
+	Mat src = img.clone();
+
+	// Change the background from white to black, since that will help later to extract
+	// better results during the use of Distance Transform
+	Mat mask;
+	inRange(src, Scalar(255, 255, 255), Scalar(255, 255, 255), mask);
+	src.setTo(Scalar(0, 0, 0), mask);
+
+
+	// Create a kernel that we will use to sharpen our image
+	Mat kernel = (Mat_<float>(3, 3) <<
+		1, 1, 1,
+		1, -8, 1,
+		1, 1, 1); 
+	// an approximation of second derivative, a quite strong kernel
+	// do the laplacian filtering as it is
+	// well, we need to convert everything in something more deeper then CV_8U
+	// because the kernel has some negative values,
+	// and we can expect in general to have a Laplacian image with negative values
+	// BUT a 8bits unsigned int (the one we are working with) can contain values from 0 to 255
+	// so the possible negative number will be truncated
+	Mat imgLaplacian;
+	filter2D(src, imgLaplacian, CV_32F, kernel);
+	Mat sharp;
+	src.convertTo(sharp, CV_32F);
+	Mat imgResult = sharp - imgLaplacian;
+	// convert back to 8bits gray scale
+	imgResult.convertTo(imgResult, CV_8UC3);
+	imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
+	// Create binary image from source image
+	Mat bw;
+	cvtColor(imgResult, bw, COLOR_BGR2GRAY);
+	threshold(bw, bw, 40, 255, THRESH_BINARY | THRESH_OTSU);
+	// Perform the distance transform algorithm
+	Mat dist;
+	distanceTransform(bw, dist, DIST_L2, 3);
+	// Normalize the distance image for range = {0.0, 1.0}
+	// so we can visualize and threshold it
+	normalize(dist, dist, 0, 1.0, NORM_MINMAX);
+	// Threshold to obtain the peaks
+	// This will be the markers for the foreground objects
+	threshold(dist, dist, 0.4, 1.0, THRESH_BINARY);
+	// Dilate a bit the dist image
+	Mat kernel1 = Mat::ones(3, 3, CV_8U);
+	dilate(dist, dist, kernel1);
+	// Create the CV_8U version of the distance image
+	// It is needed for findContours()
+	Mat dist_8u;
+	dist.convertTo(dist_8u, CV_8U);
+	// Find total markers
+	std::vector<std::vector<Point> > contours;
+	findContours(dist_8u, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	// Create the marker image for the watershed algorithm
+	Mat markers = Mat::zeros(dist.size(), CV_32S);
+	// Draw the foreground markers
+	for (size_t i = 0; i < contours.size(); i++)
+	{
+		drawContours(markers, contours, static_cast<int>(i), Scalar(static_cast<int>(i) + 1), -1);
+	}
+	// Draw the background marker
+	circle(markers, Point(5, 5), 3, Scalar(255), -1);
+	Mat markers8u;
+	markers.convertTo(markers8u, CV_8U, 10);
+	// Perform the watershed algorithm
+	watershed(imgResult, markers);
+	Mat mark;
+	markers.convertTo(mark, CV_8U);
+	bitwise_not(mark, mark);
+	// Generate random colors
+	std::vector<Vec3b> colors;
+	for (size_t i = 0; i < contours.size(); i++)
+	{
+		int b = theRNG().uniform(0, 256);
+		int g = theRNG().uniform(0, 256);
+		int r = theRNG().uniform(0, 256);
+		colors.push_back(Vec3b((uchar)b, (uchar)g, (uchar)r));
+	}
+	// Create the result image
+	Mat dst = Mat::zeros(markers.size(), CV_8UC3);
+	// Fill labeled objects with random colors
+	for (int i = 0; i < markers.rows; i++)
+	{
+		for (int j = 0; j < markers.cols; j++)
+		{
+			int index = markers.at<int>(i, j);
+			if (index > 0 && index <= static_cast<int>(contours.size()))
+			{
+				dst.at<Vec3b>(i, j) = colors[index - 1];
+			}
+		}
+	}
+	return dst;
+
+
 }
 
 

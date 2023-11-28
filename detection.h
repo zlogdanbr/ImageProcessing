@@ -49,5 +49,7 @@ Mat workingAlgorithm(const Mat& image);
 Mat ApplyCanny(const Mat& img);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 
+Mat WaterShed(const Mat& img);
+
 #endif
 

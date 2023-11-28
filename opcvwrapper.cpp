@@ -126,6 +126,15 @@ Mat convertograyScale(const Mat& img)
     return grayscaleimage;
 }
 
+Mat getBinaryImage(const Mat& img)
+{
+    // Create binary image from source image
+    Mat bw;
+    cvtColor(img, bw, COLOR_BGR2GRAY);
+    threshold(bw, bw, 40, 255, THRESH_BINARY | THRESH_OTSU);
+    return bw;
+}
+
 //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html
 Mat equalizeGrayImage(const Mat& img)
 {

@@ -69,7 +69,8 @@ void CInputDialog::fillComboInfo()
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
     fsimple["Detect Faces"] = detectFaces;
-
+    fsimple["Convert to Binary"] = getBinaryImage;
+    fsimple["Watershed"] = WaterShed;
     fsimple["Erode"] = ApplyErode;
     fsimple["Dilate"] = ApplyDilate; 
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
@@ -80,6 +81,8 @@ void CInputDialog::fillComboInfo()
     fmore["Median"] = MedianImageSmooth;
     fmore["Sobel"] = ApplySobel;
 
+    
+
     comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
@@ -89,6 +92,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Flip Image");
     comboBox1->Append("Blur Image");
     comboBox1->Append("Invert Image");
+    comboBox1->Append("Convert to Binary");
     comboBox1->Append("Gaussian");
     comboBox1->Append("Median");
     comboBox1->Append("Sharpening");
@@ -106,6 +110,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Dilate");
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
+    comboBox1->Append("Watershed");
 }
 
 void CInputDialog::DoFunction()
