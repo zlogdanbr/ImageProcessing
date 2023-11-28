@@ -1,3 +1,8 @@
+//--------------------------------------------------------------------------------------------------
+// Just an helper for setting messages in the control text control
+// author: Daniel Vasconcelos Gomes 2023
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
 #ifndef _MY_APP_LOGS_
 #define _MY_APP_LOGS_
 

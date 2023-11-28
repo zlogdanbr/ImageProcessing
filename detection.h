@@ -1,3 +1,8 @@
+//--------------------------------------------------------------------------------------------------
+// Interface over OpenCV more complex algorithms
+// author: Daniel Vasconcelos Gomes 2023
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
 #ifndef _DETECT_ALGO_FILE_
 #define _DETECT_ALGO_FILE_
 

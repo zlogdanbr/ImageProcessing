@@ -1,3 +1,11 @@
+//--------------------------------------------------------------------------------------------------
+// Usefull mathematical tools
+// includes Eingen
+// includes boost::math
+// author: Daniel Vasconcelos Gomes 2023
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
+
 #ifndef _MAT_DVG_ALGO_
 #define _MAT_DVG_ALGO__
 

@@ -1,6 +1,3 @@
-#ifndef _MAIN_FRAME_MY_APP_DVG_
-#define _MAIN_FRAME_MY_APP_DVG_
-
 //--------------------------------------------------------------------------------------------------
 // Main frame of the application, a rather simple WxWigets UI
 // author: Daniel Vasconcelos Gomes 2023
@@ -19,6 +16,9 @@
 // https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
 // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
 // ---------------------------------------------------------------------------------------------
+
+#ifndef _MAIN_FRAME_MY_APP_DVG_
+#define _MAIN_FRAME_MY_APP_DVG_
 
 #include "image_helper.h"
 #include "childframes.h"

@@ -1,10 +1,11 @@
-#ifndef _MYFILESYS_FUNC_
-#define _MYFILESYS_FUNC_
 //--------------------------------------------------------------------------------------------------
 // Wrapper functions over c++17 filesystem libray
 // author: Daniel Vasconcelos Gomes 2023
 // if an external code has been used I indicate the sources
 //--------------------------------------------------------------------------------------------------
+
+#ifndef _MYFILESYS_FUNC_
+#define _MYFILESYS_FUNC_
 
 #include <filesystem>
 #include <iostream>

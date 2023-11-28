@@ -1,6 +1,10 @@
+//--------------------------------------------------------------------------------------------------
+// Declaration of class interfaces for dialogs used in the application
+// author: Daniel Vasconcelos Gomes 2023
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
 #ifndef _CHILD_FRAME_DEFS_
 #define _CHILD_FRAME_DEFS_
-
 
 #include "image_helper.h"
 #include <wx/grid.h>
