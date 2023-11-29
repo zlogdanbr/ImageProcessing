@@ -17,6 +17,7 @@
 #include <wx/wx.h>
 #include <wx/progdlg.h>
 #include "filesys.h"
+#include <wx/dc.h>
 
 using Function1Parameter = std::function<Mat(Mat)>;
 using Function2Parameter = std::function<Mat(Mat, int)>;
@@ -251,6 +252,7 @@ private:
     bool capture = false;
 
     RGB_CST myrgb;
+
 };
 
 #endif

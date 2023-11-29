@@ -217,7 +217,7 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
                 wxRect rect(p, s);
                 image.SetRGB(rect, myrgb[0], myrgb[1], myrgb[2]);
                 reloadImage(-1, -1);
-                // Refresh();
+                //Refresh();
             }
         });
 
