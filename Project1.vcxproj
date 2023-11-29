@@ -283,6 +283,7 @@
     <ClCompile Include="image_helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
+    <ClCompile Include="ml.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
     <ClCompile Include="savekernel.cpp" />
     <ClCompile Include="wxwimage_algos.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="image_helper.h" />
     <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />
+    <ClInclude Include="ml.h" />
     <ClInclude Include="opcvwrapper.h" />
     <ClInclude Include="savekernel.h" />
     <ClInclude Include="wxwimage_algos.h" />
