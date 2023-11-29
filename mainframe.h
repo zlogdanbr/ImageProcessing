@@ -137,5 +137,7 @@ private:
         return -1;
     }
 
+    CDataCapture c;
+
 };
 #endif

@@ -85,6 +85,34 @@ protected:
 
 };
 
+using CPointCst = std::pair<int, int>;
+using CDataValue = std::vector<CPointCst>;
+using RGB_CST = unsigned char[3];
+
+class CDataCapture : public CDataValue
+{
+public:
+    void insertPoint(int x, int y)
+    {
+        CPointCst p{ x,y };
+        this->push_back(p);
+    }
+
+    void clear_me()
+    {
+        this->clear();
+    }
+
+    bool isPointInThePicture(int x, int y)
+    {
+        CPointCst p(x, y);
+        if (std::find(this->begin(), this->end(), p) != this->end())
+        {
+            return true;
+        }
+        return false;
+    }
+};
 
 class CGridInputDialog : public CInputDialogBase
 {
@@ -121,6 +149,7 @@ private:
                                 )
                     };
     void setControlslayout() override;
+    
 
 };
 
@@ -178,6 +207,8 @@ public:
     void reloadImage(int factor1 = 710, int factor2 = 710);
 
     wxImage getImage() { return image; };
+    
+    CDataCapture getCDataCapture() { return c; };
 
 private:
 
@@ -203,6 +234,7 @@ private:
     wxButton* button11{ new wxButton(panel1, wxID_ANY, "BlurV") };
     wxButton* button12{ new wxButton(panel1, wxID_ANY, "Blur") };
     wxButton* button13{ new wxButton(panel1, wxID_ANY, "Gray") };
+    wxButton* button14{ new wxButton(panel1, wxID_ANY, "Color") };
 
 
     wxImage image;
@@ -213,6 +245,12 @@ private:
     bool pog_mirror = false;
 
     void setControlslayout() override;
+
+    CDataCapture c;
+
+    bool capture = false;
+
+    RGB_CST myrgb;
 };
 
 #endif

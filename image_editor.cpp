@@ -1,5 +1,6 @@
 #include "childframes.h"
 #include "wxwimage_algos.h"
+#include <wx/colordlg.h>
 
 void CImageCustomDialog::setControlslayout()
 {
@@ -20,6 +21,7 @@ void CImageCustomDialog::setControlslayout()
     vbox1->Add(button11);
     vbox1->Add(button12);
     vbox1->Add(button13);
+    vbox1->Add(button14);
 
     vbox2->Add(picture, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL);// wxALIGN_CENTER_HORIZONTAL
 
@@ -37,6 +39,9 @@ void CImageCustomDialog::setControlslayout()
 
 CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ parent,"Image Editor" }
 {
+
+    memset(myrgb, 0x00, 3);
+
     setControlslayout();
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -182,6 +187,58 @@ CImageCustomDialog::CImageCustomDialog(wxFrame* parent) :CInputDialogBase{ paren
                 reloadImage(-1, -1);
             }
         });
+
+    button14->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            if (image.IsOk())
+            {
+                wxColourDialog colourDialog(this);
+
+                if (colourDialog.ShowModal() == wxID_OK)
+                {
+                    wxColour color = colourDialog.GetColourData().GetColour();
+                    myrgb[0] = color.GetRed();
+                    myrgb[1] = color.GetGreen();
+                    myrgb[2] = color.GetBlue();
+                }
+            }
+        });
+
+
+    picture->Bind(wxEVT_LEFT_DOWN, [&](wxMouseEvent& event)
+        {
+
+            if (image.IsOk())
+            {
+                wxPoint p = event.GetPosition();
+                int x = p.x;
+                int y = p.y;
+                wxSize s(5, 5);
+                wxRect rect(p, s);
+                image.SetRGB(rect, myrgb[0], myrgb[1], myrgb[2]);
+                reloadImage(-1, -1);
+                // Refresh();
+            }
+        });
+
+    picture->Bind(wxEVT_RIGHT_DOWN, [&](wxMouseEvent& event)
+        {
+
+            if (image.IsOk())
+            {   
+                wxColourDialog colourDialog(this);
+
+                if (colourDialog.ShowModal() == wxID_OK) 
+                {
+                    wxColour color = colourDialog.GetColourData().GetColour();    
+                    myrgb[0] = color.GetRed();
+                    myrgb[1] = color.GetGreen();
+                    myrgb[2] = color.GetBlue();
+
+                }
+            }
+        });
+
 
 }
 
