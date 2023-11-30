@@ -69,11 +69,13 @@ Mat equalizeColorImage(const Mat& img);
 Mat ApplyThreShold(const Mat& img);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
+
 Mat GaussianImageSmoothExtended(    const Mat& img,
                                     int kernel_size,
                                     double sigmaX,
                                     double sigmaY
                                 );
+
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
 
@@ -85,12 +87,19 @@ Mat ApplyHoughTransformRegular(const Mat& img);
 Mat ApplyHoughTransformReProbabilistic(const Mat& img);
 
 /* 
-* Edge detectors
+* Edge detectors Laplacian
 */
 Mat ApplyLaplacian(const Mat& src);
-Mat ApplyLaplacianExtended(const Mat& src, int kernel_size = 3, int scale = 1, int delta = 0, int ddepth = CV_16S);
+Mat ApplyLaplacianExtended( const Mat& src, 
+                            int kernel_size = 3,
+                            int scale = 1, 
+                            int delta = 0, 
+                            int ddepth = CV_16S);
 
 
+/*
+* Edge detectors Sobel
+*/
 Mat ApplySobelX(const Mat& img, int kernel_size);
 Mat ApplySobelY(const Mat& img, int kernel_size);
 Mat ApplySobel(const Mat& img, int kernel_size);
@@ -116,13 +125,15 @@ Mat ApplySobelExtended(const Mat& img,
     double delta,
     int kernel_size);
 
+/*
+* Edge detectors Sharpening/Unsharp
+*/
 Mat Sharpening(const Mat& img);
 Mat Unsharp(const Mat& img);
 
 /*
 *  Morphological
 */
-
 Mat ApplyErode(const Mat& img);
 Mat ApplyDilate(const Mat& img);
 Mat ApplyMorphGradient(const Mat& img);
@@ -134,13 +145,24 @@ Mat ApplyTopHatAlgo(const Mat& img);
 */
 static
 void visualize(Mat& input, int frame, Mat& faces, int thickness = 2);
-AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);;
-void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE, UBYTE, UBYTE, bool blank_bgr = false);
+
+AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);
+
+void highlightFeature(  Mat& img, 
+                        AbstractRegion& abstract_region, 
+                        UBYTE, 
+                        UBYTE, 
+                        UBYTE,
+                        bool blank_bgr = false);
+
 TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
+
 Mat convertRectoImg(Rect& r, Mat& img);
 
 std::vector<Mat> splitChannel(Mat& img);
+
 std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage);
+
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
 void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
 
@@ -149,10 +171,10 @@ void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
 *  Advanced Algorithms and detectors
 */
 Mat detectCornersHarrisAlgoFull(const Mat& image,
-    int neighborhood_size,
-    int aperture_size,
-    int threshold,
-    double Harris_parameter
+                                int neighborhood_size,
+                                int aperture_size,
+                                int threshold,
+                                double Harris_parameter
 );
 
 Mat detectCornersHarris(const Mat& image);

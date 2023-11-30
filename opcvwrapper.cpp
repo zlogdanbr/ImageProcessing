@@ -613,12 +613,12 @@ Robert Laganiere
 Page [ 239 ]
 See page [245 ] for the math
 ----------------------------------------------------------------------------------------------*/
-Mat detectCornersHarrisAlgoFull(const Mat& image,
-    int neighborhood_size,
-    int aperture_size,
-    double threshold,
-    double Harris_parameter
-)
+Mat detectCornersHarrisAlgoFull(    const Mat& image,
+                                    int neighborhood_size,
+                                    int aperture_size,
+                                    double threshold,
+                                    double Harris_parameter
+                                )
 {
     // Detect Harris Corners
     cv::Mat cornerStrength;
