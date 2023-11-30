@@ -15,15 +15,15 @@ So, my research was in Image Processing, especifically for x-ray scans of mamogr
 
 My major was Electrical Engineering - electronics- but I did and I still don't like it.
 
-Because of this research I learned Delphi and C.
-I had access to the internet ( around 1996-1998 )
-I used a lot of IRC.
-I was part of many mailing lists.
+- Because of this research I learned Delphi and C.
+- I had access to the internet ( around 1996-1998 )
+- I used a lot of IRC.
+- I was part of many mailing lists.
 
 So, you can tell that besides all the math I learned, boolean logics, pascal and assembly, I own my career in great part to this. 
 
 Image Processing uses a lot of Math and discrete math. 
-If I won the lottery I would probably spend my time doing a master degree in Computer Vision.
+If I won the lottery, I would probably spend my time doing a master degree in Computer Vision.
 
 Back to reality however, this is how I have fun. It is mostly a hobby project just like some people do carpentry or gardening.
 
