@@ -21,76 +21,6 @@ Mat workingAlgorithm(const Mat& image)
 
 
 /* -------------------------------------------------------------------------------------------
- https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
-It should work but only God knows why it is not
-I had used these functions before using Windows 10 and Linux ( Lubuntu 18 )
-I suspect that as I am running at windows 11, opencv simply does not like
-it when it runs detector->detect(out, faces1);
-Tried with OpenCV 4.5 and 4.8
-----------------------------------------------------------------------------------------------*/
-static
-void 
-visualize(Mat& input, int frame, Mat& faces,  int thickness)
-{
-
-    for (int i = 0; i < faces.rows; i++)
-    {
-        // Draw bounding box
-        rectangle(input, Rect2i(int(faces.at<float>(i, 0)), int(faces.at<float>(i, 1)), int(faces.at<float>(i, 2)), int(faces.at<float>(i, 3))), Scalar(0, 255, 0), thickness);
-        // Draw landmarks
-        circle(input, Point2i(int(faces.at<float>(i, 4)), int(faces.at<float>(i, 5))), 2, Scalar(255, 0, 0), thickness);
-        circle(input, Point2i(int(faces.at<float>(i, 6)), int(faces.at<float>(i, 7))), 2, Scalar(0, 0, 255), thickness);
-        circle(input, Point2i(int(faces.at<float>(i, 8)), int(faces.at<float>(i, 9))), 2, Scalar(0, 255, 0), thickness);
-        circle(input, Point2i(int(faces.at<float>(i, 10)), int(faces.at<float>(i, 11))), 2, Scalar(255, 0, 255), thickness);
-        circle(input, Point2i(int(faces.at<float>(i, 12)), int(faces.at<float>(i, 13))), 2, Scalar(0, 255, 255), thickness);
-    }
-}
-
-Mat detectFaces(const Mat& image)
-{
-	// https://github.com/opencv/opencv_zoo/tree/master/models/face_detection_yunet
-	std::string fd_modelPath = "face_data1\\face_detection_yunet_2023mar_int8.onnx";
-	// https://github.com/opencv/opencv_zoo/tree/master/models/face_recognition_sface
-	std::string fr_modelPath = "face_data2\\face_recognition_sface_2021dec.onnx";
-
-
-	float scoreThreshold = static_cast<float>(0.9);
-	float nmsThreshold = static_cast<float>(0.3);
-	int topK = 5000;
-
-	Mat empty;
-
-	cv::Mat imgclone = convertograyScale(image);
-
-	// this shared pointer is never initialized correctly
-	Ptr<FaceDetectorYN> detector = FaceDetectorYN::create(
-		fd_modelPath,
-		"",
-		Size(320, 320),
-		scoreThreshold,
-		nmsThreshold,
-		topK);
-
-	if (nullptr == detector)
-	{
-		return empty;
-	}
-
-
-	Mat faces1;
-	Mat out = imgclone.clone();
-
-	detector->detect(out, faces1);
-	if (faces1.rows < 1)
-	{
-		return empty;
-	}
-
-	visualize(out, -1, faces1 );
-	return out;
-}
-
-/* -------------------------------------------------------------------------------------------
 OpenCV 3 Computer Vision
 Application Programming
 Cookbook
@@ -343,6 +273,106 @@ Mat WaterShed(const Mat& img)
 	return dst;
 
 
+}
+
+// Only worked on linux Windows 10
+// Apparently there is some internal driver that prevents me from using
+// cascade classifiers
+// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
+std::vector<Rect> detectFacesInImage(Mat& img)
+{
+	if (img.type() != CV_8UC1)
+	{   // not gray-level image
+		convertograyScale(img);
+	}
+
+	std::vector<Rect> faces;
+	CascadeClassifier cascade;
+	cascade.load(CASCADE_PATH_FRONTAL);
+	cascade.detectMultiScale(img, faces);
+	return faces;
+
+}
+
+// Only worked on linux Windows 10
+// Apparently there is some internal driver that prevents me from using
+// cascade classifiers
+// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
+std::vector<Rect> detectEyesInImage(Mat& img)
+{
+
+	if (img.type() != CV_8UC1)
+	{   // not gray-level image
+		convertograyScale(img);
+	}
+
+	std::vector<Rect> eyes;
+	CascadeClassifier cascade;
+	//cascade.load(CASCADE_PATH_FRONTAL_EYE); 
+	cascade.load(CASCADE_PATH_FRONTAL_EYE_CUDA);
+	cascade.detectMultiScale(img, eyes);
+	return eyes;
+
+}
+
+/*------------------------------------------------------------------------------------------
+* https://docs.opencv.org/4.x/d0/dd4/tutorial_dnn_face.html
+*----------------------------------------------------------------------------------------------*/
+static
+void
+visualize(Mat& input, int frame, Mat& faces, int thickness)
+{
+
+	for (int i = 0; i < faces.rows; i++)
+	{
+		// Draw bounding box
+		rectangle(input, Rect2i(int(faces.at<float>(i, 0)), int(faces.at<float>(i, 1)), int(faces.at<float>(i, 2)), int(faces.at<float>(i, 3))), Scalar(0, 255, 0), thickness);
+		// Draw landmarks
+		circle(input, Point2i(int(faces.at<float>(i, 4)), int(faces.at<float>(i, 5))), 2, Scalar(255, 0, 0), thickness);
+		circle(input, Point2i(int(faces.at<float>(i, 6)), int(faces.at<float>(i, 7))), 2, Scalar(0, 0, 255), thickness);
+		circle(input, Point2i(int(faces.at<float>(i, 8)), int(faces.at<float>(i, 9))), 2, Scalar(0, 255, 0), thickness);
+		circle(input, Point2i(int(faces.at<float>(i, 10)), int(faces.at<float>(i, 11))), 2, Scalar(255, 0, 255), thickness);
+		circle(input, Point2i(int(faces.at<float>(i, 12)), int(faces.at<float>(i, 13))), 2, Scalar(0, 255, 255), thickness);
+	}
+}
+
+Mat detectFaces(const Mat& image)
+{
+
+	float scoreThreshold = static_cast<float>(0.9);
+	float nmsThreshold = static_cast<float>(0.3);
+	int topK = 5000;
+
+	Mat empty;
+
+	cv::Mat imgclone = convertograyScale(image);
+
+	// this shared pointer is never initialized correctly
+	Ptr<FaceDetectorYN> detector = FaceDetectorYN::create(
+		fd_modelPath,
+		"",
+		Size(320, 320),
+		scoreThreshold,
+		nmsThreshold,
+		topK);
+
+	if (nullptr == detector)
+	{
+		return empty;
+	}
+
+
+	Mat faces1;
+	Mat out = imgclone.clone();
+
+	detector->detect(out, faces1);
+	if (faces1.rows < 1)
+	{
+		return empty;
+	}
+
+	visualize(out, -1, faces1);
+	return out;
 }
 
 

@@ -19,6 +19,7 @@
 #include "Eigen"
 #include "Dense"
 
+
 using namespace cv;
 
 
@@ -38,6 +39,8 @@ Mat InvertImage(const Mat& img);
 Mat getBinaryImage(const Mat& img);
 std::vector<Mat> splitChannel(Mat& img);
 std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage);
+void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
+void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
 
 /*
 * Gray Scale
