@@ -19,7 +19,6 @@
 #include <string>
 #include "filesys.h"
 #include "opcvwrapper.h"
-#include "detection.h"
 #include <functional>
 #include <queue>
 #include <stack>

@@ -1,6 +1,5 @@
 
 #include "mainframe.h"
-#include "detection.h"
 
 
 MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }

@@ -9,7 +9,6 @@
 #include "image_helper.h"
 #include <wx/grid.h>
 #include "opcvwrapper.h"
-#include "detection.h"
 #include "logs.h"
 #include <functional>
 #include <wx/numdlg.h>
