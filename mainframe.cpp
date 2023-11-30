@@ -122,49 +122,6 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
 
 }
 
-void MyFrame::onSumImage(wxCommandEvent& event)
-{
-    //if (ImageHelper.getOriginalImageInitiated() == true)
-    //{
-    //    if ( ImageHelper.SumImages() == false )
-    //    {
-    //        outxt.writeTo("Error, final image not loaded\n");
-    //    }
-    //}
-}
-
-void MyFrame::onSubImage(wxCommandEvent& event)
-{
-    //if (ImageHelper.getOriginalImageInitiated() == true)
-    //{
-    //    if ( ImageHelper.SubtractImages() == false )
-    //    {
-    //        outxt.writeTo("Error, final image not loaded\n");
-    //    }
-    //}
-}
-
-void MyFrame::onAdjustContrast(wxCommandEvent& event)
-{
-    //if (ImageHelper.getOriginalImageInitiated() == true)
-    //{
-    //    int contrast = getContrastDialog();
-
-    //    if (contrast <= 0)
-    //    {
-    //        outxt.writeTo("Error, final image not loaded\n");
-    //        return;
-    //    }
-    //    ImageHelper.AdjustContrast(contrast);
-    //}
-}
-
-void MyFrame::onDisplayImage(wxCommandEvent& event)
-{
-    CImageCustomDialog* ImageDialog = new CImageCustomDialog(this);
-    ImageDialog->Show(true);
-}
-
 void MyFrame::onRevert(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)

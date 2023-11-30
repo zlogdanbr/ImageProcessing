@@ -64,13 +64,7 @@ private:
     void onCustomKernel(wxCommandEvent& event);
     void onAllMenu(wxCommandEvent& event);
     void onHelpFile(wxCommandEvent& event);
-    void onDisplayImage(wxCommandEvent& event);
     void onRevert(wxCommandEvent& event);
-
-    void onSumImage(wxCommandEvent& event);
-    void onSubImage(wxCommandEvent& event);
-
-    void onAdjustContrast(wxCommandEvent& event);
 
     enum  Opt 
     {
@@ -92,10 +86,6 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onCustomKernel, this, CUSTKERNEL);
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
-        Bind(wxEVT_MENU, &MyFrame::onDisplayImage, this, IMAGE_DISPLAY);
-        Bind(wxEVT_MENU, &MyFrame::onSumImage, this, SUM_IMG_ID);
-        Bind(wxEVT_MENU, &MyFrame::onSubImage, this, SUB_IMG_ID);
-        Bind(wxEVT_MENU, &MyFrame::onAdjustContrast, this, CONTRAST_ID_IMG);
         Bind(wxEVT_MENU, &MyFrame::onRevert, this, REVETR_IMG_ID);
     }
 
@@ -107,37 +97,10 @@ private:
         auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL,    "Kernels", "Input custom kernel");
         menuCtsKernl->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_MENU));
         
-        auto menuImage = menuAlgo->Append(IMAGE_DISPLAY,    "Edit", "Image Display");
-        menuImage->SetBitmap(wxArtProvider::GetBitmap (wxART_INFORMATION, wxART_MENU));
-
-        // TODO
-        //auto menuSum = menuAlgo->Append(SUM_IMG_ID, "Sum images", "Sum images");
-        //menuSum->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_MENU));
-
-        //auto menuSub = menuAlgo->Append(SUB_IMG_ID, "Subtrack images", "Subtrack images");
-        //menuSub->SetBitmap(wxArtProvider::GetBitmap(wxART_MINUS, wxART_MENU));
-
-        //auto menuContrast = menuAlgo->Append(CONTRAST_ID_IMG, "Adjust Contrast", "Adjust Contrast");
-        //menuContrast->SetBitmap(wxArtProvider::GetBitmap(wxART_EDIT, wxART_MENU));
-
         auto menuRevert = menuAlgo->Append(REVETR_IMG_ID, "Revert", "Revert");
         menuRevert->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_MENU));
     }
 
-    int getContrastDialog()
-    {
-        wxNumberEntryDialog dialog(this, "Contrast Adjustment", "Choose Contrast Adjustment", "Contrast Adjustmen Factor", 1, 1, 100);
-
-        if (dialog.ShowModal() == wxID_OK)
-        {
-            auto scale = static_cast<int>(dialog.GetValue());
-            return scale;
-        }
-
-        return -1;
-    }
-
-    CDataCapture c;
 
 };
 #endif

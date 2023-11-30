@@ -277,16 +277,13 @@
     <ClCompile Include="dmath.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_gridialog.cpp" />
-    <ClCompile Include="image_editor.cpp" />
     <ClCompile Include="image_io.cpp" />
     <ClCompile Include="image_algorithms.cpp" />
     <ClCompile Include="image_helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
-    <ClCompile Include="ml.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
     <ClCompile Include="savekernel.cpp" />
-    <ClCompile Include="wxwimage_algos.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframes.h" />
@@ -296,10 +293,8 @@
     <ClInclude Include="image_helper.h" />
     <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />
-    <ClInclude Include="ml.h" />
     <ClInclude Include="opcvwrapper.h" />
     <ClInclude Include="savekernel.h" />
-    <ClInclude Include="wxwimage_algos.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
