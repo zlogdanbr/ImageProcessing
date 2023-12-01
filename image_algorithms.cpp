@@ -31,6 +31,16 @@ CInputDialog::getAlgoFunctionFourPar(wxString key)
 
 }
 
+std::function<Mat(Mat, int, int, int, int)>
+CInputDialog::getAlgoFunctionFivePar(wxString key)
+{
+    if (fmorepp.find(key) != fmorepp.end())
+    {
+        return fmorepp[key];
+    }
+    return nullptr;
+
+}
 
 void CInputDialog::setControlslayout()
 {
@@ -92,6 +102,7 @@ void CInputDialog::fillComboInfo()
     fmore["Median"] = MedianImageSmooth;
     fmore["Sobel"] = ApplySobel;
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
+    fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
 
     comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
@@ -110,6 +121,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Unsharp");
     comboBox1->Append("Threshold");
     comboBox1->Append("Laplacian");
+    comboBox1->Append("Laplacian Extended");
     comboBox1->Append("Sobel");
     comboBox1->Append("Canny");
     comboBox1->Append("Detect Corners");
@@ -150,12 +162,37 @@ void CInputDialog::DoFunction()
             }
             else
             {
-                outxt->writeTo("Error while loading algos.\n");
-                stop = true;
-                return;
+                Function5Parameters f5 = getAlgoFunctionFivePar(opt);
+                if (f5 != nullptr)
+                {
+                    wxNumberEntryDialog dialog(this, "Scale", "Scale", "Divided by 10", 2, 1, 1000);
+                    int scale = 0;
+                    int delta = 0;
+
+                    if (dialog.ShowModal() == wxID_OK)
+                    {
+                        scale = dialog.GetValue();
+
+                        wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 2, 1, 1000);
+                        if (dialog2.ShowModal() == wxID_OK)
+                        {
+
+                            delta = dialog2.GetValue();
+                            ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
+                            stop = true;
+                            return;
+                        }
+  
+                    }
+                }
+                else
+                {
+                    outxt->writeTo("Error while loading algos.\n");
+                    stop = true;
+                    return;
+                }
             }
         }
-
         ApplyAlgorithm(f2, true, 3);
     }
     else

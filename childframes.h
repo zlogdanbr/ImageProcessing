@@ -21,9 +21,11 @@
 using Function1Parameter    = std::function<Mat(Mat)>;
 using Function2Parameter    = std::function<Mat(Mat, int)>;
 using Function4Parameters   = std::function<Mat(Mat, int,double,double)>;
+using Function5Parameters   = std::function<Mat(Mat, int, int,int,int)>;
 using Function1ParContainer = std::map < wxString, Function1Parameter >;
 using Function2ParContainer = std::map < wxString, Function2Parameter >;
 using Function4ParContainer = std::map < wxString, Function4Parameters >;
+using Function5ParContainer = std::map < wxString, Function5Parameters >;
 
 class COpenImage
 {
@@ -82,6 +84,7 @@ protected:
     void ApplyAlgorithm(Function1Parameter& f, bool Gray);
     void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
     void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
+    void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
 
     // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
     virtual void setControlslayout() = 0;
@@ -172,6 +175,9 @@ public:
     std::function<Mat(Mat, int, double, double)> 
         getAlgoFunctionFourPar(wxString key);
 
+    std::function<Mat(Mat, int, int,int,int)>
+        getAlgoFunctionFivePar(wxString key);
+
     wxString getSelectionText() { return SelectionText;};
 
     void DoFunction();
@@ -195,6 +201,7 @@ private:
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
     Function4ParContainer fmorep;
+    Function5ParContainer fmorepp;
 
     bool stop = false;
 
