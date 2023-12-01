@@ -78,6 +78,37 @@ void MyFrame::OnSave(wxCommandEvent& event)
        auto path = ImageHelper.getOriginalImage().GetPath();
        auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
 
+
+### Dependecies
+
+Boost:
+
+https://www.boost.org
+Easiest way to install, using 
+
+https://community.chocolatey.org/packages/boost-msvc-14.3
+
+
+Eigen:
+
+Great lib for manipulating matrix and linear algebra ( this is what basically you do with Machine Learning and AI )
+
+https://eigen.tuxfamily.org/index.php?title=Main_Page
+
+
+wxWidgets:
+
+https://wxwidgets.org
+
+
+OpenCV:
+
+https://opencv.org
+
+
+
+Python soon will be required.
+
 -------------------------------------------------------------------------------------------------
 ## References:
 
