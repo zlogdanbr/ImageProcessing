@@ -93,8 +93,6 @@ void CInputDialog::fillComboInfo()
     fmore["Sobel"] = ApplySobel;
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
 
-    
-
     comboBox1->Append("Working Algorithm");
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
@@ -141,9 +139,14 @@ void CInputDialog::DoFunction()
             Function4Parameters f3 = getAlgoFunctionFourPar(opt);
             if (f3 != nullptr)
             {
-                ApplyAlgorithm(f3, true, 3, 0.01, 0.01);
-                stop = true;
-                return;
+                wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 10", 2, 1, 1000);
+                if (dialog.ShowModal() == wxID_OK)
+                { 
+                    double sigma = 0.1 * static_cast<double>(dialog.GetValue());
+                    ApplyAlgorithm(f3, true, 3, sigma, sigma);
+                    stop = true;
+                    return;
+                }
             }
             else
             {
