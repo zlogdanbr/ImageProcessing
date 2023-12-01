@@ -1,7 +1,7 @@
 #include "childframes.h"
 
 std::function<Mat(Mat)> 
-CInputDialog::getAlgoFunctionSimple(wxString key)
+CInputDialog::getAlgoFunctionOnePar(wxString key)
 {
     if (fsimple.find(key) != fsimple.end())
     {
@@ -11,13 +11,24 @@ CInputDialog::getAlgoFunctionSimple(wxString key)
 }
 
 std::function<Mat(Mat, int)> 
-CInputDialog::getAlgoFunctionMore(wxString key)
+CInputDialog::getAlgoFunctionTwoPar(wxString key)
 {
     if (fmore.find(key) != fmore.end())
     {
         return fmore[key];
     }
     return nullptr;
+}
+
+std::function<Mat(Mat, int, double, double)>
+CInputDialog::getAlgoFunctionFourPar(wxString key)
+{
+    if (fmorep.find(key) != fmorep.end())
+    {
+        return fmorep[key];
+    }
+    return nullptr;
+
 }
 
 
@@ -80,6 +91,7 @@ void CInputDialog::fillComboInfo()
     fmore["Gaussian"] = GaussianImageSmooth;
     fmore["Median"] = MedianImageSmooth;
     fmore["Sobel"] = ApplySobel;
+    fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
 
     
 
@@ -94,6 +106,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Invert Image");
     comboBox1->Append("Convert to Binary");
     comboBox1->Append("Gaussian");
+    comboBox1->Append("Gaussian Extended");
     comboBox1->Append("Median");
     comboBox1->Append("Sharpening");
     comboBox1->Append("Unsharp");
@@ -118,19 +131,29 @@ void CInputDialog::DoFunction()
     outxt->writeTo("Applying algorithm... please wait...\n");
     wxString opt = getSelectionText();
 
-    Function1Parameter f1 = getAlgoFunctionSimple(opt);
+    Function1Parameter f1 = getAlgoFunctionOnePar(opt);
 
     if (f1 == nullptr)
     {
-        Function2Parameter f2 = getAlgoFunctionMore(opt);
+        Function2Parameter f2 = getAlgoFunctionTwoPar(opt);
         if (f2 == nullptr)
         {
-            outxt->writeTo("Error while loading algos.\n");
-            stop = true;
-            return;
+            Function4Parameters f3 = getAlgoFunctionFourPar(opt);
+            if (f3 != nullptr)
+            {
+                ApplyAlgorithm(f3, true, 3, 0.01, 0.01);
+                stop = true;
+                return;
+            }
+            else
+            {
+                outxt->writeTo("Error while loading algos.\n");
+                stop = true;
+                return;
+            }
         }
 
-        ApplyAlgorithm(f2, true, 5);
+        ApplyAlgorithm(f2, true, 3);
     }
     else
     {

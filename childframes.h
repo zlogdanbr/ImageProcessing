@@ -18,10 +18,12 @@
 #include "filesys.h"
 #include <wx/dc.h>
 
-using Function1Parameter = std::function<Mat(Mat)>;
-using Function2Parameter = std::function<Mat(Mat, int)>;
+using Function1Parameter    = std::function<Mat(Mat)>;
+using Function2Parameter    = std::function<Mat(Mat, int)>;
+using Function4Parameters   = std::function<Mat(Mat, int,double,double)>;
 using Function1ParContainer = std::map < wxString, Function1Parameter >;
 using Function2ParContainer = std::map < wxString, Function2Parameter >;
+using Function4ParContainer = std::map < wxString, Function4Parameters >;
 
 class COpenImage
 {
@@ -79,6 +81,7 @@ protected:
 
     void ApplyAlgorithm(Function1Parameter& f, bool Gray);
     void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
+    void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
 
     // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
     virtual void setControlslayout() = 0;
@@ -160,8 +163,14 @@ public:
 
     CInputDialog(wxFrame* parent);
 
-    std::function<Mat(Mat)> getAlgoFunctionSimple(wxString key);
-    std::function<Mat(Mat, int)> getAlgoFunctionMore(wxString key);
+    std::function<Mat(Mat)> 
+        getAlgoFunctionOnePar(wxString key);
+
+    std::function<Mat(Mat, int)> 
+        getAlgoFunctionTwoPar(wxString key);
+
+    std::function<Mat(Mat, int, double, double)> 
+        getAlgoFunctionFourPar(wxString key);
 
     wxString getSelectionText() { return SelectionText;};
 
@@ -185,6 +194,7 @@ private:
 
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
+    Function4ParContainer fmorep;
 
     bool stop = false;
 

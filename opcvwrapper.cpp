@@ -157,7 +157,16 @@ Mat getBinaryImage(const Mat& img)
 {
     // Create binary image from source image
     Mat bw;
-    cvtColor(img, bw, COLOR_BGR2GRAY);
+
+    if (!isGrayScaleImage(img))
+    {
+        cvtColor(img, bw, COLOR_BGR2GRAY);
+    }
+    else
+    {
+        bw = img.clone();
+    }
+    
     threshold(bw, bw, 40, 255, THRESH_BINARY | THRESH_OTSU);
     return bw;
 }
@@ -237,9 +246,10 @@ Mat GaussianImageSmoothExtended(    const Mat& img,
                                     double sigmaY
                                 )
 {
+    Mat Gray = convertograyScale(img);
     Mat Blurred;
     GaussianBlur(   
-                    img, 
+                    Gray, 
                     Blurred, 
                     Size(kernel_size, kernel_size), 
                     sigmaX, // sigmaX standard deviation in X direction
@@ -254,7 +264,7 @@ Mat ApplyThreShold(const Mat& img)
     cv::Mat out;
     cv::threshold(img,
         out,
-        1,
+        40,
         255,
         cv::THRESH_BINARY);
     return out;
@@ -593,12 +603,29 @@ Mat ApplyTopHatAlgo(const Mat& img)
 */
 Mat workingAlgorithm(const Mat& image)
 {
+    const std::string FOLDER = "Custom Algo";
+
+    if (directory_exists(FOLDER) == false)
+    {
+        create_dir(FOLDER);
+    }
     cv::Mat imgclone1;
 
     // Convert to gray scale
     imgclone1 = convertograyScale(image);
 
-    GaussianImageSmoothExtended(imgclone1, 5, 100, 25);
+    double a = 1;
+    
+    for (int i = 0; i < 20; i++)
+    {
+        auto sigma = 10.0 * static_cast<double>(a * i);
+        imgclone1 = GaussianImageSmoothExtended(imgclone1, 5, sigma, sigma);
+        std::stringstream os;
+        os << FOLDER << "\\" << "Image" << i << "--" << sigma << ".jpg";
+        saveImage(os.str(), imgclone1);
+    }
+    
+
 
     return imgclone1;
 }
