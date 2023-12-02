@@ -65,6 +65,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image"] = flipImage;
     fsimple["Threshold"] = ApplyThreShold;
     fsimple["Canny"] = ApplyCanny;
+    fmore3["Canney Extended"] = ApplyCannyAlgoFull;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
@@ -104,6 +105,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Laplacian Extended");
     comboBox1->Append("Sobel");
     comboBox1->Append("Canny");
+    comboBox1->Append("Canney Extended");
     comboBox1->Append("Detect Corners");
     comboBox1->Append("Detect features");
     comboBox1->Append("Hough Transform");
@@ -159,68 +161,87 @@ CInputDialog::getAlgoFunctionFivePar(wxString key)
 
 }
 
+std::function<Mat(Mat, int, int)>
+CInputDialog::getAlgoFunctionThreePar(wxString key)
+{
+    if (fmore3.find(key) != fmore3.end())
+    {
+        return fmore3[key];
+    }
+    return nullptr;
+}
+
 void CInputDialog::DoFunction()
 {
     outxt->writeTo("Applying algorithm... please wait...\n");
     wxString opt = getSelectionText();
 
-    Function1Parameter f1 = getAlgoFunctionOnePar(opt);
+    Function1Parameter  f1 = getAlgoFunctionOnePar(opt);
+    Function2Parameter  f2 = getAlgoFunctionTwoPar(opt);
+    Function3Parameters f3 = getAlgoFunctionThreePar(opt);
+    Function4Parameters f4 = getAlgoFunctionFourPar(opt);
+    Function5Parameters f5 = getAlgoFunctionFivePar(opt);
 
-    if (f1 == nullptr)
-    {
-        Function2Parameter f2 = getAlgoFunctionTwoPar(opt);
-        if (f2 == nullptr)
-        {
-            Function4Parameters f3 = getAlgoFunctionFourPar(opt);
-            if (f3 != nullptr)
-            {
-                wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 10", 2, 1, 1000);
-                if (dialog.ShowModal() == wxID_OK)
-                { 
-                    double sigma = 0.1 * static_cast<double>(dialog.GetValue());
-                    ApplyAlgorithm(f3, true, 3, sigma, sigma);
-                    stop = true;
-                    return;
-                }
-            }
-            else
-            {
-                Function5Parameters f5 = getAlgoFunctionFivePar(opt);
-                if (f5 != nullptr)
-                {
-                    wxNumberEntryDialog dialog(this, "Scale", "Scale", "Divided by 10", 2, 1, 1000);
-                    int scale = 0;
-                    int delta = 0;
-
-                    if (dialog.ShowModal() == wxID_OK)
-                    {
-                        scale = dialog.GetValue();
-
-                        wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 2, 1, 1000);
-                        if (dialog2.ShowModal() == wxID_OK)
-                        {
-
-                            delta = dialog2.GetValue();
-                            ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
-                            stop = true;
-                            return;
-                        }
-  
-                    }
-                }
-                else
-                {
-                    outxt->writeTo("Error while loading algos.\n");
-                    stop = true;
-                    return;
-                }
-            }
-        }
-        ApplyAlgorithm(f2, true, 3);
-    }
-    else
+    if (f1 != nullptr)
     {
         ApplyAlgorithm(f1, true);
+        return;
     }
-    stop = true;
+
+    if (f2 != nullptr)
+    {
+        ApplyAlgorithm(f2, true, 3);
+        return;
+    }
+
+    if (f3 != nullptr)
+    {
+        wxNumberEntryDialog dialog(this, "threshold", "threshold", "threshold", 1, 1, 1000);
+        int threshold = 0;
+        int Aperture = 0;
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            threshold = dialog.GetValue();
+
+            wxNumberEntryDialog dialog2(this, "Aperture", "Aperture", "Aperture", 1, 1, 1000);
+            if (dialog2.ShowModal() == wxID_OK)
+            {
+                Aperture = dialog2.GetValue();
+                ApplyAlgorithm(f3, true, threshold, Aperture);
+            }
+        }
+        return;
+    }
+
+    if (f4 != nullptr)
+    {
+        wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 10", 2, 1, 1000);
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            double sigma = 0.1 * static_cast<double>(dialog.GetValue());
+            ApplyAlgorithm(f4, true, 3, sigma, sigma);
+        }
+        return;
+    }
+
+    if (f5 != nullptr)
+    {
+        wxNumberEntryDialog dialog(this, "Scale", "Scale", "Divided by 10", 2, 1, 1000);
+        int scale = 0;
+        int delta = 0;
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            scale = dialog.GetValue();
+
+            wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 2, 1, 1000);
+            if (dialog2.ShowModal() == wxID_OK)
+            {
+                delta = dialog2.GetValue();
+                ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
+            }
+        }
+        return;
+    }
 }

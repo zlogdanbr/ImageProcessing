@@ -108,6 +108,31 @@ CInputDialogBase::ApplyAlgorithm(   Function4Parameters& f,
     }
 }
 
+void 
+CInputDialogBase::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, p1, p2);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), p1, p2);
+        setFinalImg(out);
+    }
+}
+
 void
 CInputDialogBase::ApplyAlgorithm(   Function5Parameters& f, 
                                     bool Gray, 

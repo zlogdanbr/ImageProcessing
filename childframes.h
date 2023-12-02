@@ -21,12 +21,16 @@
 
 using Function1Parameter    = std::function<Mat(Mat)>;
 using Function2Parameter    = std::function<Mat(Mat, int)>;
+using Function3Parameters   = std::function<Mat(Mat, int, int)>;
 using Function4Parameters   = std::function<Mat(Mat, int, double, double)>;
 using Function5Parameters   = std::function<Mat(Mat, int, int, int, int)>;
+
 using Function1ParContainer = std::map < wxString, Function1Parameter >;
 using Function2ParContainer = std::map < wxString, Function2Parameter >;
+using Function3ParContainer = std::map < wxString, Function3Parameters >;
 using Function4ParContainer = std::map < wxString, Function4Parameters >;
 using Function5ParContainer = std::map < wxString, Function5Parameters >;
+
 using CPointCst = std::pair<int, int>;
 using CDataValue = std::vector<CPointCst>;
 using RGB_CST = unsigned char[3];
@@ -90,6 +94,7 @@ protected:
 
     void ApplyAlgorithm(Function1Parameter& f, bool Gray);
     void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
+    void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
     void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
     void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
 
@@ -181,6 +186,9 @@ public:
     std::function<Mat(Mat, int, int,int,int)>
         getAlgoFunctionFivePar(wxString key);
 
+    std::function<Mat(Mat, int, int)>
+        getAlgoFunctionThreePar(wxString key);
+
     wxString getSelectionText() { return SelectionText;};
 
     void DoFunction();
@@ -203,6 +211,7 @@ private:
 
     Function1ParContainer fsimple;
     Function2ParContainer fmore;
+    Function3ParContainer fmore3;
     Function4ParContainer fmorep;
     Function5ParContainer fmorepp;
 
