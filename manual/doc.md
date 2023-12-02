@@ -80,8 +80,11 @@ The sources for them are:
 
 https://www.ogemarques.com
 http://www.cse.iitm.ac.in/~vplab/courses/optimization/MAths_IM_DEBLUR_ENH_SD_EDT_2016.pdf
+
 https://farid.berkeley.edu/downloads/tutorials/fip.pdf
+
 http://www.dsc.ufcg.edu.br/~hmg/disciplinas/graduacao/vc-2014.1/Rita-Tutorial-PDI.pdf
+
 https://imageprocessingplace.com/downloads_V3/root_downloads/tutorials/Image%20Processing%20Fundamentals--An%20Overview.pdf
 
 
