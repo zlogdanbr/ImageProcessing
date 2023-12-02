@@ -6,34 +6,39 @@
 #ifndef _CHILD_FRAME_DEFS_
 #define _CHILD_FRAME_DEFS_
 
-#include "image_helper.h"
+#include <wx/dc.h>
 #include <wx/grid.h>
-#include "opcvwrapper.h"
-#include "logs.h"
-#include <functional>
-#include <wx/numdlg.h>
-#include <thread>
 #include <wx/wx.h>
 #include <wx/progdlg.h>
+#include <wx/numdlg.h>
+#include <wx/aboutdlg.h>
+#include <functional>
+#include <thread>
+#include "image_helper.h"
+#include "opcvwrapper.h"
+#include "logs.h"
 #include "filesys.h"
-#include <wx/dc.h>
 
 using Function1Parameter    = std::function<Mat(Mat)>;
 using Function2Parameter    = std::function<Mat(Mat, int)>;
-using Function4Parameters   = std::function<Mat(Mat, int,double,double)>;
-using Function5Parameters   = std::function<Mat(Mat, int, int,int,int)>;
+using Function4Parameters   = std::function<Mat(Mat, int, double, double)>;
+using Function5Parameters   = std::function<Mat(Mat, int, int, int, int)>;
 using Function1ParContainer = std::map < wxString, Function1Parameter >;
 using Function2ParContainer = std::map < wxString, Function2Parameter >;
 using Function4ParContainer = std::map < wxString, Function4Parameters >;
 using Function5ParContainer = std::map < wxString, Function5Parameters >;
+using CPointCst = std::pair<int, int>;
+using CDataValue = std::vector<CPointCst>;
+using RGB_CST = unsigned char[3];
 
 class COpenImage
 {
 public:
+
     COpenImage(CImageHelper* imghelper, CWriteLogs* outxt);
+
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
-
     void OpenFile(wxFrame& frame);
 
 private:
@@ -48,10 +53,11 @@ private:
 class CSaveImage
 {
 public:
+
     CSaveImage(CImageHelper* imghelper, CWriteLogs* outxt);
+
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
-
     void SaveFile(wxFrame& frame);
 
 private:
@@ -68,6 +74,7 @@ class CInputDialogBase : public wxFrame
 public:
 
     CInputDialogBase(wxFrame* parent, wxString name);
+
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
 
@@ -90,10 +97,6 @@ protected:
     virtual void setControlslayout() = 0;
 
 };
-
-using CPointCst = std::pair<int, int>;
-using CDataValue = std::vector<CPointCst>;
-using RGB_CST = unsigned char[3];
 
 class CDataCapture : public CDataValue
 {
@@ -154,11 +157,11 @@ private:
                                     wxEXPAND
                                 )
                     };
+
     void setControlslayout() override;
     
 
 };
-
 
 class CInputDialog : public CInputDialogBase
 {
@@ -207,7 +210,5 @@ private:
 
 
 };
-
-
 
 #endif

@@ -62,10 +62,6 @@ public:
     const bool getFinalGray() const { return final_isgray; };
     void SetOriginalNew();
 
-    bool SumImages();
-    bool SubtractImages(); 
-    bool AdjustContrast(double scale);
-
     void addtoCache(Mat& img)
     {
         cache.push(img);

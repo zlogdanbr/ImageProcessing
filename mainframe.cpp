@@ -51,9 +51,6 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
     // -----------------------------------------------------------------------------
     BinAllEvents();
     SetMenuBar(mainMenu);
-   
-    // -----------------------------------------------------------------------------
-    //          Image
 
     outxt.writeTo("Application initiated.\n");
 
@@ -63,8 +60,19 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
 void MyFrame::onHelpFile(wxCommandEvent& event)
 {
     std::stringstream os;
-    os << "2023 Daniel Vasconcelos Gomes zlogdan.wordpress.com \n" ;
+    os << "2023 Daniel Vasconcelos Gomes zlogdan.wordpress.com \n";
     outxt.writeInfo(os);
+    wxAboutDialogInfo aboutInfo;
+    aboutInfo.SetName(wxTheApp->GetAppName());
+    aboutInfo.SetVersion("1.0", "1.0.1");
+    aboutInfo.SetDescription("Image Processing Tool");
+    aboutInfo.SetWebSite("http://zlogdan.wordpress.com");
+    aboutInfo.SetLicence("GNU GENERAL PUBLIC LICENSE GPLv3");
+    wxArrayString Dev;
+    wxString _me_ = "Daniel Vasconcelos Gomes";
+    Dev.Add(_me_);
+    aboutInfo.SetDevelopers(Dev);
+    wxAboutBox(aboutInfo);
 }
 
 void MyFrame::OnExit(wxCommandEvent& event)

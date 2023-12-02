@@ -8,24 +8,6 @@ std::string convertWxStringToString(const wxString wsx)
     return s.str();
 }
 
-// TODO
-bool CImageHelper::SumImages()
-{
-    return true;
-}
-
-// TODO
-bool CImageHelper::SubtractImages()
-{
-    return true;
-}
-
-// TODO
-bool CImageHelper::AdjustContrast(double scale)
-{
-    return true;
-}
-
 void CImageHelper::clean()
 {
     original_initiated = false;
