@@ -483,7 +483,6 @@ Mat ApplySobelExtended( const Mat& img,
     return sobel;
 }
 
-
 //https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
 Mat ApplyHoughTransform(const Mat& img, int opt)
 {
@@ -498,9 +497,11 @@ Mat ApplyHoughTransform(const Mat& img, int opt)
     // Copy edges to the images that will display the results in BGR
     cvtColor(dst, cdst, COLOR_GRAY2BGR);
     cdstP = cdst.clone();
+
     // Standard Hough Line Transform
     std::vector<Vec2f> lines; // will hold the results of the detection
     HoughLines(dst, lines, 1, CV_PI / 180, 150, 0, 0); // runs the actual detection
+
     // Draw the lines
     for (size_t i = 0; i < lines.size(); i++)
     {
@@ -514,9 +515,11 @@ Mat ApplyHoughTransform(const Mat& img, int opt)
         pt2.y = cvRound(y0 - 1000 * (a));
         line(cdst, pt1, pt2, Scalar(0, 0, 255), 3, LINE_AA);
     }
+
     // Probabilistic Line Transform
     std::vector<Vec4i> linesP; // will hold the results of the detection
     HoughLinesP(dst, linesP, 1, CV_PI / 180, 50, 50, 10); // runs the actual detection
+
     // Draw the lines
     for (size_t i = 0; i < linesP.size(); i++)
     {
@@ -535,6 +538,40 @@ Mat ApplyHoughTransform(const Mat& img, int opt)
         return cdstP;
     }
 
+}
+
+// https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
+Mat ApplyHoughTransformCustom(const Mat& img)
+{
+    Mat dst;
+    Mat cdst;
+
+    // Apply Canny algorithm
+    cv::Mat contours;
+    Canny(img, dst, 50, 200, 3);
+
+    // Copy edges to the images that will display the results in BGR
+    cvtColor(dst, cdst, COLOR_GRAY2BGR);
+
+    // Standard Hough Line Transform
+    std::vector<Vec2f> lines; // will hold the results of the detection
+    HoughLines(dst, lines, 1, CV_PI / 180, 150, 0, 0); // runs the actual detection
+
+    // Draw the lines
+    for (size_t i = 0; i < lines.size(); i++)
+    {
+        float rho = lines[i][0], theta = lines[i][1];
+        Point pt1, pt2;
+        double a = cos(theta), b = sin(theta);
+        double x0 = a * rho, y0 = b * rho;
+        pt1.x = cvRound(x0 + 1000 * (-b));
+        pt1.y = cvRound(y0 + 1000 * (a));
+        pt2.x = cvRound(x0 - 1000 * (-b));
+        pt2.y = cvRound(y0 - 1000 * (a));
+        line(cdst, pt1, pt2, Scalar(0, 0, 255), 3, LINE_AA);
+    }
+
+    return cdst;
 }
 
 Mat ApplyHoughTransformRegular(const Mat& img)
@@ -958,9 +995,23 @@ Mat detectFaces(const Mat& image)
 
     cv::Mat imgclone = convertograyScale(image);
 
+    wxString curren_dir = wxGetCwd();
+    std::stringstream s;
+    s << curren_dir;
+    s.str();
+    s << "\\";
+    s << fd_modelPath;
+    std::string model = s.str();
+    bool fileexists = file_exists(model);
+    
+    if (fileexists == false)
+    {
+        return empty;
+    }
+
     // this shared pointer is never initialized correctly
     Ptr<FaceDetectorYN> detector = FaceDetectorYN::create(
-        fd_modelPath,
+        model,
         "",
         Size(320, 320),
         scoreThreshold,

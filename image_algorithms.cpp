@@ -50,11 +50,15 @@ void CInputDialog::setControlslayout()
 
 void CInputDialog::fillComboInfo()
 {
+
+    // Add functors to the functor mapping
+    // this will allow the program to find the appropriate
+    // algorithm to be applied
     fsimple["Convert to Gray Scale"] = convertograyScale;
     fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
     fsimple["Laplacian"] = ApplyLaplacian;
-    fsimple["Detect Corners"] = detectCornersHarris;
+    fsimple["Harris Algorithm"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Working Algorithm"] = workingAlgorithm;
     fsimple["Detect Corners"] = detectCornersHarris;
@@ -65,11 +69,12 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image"] = flipImage;
     fsimple["Threshold"] = ApplyThreShold;
     fsimple["Canny"] = ApplyCanny;
-    fmore3["Canney Extended"] = ApplyCannyAlgoFull;
+    fmore3["Canny Extended"] = ApplyCannyAlgoFull;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
+    fsimple["Hough Transform Custom"] = ApplyHoughTransformCustom;
     fsimple["Detect Faces"] = detectFaces;
     fsimple["Convert to Binary"] = getBinaryImage;
     fsimple["Watershed"] = WaterShed;
@@ -77,7 +82,6 @@ void CInputDialog::fillComboInfo()
     fsimple["Dilate"] = ApplyDilate;
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
-
     fmore["Blur Image"] = blurImageSmooth;
     fmore["Gaussian"] = GaussianImageSmooth;
     fmore["Median"] = MedianImageSmooth;
@@ -85,7 +89,9 @@ void CInputDialog::fillComboInfo()
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
 
-    comboBox1->Append("Working Algorithm");
+    // Now fill the combox box options with the algorithms
+
+    // Basic operations
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
     comboBox1->Append("Equalize Color Scale Image");
@@ -95,26 +101,50 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Blur Image");
     comboBox1->Append("Invert Image");
     comboBox1->Append("Convert to Binary");
-    comboBox1->Append("Gaussian");
-    comboBox1->Append("Gaussian Extended");
-    comboBox1->Append("Median");
-    comboBox1->Append("Sharpening");
-    comboBox1->Append("Unsharp");
     comboBox1->Append("Threshold");
-    comboBox1->Append("Laplacian");
-    comboBox1->Append("Laplacian Extended");
-    comboBox1->Append("Sobel");
-    comboBox1->Append("Canny");
-    comboBox1->Append("Canney Extended");
-    comboBox1->Append("Detect Corners");
-    comboBox1->Append("Detect features");
-    comboBox1->Append("Hough Transform");
-    comboBox1->Append("Hough Transform Probabilistic");
-    comboBox1->Append("Detect Faces");
+
+    // Morphological operations
     comboBox1->Append("Erode");
     comboBox1->Append("Dilate");
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
+
+    // Custom algorithms I am working
+    comboBox1->Append("Working Algorithm");
+
+    // Gaussian Low pass filters
+    comboBox1->Append("Gaussian");
+    comboBox1->Append("Gaussian Extended");
+
+    // Median filters blurred images
+    comboBox1->Append("Median");
+
+    // Sharp algorithms
+    comboBox1->Append("Sharpening");
+    comboBox1->Append("Unsharp");
+    
+    // Lapalcian second derivative edge detectors
+    comboBox1->Append("Laplacian");
+    comboBox1->Append("Laplacian Extended");
+
+    // Gradient based algorithms
+    comboBox1->Append("Sobel");
+    comboBox1->Append("Canny");
+    comboBox1->Append("Canny Extended");
+
+    // Circle detection algorithm
+    comboBox1->Append("Hough Transform");
+    comboBox1->Append("Hough Transform Probabilistic");
+    comboBox1->Append("Hough Transform Custom");
+
+    // feature detection algorithms
+    comboBox1->Append("Harris Algorithm");
+    comboBox1->Append("Detect features");
+    
+    // Detecting faces, not currently working
+    comboBox1->Append("Detect Faces");
+
+    // Watershed
     comboBox1->Append("Watershed");
 }
 

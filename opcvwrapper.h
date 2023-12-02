@@ -85,6 +85,7 @@ Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
 Mat ApplyHoughTransform(const Mat& img, int opt);
 Mat ApplyHoughTransformRegular(const Mat& img);
 Mat ApplyHoughTransformReProbabilistic(const Mat& img);
+Mat ApplyHoughTransformCustom(const Mat& img);
 
 /* 
 * Edge detectors Laplacian
@@ -173,9 +174,9 @@ void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
 Mat detectCornersHarrisAlgoFull(const Mat& image,
                                 int neighborhood_size,
                                 int aperture_size,
-                                int threshold,
+                                double threshold,
                                 double Harris_parameter
-);
+                                );
 
 Mat detectCornersHarris(const Mat& image);
 Mat detectFastKeyPoints(const Mat& image);
