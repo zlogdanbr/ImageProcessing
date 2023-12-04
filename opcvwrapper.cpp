@@ -303,8 +303,7 @@ Mat ApplyLaplacian(const Mat& src)
 
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(src_gray, src_gray, Size(3, 3), 0, 0, BORDER_DEFAULT);
-
-       
+      
     Mat abs_dst;
     Laplacian(  src_gray, 
                 dst, 
@@ -328,7 +327,6 @@ Mat ApplyLaplacianExtended(const Mat& src, int kernel_size, int scale, int delta
 
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(src_gray, src_gray, Size(3, 3), 0, 0, BORDER_DEFAULT);
-
 
     Mat abs_dst;
     Laplacian(src_gray,
@@ -431,11 +429,11 @@ Mat ApplySobelY(const Mat& img, int kernel_size)
 }
 
 Mat ApplySobelYExtended(const Mat& img,
-                int image_type,
-                int depth,
-                int type,
-                double delta,
-                int kernel_size)
+                        int image_type,
+                        int depth,
+                        int type,
+                        double delta,
+                        int kernel_size)
 {
     Mat sobelY;
 
@@ -480,11 +478,11 @@ Mat ApplySobel(const Mat& img, int kernel_size)
 }
 
 Mat ApplySobelExtended( const Mat& img,
-                int image_type,
-                int depth,
-                int type,
-                double delta,
-                int kernel_size)
+                        int image_type,
+                        int depth,
+                        int type,
+                        double delta,
+                        int kernel_size)
 {
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
     GaussianBlur(img, img, Size(3, 3), 0, 0, BORDER_DEFAULT);
@@ -602,6 +600,7 @@ Mat ApplyHoughTransformReProbabilistic(const Mat& img)
 {
     return ApplyHoughTransform(img, 1);
 }
+
 Mat Sharpening(const Mat& img)
 {
     Mat Iconv = 0.5 * ApplyLaplacian(img);
@@ -648,7 +647,6 @@ Mat ApplyDilate(const Mat& img)
 
 Mat ApplyMorphGradient(const Mat& img)
 {
-
     cv::Mat result;
     cv::morphologyEx(img,
         result,
@@ -665,9 +663,6 @@ Mat ApplyTopHatAlgo(const Mat& img)
     cv::morphologyEx(img, result, cv::MORPH_BLACKHAT, element7);
     return result;
 }
-
-
-
 
 /**
     This function is the one I use to test algorithms I am studing
@@ -696,8 +691,6 @@ Mat workingAlgorithm(const Mat& image)
         os << FOLDER << "\\" << "Image" << i << "--" << sigma << ".jpg";
         saveImage(os.str(), imgclone1);
     }
-    
-
 
     return imgclone1;
 }
