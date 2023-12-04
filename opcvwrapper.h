@@ -41,6 +41,8 @@ Mat flipImageVertical(const Mat& img);
 Mat flipImage(const Mat& img);
 Mat InvertImage(const Mat& img);
 Mat getBinaryImage(const Mat& img);
+Mat adjustContrast(const Mat& img, int factor);
+Mat adjustBrightness(const Mat& img, int factor);
 
 
 /*

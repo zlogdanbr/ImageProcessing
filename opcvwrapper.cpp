@@ -153,6 +153,25 @@ Mat convertograyScale(const Mat& img)
     return grayscaleimage;
 }
 
+Mat adjustContrast(const Mat& img, int factor)
+{
+    if (factor <= 0 || factor > 100)
+    {
+        factor = 50;
+    }
+    double toFactor = (static_cast<double>(factor) / static_cast<double>(100));
+    Mat final = img.clone();
+    final = final * toFactor;
+    return final;
+}
+
+Mat adjustBrightness(const Mat& img, int factor)
+{
+    Mat final = img.clone();
+    final = final * factor;
+    return final;
+}
+
 Mat getBinaryImage(const Mat& img)
 {
     // Create binary image from source image

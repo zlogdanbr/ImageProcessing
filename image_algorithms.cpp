@@ -87,6 +87,8 @@ void CInputDialog::fillComboInfo()
     fmore["Sobel"] = ApplySobel;
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
+    fadjust["Adjust Contrast"] = adjustContrast;
+    fadjust["Adjust Brightness"] = adjustBrightness;
 
     // Now fill the combox box options with the algorithms
 
@@ -101,6 +103,8 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Invert Image");
     comboBox1->Append("Convert to Binary");
     comboBox1->Append("Threshold");
+    comboBox1->Append("Adjust Contrast");
+    comboBox1->Append("Adjust Brightness");
 
     // Morphological operations
     comboBox1->Append("Erode");
@@ -197,6 +201,16 @@ CInputDialog::getAlgoFunctionThreePar(wxString key)
     return nullptr;
 }
 
+std::function<Mat(Mat, int)>
+CInputDialog::getAlgoFunctionAdjust(wxString key)
+{
+    if (fadjust.find(key) != fadjust.end())
+    {
+        return fadjust[key];
+    }
+    return nullptr;
+}
+
 void CInputDialog::DoFunction()
 {
     outxt->writeTo("Applying algorithm... please wait...\n");
@@ -207,6 +221,7 @@ void CInputDialog::DoFunction()
     Function3Parameters f3 = getAlgoFunctionThreePar(opt);
     Function4Parameters f4 = getAlgoFunctionFourPar(opt);
     Function5Parameters f5 = getAlgoFunctionFivePar(opt);
+    Function2Parameter  f6 = getAlgoFunctionAdjust(opt);
 
     if (f1 != nullptr)
     {
@@ -267,6 +282,19 @@ void CInputDialog::DoFunction()
                 delta = dialog2.GetValue();
                 ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
             }
+        }
+        return;
+    }
+
+    if (f6 != nullptr)
+    {
+        wxNumberEntryDialog dialog(this, "Scale", "Scale", "Divided by 10", 2, 1, 1000);
+        int scale = 0;
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            scale = dialog.GetValue();
+            ApplyAlgorithm(f6, true, scale);
         }
         return;
     }

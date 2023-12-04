@@ -189,6 +189,9 @@ public:
     std::function<Mat(Mat, int, int)>
         getAlgoFunctionThreePar(wxString key);
 
+    std::function<Mat(Mat, int)>
+        getAlgoFunctionAdjust(wxString key);
+
     wxString getSelectionText() { return SelectionText;};
 
     void DoFunction();
@@ -210,6 +213,7 @@ private:
     void setControlslayout() override;
 
     Function1ParContainer fsimple;
+    Function2ParContainer fadjust;
     Function2ParContainer fmore;
     Function3ParContainer fmore3;
     Function4ParContainer fmorep;
