@@ -50,7 +50,6 @@ void CInputDialog::setControlslayout()
 
 void CInputDialog::fillComboInfo()
 {
-
     // Add functors to the functor mapping
     // this will allow the program to find the appropriate
     // algorithm to be applied
@@ -79,6 +78,8 @@ void CInputDialog::fillComboInfo()
     fsimple["Watershed"] = WaterShed;
     fsimple["Erode"] = ApplyErode;
     fsimple["Dilate"] = ApplyDilate;
+    fsimple["Closing"] = ApplyClosing;
+    fsimple["Opening"] = ApplyOpening;
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fmore["Blur Image"] = blurImageSmooth;
@@ -109,6 +110,8 @@ void CInputDialog::fillComboInfo()
     // Morphological operations
     comboBox1->Append("Erode");
     comboBox1->Append("Dilate");
+    comboBox1->Append("Closing");
+    comboBox1->Append("Opening");
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
 

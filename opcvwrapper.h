@@ -132,6 +132,8 @@ Mat Unsharp(const Mat& img);
 */
 Mat ApplyErode(const Mat& img);
 Mat ApplyDilate(const Mat& img);
+Mat ApplyClosing(const Mat& img);
+Mat ApplyOpening(const Mat& img);
 Mat ApplyMorphGradient(const Mat& img);
 Mat ApplyTopHatAlgo(const Mat& img);
 

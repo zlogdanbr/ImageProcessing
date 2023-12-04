@@ -623,6 +623,22 @@ Mat ApplyErode(const Mat& img)
     return eroded;
 }
 
+Mat ApplyClosing(const Mat& img)
+{
+    cv::Mat final;
+    final = ApplyErode(img);
+    final = ApplyDilate(final);
+    return final;
+}
+
+Mat ApplyOpening(const Mat& img)
+{
+    cv::Mat final;
+    final = ApplyDilate(img);
+    final = ApplyErode(final);    
+    return final;
+}
+
 Mat ApplyDilate(const Mat& img)
 {
     cv::Mat dilated; // the destination image
