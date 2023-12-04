@@ -75,7 +75,6 @@ void CInputDialog::fillComboInfo()
     fsimple["Hough Transform"] = ApplyHoughTransformRegular;
     fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
     fsimple["Hough Transform Custom"] = ApplyHoughTransformCustom;
-    fsimple["Detect Faces"] = detectFaces;
     fsimple["Convert to Binary"] = getBinaryImage;
     fsimple["Watershed"] = WaterShed;
     fsimple["Erode"] = ApplyErode;
@@ -140,9 +139,6 @@ void CInputDialog::fillComboInfo()
     // feature detection algorithms
     comboBox1->Append("Harris Algorithm");
     comboBox1->Append("Detect features");
-    
-    // Detecting faces, not currently working
-    comboBox1->Append("Detect Faces");
 
     // Watershed
     comboBox1->Append("Watershed");
