@@ -99,6 +99,15 @@ void MyFrame::OnOpen(wxCommandEvent& event)
     openFileCustom->OpenFile(*this);
 }
 
+void MyFrame::onPython(wxCommandEvent& event)
+{
+    CPythonDialog* pydialog{ new CPythonDialog(this) };
+    pydialog->setImageHelper(&ImageHelper);
+    pydialog->setLogs(&outxt);
+    outxt.writeTo("Open Data Input dialog.\n");
+    pydialog->Show(true);
+}
+
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {
     outxt.writeTo("Ao menu all.\n");

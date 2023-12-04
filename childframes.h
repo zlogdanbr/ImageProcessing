@@ -224,4 +224,32 @@ private:
 
 };
 
+
+class CPythonDialog : public CInputDialogBase
+{
+public:
+    CPythonDialog(wxFrame* parent);
+
+private:
+    void setControlslayout() override;
+
+    wxPanel* basePanel = new wxPanel(this, -1);
+    wxPanel* panel1 = new wxPanel(basePanel, wxID_ANY, { -1,-1 }, { 400, 30 }, wxTAB_TRAVERSAL | wxBORDER_SIMPLE);
+    wxPanel* panel2 = new wxPanel(basePanel, wxID_ANY, { -1,-1}, { 400, 30 }, wxTAB_TRAVERSAL | wxBORDER_THEME);
+
+    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
+    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
+    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
+
+    wxButton* button1{ new wxButton(panel1, wxID_ANY, "Select") };
+    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Run") };
+
+
+    wxTextCtrl* textCtrl1 =     new wxTextCtrl(         panel2, 
+                                                        wxID_ANY, 
+                                                        "Script path", 
+                                                        { -1,-1 },
+                                                        { 380, 20 }); 
+};
+
 #endif
