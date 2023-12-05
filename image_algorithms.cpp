@@ -291,7 +291,24 @@ void CInputDialog::DoFunction()
 
     if (f6 != nullptr)
     {
-        wxNumberEntryDialog dialog(this, "Scale", "Scale", "Divided by 10", 2, 1, 1000);
+        wxString tip;
+        int max = 0;
+        int min = 0;
+
+        if (opt == "Adjust Contrast")
+        {
+           tip = "Percentage";
+           max = 100;
+           min = 0;
+        }
+        else
+        {
+            tip = "Values";
+            max = 1000;
+            min = 1;
+        }
+
+        wxNumberEntryDialog dialog(this, opt, tip, opt, 1, min, max);
         int scale = 0;
 
         if (dialog.ShowModal() == wxID_OK)

@@ -168,7 +168,7 @@ Mat adjustContrast(const Mat& img, int factor)
 Mat adjustBrightness(const Mat& img, int factor)
 {
     Mat final = img.clone();
-    final = final * factor;
+    final = final + factor;
     return final;
 }
 
@@ -349,6 +349,8 @@ Mat ApplyCustomKernel(const Mat& img, Mat& kernel)
 {
     Mat final;
 
+    Mat src_gray = convertograyScale(img);
+
     //  src: Source image
     //  dst : Destination image
     //  ddepth : The depth of dst.A negative value(such as −1) indicates that the depth is the same as the source.
@@ -358,7 +360,7 @@ Mat ApplyCustomKernel(const Mat& img, Mat& kernel)
     //  BORDER_DEFAULT : We let this value by default (more details in the following tutorial)
 
     // image,result,image.depth(),kernel
-    filter2D(   img,
+    filter2D(   src_gray,
                 final,
                 img.depth(),
                 kernel);
@@ -376,7 +378,9 @@ Page [ 188 ]
 Mat ApplySobelX(const Mat& img, int kernel_size)
 {
     Mat sobelX;
-    cv::Sobel(img, // input
+    Mat src_gray = convertograyScale(img);
+
+    cv::Sobel(src_gray, // input
         sobelX, // output
         CV_8U, // image type
         1, 0, // kernel specification
@@ -394,7 +398,9 @@ Mat ApplySobelXExtended(    const Mat& img,
                     int kernel_size)
 {
     Mat sobelX;
-    cv::Sobel(      img,            // input image
+    Mat src_gray = convertograyScale(img);
+
+    cv::Sobel(src_gray,            // input image
                     sobelX,         // output
                     CV_8U,          // ddepth
                     1,              // dx order of the derivative x
@@ -417,8 +423,8 @@ Page [ 188 ]
 Mat ApplySobelY(const Mat& img, int kernel_size)
 {
     Mat sobelY;
-
-    cv::Sobel(img, // input
+    Mat src_gray = convertograyScale(img);
+    cv::Sobel(src_gray, // input
         sobelY, // output
         CV_8U, // image type
         0, 1, // kernel specification
@@ -436,8 +442,9 @@ Mat ApplySobelYExtended(const Mat& img,
                         int kernel_size)
 {
     Mat sobelY;
+    Mat src_gray = convertograyScale(img);
 
-    cv::Sobel(img,      // input image
+    cv::Sobel(src_gray,      // input image
         sobelY,         // output
         CV_8U,          // ddepth
         0,              // dx order of the derivative x
