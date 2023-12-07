@@ -110,8 +110,7 @@ void MyFrame::onPython(wxCommandEvent& event)
 
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {
-    outxt.writeTo("Ao menu all.\n");
-    
+   
     CInputDialog* InputDialog = new CInputDialog(this);
     InputDialog->setImageHelper(&ImageHelper);
     InputDialog->setLogs(&outxt);

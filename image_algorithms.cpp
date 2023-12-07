@@ -1,5 +1,29 @@
 #include "childframes.h"
+#include <chrono>
+#include <ctime>
 
+using namespace std::chrono;
+using   tp = high_resolution_clock::time_point;
+
+// starts computing the execution time of a code
+const tp
+start_tracking()
+{
+    return high_resolution_clock::now();
+}
+
+// stops  computing the execution time of a code and print 
+// elapsed time
+std::string
+end_tracking(tp& start)
+{
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    std::stringstream os;
+
+    os << "Execution time(ms): " << duration.count() / 1000 << std::endl;
+    return os.str();
+}
 
 CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Algorithms Selection" }
 {
@@ -10,7 +34,10 @@ CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Alg
             // set values
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();
+            tp t = start_tracking();
             DoFunction();
+            wxString msg = end_tracking(t).c_str();
+            outxt->writeTo(msg);
             Close();
         });
 
@@ -216,8 +243,9 @@ CInputDialog::getAlgoFunctionAdjust(wxString key)
 
 void CInputDialog::DoFunction()
 {
-    outxt->writeTo("Applying algorithm... please wait...\n");
     wxString opt = getSelectionText();
+
+    outxt->writeTo("Applying algorithm: " + opt + " please wait...\n");
 
     Function1Parameter  f1 = getAlgoFunctionOnePar(opt);
     Function2Parameter  f2 = getAlgoFunctionTwoPar(opt);
