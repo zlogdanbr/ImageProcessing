@@ -126,7 +126,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ExternalIncludePath>C:\local\boost_1_82_0\;C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\eigen\Eigen;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Users\Administrador\lib\opencv\build\x64\vc16\lib\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug45|x64'">
@@ -134,7 +134,7 @@
     <LibraryPath>C:\Users\Administrador\Documents\GitHub\OpenCV45\lib;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\eigen\Eigen;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;C:\local\boost_1_82_0\;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>C:\Users\Administrador\lib\opencv\build\include\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Users\Administrador\lib\opencv\build\x64\vc16\lib\;C:\Users\Administrador\Documents\GitHub\WxWidgets\wxMSW-3.2.3_vc14x_x64_Dev\lib\vc14x_x64_dll;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release45|x64'">
@@ -274,7 +274,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="childframes.cpp" />
-    <ClCompile Include="dmath.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_gridialog.cpp" />
     <ClCompile Include="image_io.cpp" />
@@ -288,7 +287,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframes.h" />
-    <ClInclude Include="dmath.h" />
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />
     <ClInclude Include="logs.h" />

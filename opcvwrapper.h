@@ -17,8 +17,6 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include "Eigen"
-#include "Dense"
 #include "filesys.h"
 
 
@@ -158,8 +156,6 @@ TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
 Mat convertRectoImg(Rect& r, Mat& img);
 
 std::vector<Mat> splitChannel(Mat& img);
-
-std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage);
 
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
 void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);

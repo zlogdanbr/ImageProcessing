@@ -81,20 +81,6 @@ void MyFrame::OnSave(wxCommandEvent& event)
 
 ### Dependecies
 
-Boost:
-
-https://www.boost.org
-Easiest way to install, using 
-
-https://community.chocolatey.org/packages/boost-msvc-14.3
-
-
-Eigen:
-
-Great lib for manipulating matrix and linear algebra ( this is what basically you do with Machine Learning and AI )
-
-https://eigen.tuxfamily.org/index.php?title=Main_Page
-
 
 wxWidgets:
 

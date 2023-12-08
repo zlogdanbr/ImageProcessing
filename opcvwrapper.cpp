@@ -1,48 +1,4 @@
 ﻿#include "opcvwrapper.h"
-#include "dmath.h"
-
-
-std::vector< Eigen::MatrixXd > convertOpenCVToEigen(Mat& OpenCVImage)
-{
-    std::vector< Eigen::MatrixXd > ThreeChannels;
-
-    Eigen::MatrixXd channel1;
-    Eigen::MatrixXd channel2;
-    Eigen::MatrixXd channel3;
-
-    unsigned char* input = static_cast<unsigned char*>(OpenCVImage.data);
-
-    if (isGrayScaleImage(OpenCVImage))
-    {
-        for (int j = 0; j < OpenCVImage.rows; j++)
-        {
-            for (int i = 0; i < OpenCVImage.cols; i++)
-            {
-                channel1 << input[OpenCVImage.step * j + i];
-                channel2 << input[OpenCVImage.step * j + i + 1];
-                channel3 << input[OpenCVImage.step * j + i + 2];
-            }
-        }
-        ThreeChannels.push_back(channel1);
-    }
-    else
-    {
-        for (int j = 0; j < OpenCVImage.rows; j++)
-        {
-            for (int i = 0; i < OpenCVImage.cols; i++)
-            {
-                channel1 << input[OpenCVImage.step * j + i];
-                channel2 << input[OpenCVImage.step * j + i + 1];
-                channel3 << input[OpenCVImage.step * j + i + 2];
-            }
-        }
-        ThreeChannels.push_back(channel1);
-        ThreeChannels.push_back(channel2);
-        ThreeChannels.push_back(channel3);
-    }
-
-    return ThreeChannels;
-}
 
 // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi)
@@ -125,8 +81,9 @@ bool saveImage(const std::string& image_path, Mat& img)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 void showImage(const Mat& img, const std::string& title)
 {
+    cv::Size s = img.size();
     cv::namedWindow(title, cv::WINDOW_NORMAL);
-    cv::resizeWindow(title, 400, 400);
+    cv::resizeWindow(title, s.width, s.height);
     imshow(title, img);
 }
 
