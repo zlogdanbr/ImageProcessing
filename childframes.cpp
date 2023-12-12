@@ -39,6 +39,12 @@ CInputDialogBase::ApplyAlgorithm(   Function1Parameter& f,
         if (loadImage(setPath(Gray), img) == true)
         {
             out = f(img);
+            auto s = out.size();
+
+            if (s.height == 0 || s.width == 0)
+            {
+                return;
+            }
             setFinalImg(out);
         }
         else

@@ -1,4 +1,44 @@
 ﻿#include "opcvwrapper.h"
+#include <wx/gdicmn.h> 
+
+/**
+    This function is the one I use to test algorithms I am studing
+    and applying them together with other filters.
+*/
+Mat selectRoiFromCurrentImage(const Mat& image)
+{
+    Mat clone = image.clone();
+    cv::Size s = clone.size();
+    wxRect sizeScreen = wxGetClientDisplayRect();
+
+    if (s.width > sizeScreen.width || s.height > sizeScreen.height)
+    {
+        auto rows = clone.rows;
+        auto cols = clone.cols;
+        Size _s;
+        _s.height = rows/8;
+        _s.width  = cols/8;
+        resize(clone, clone, _s);
+    }
+    
+
+    Rect rect = selectROI("Get ROI", clone, false);
+    Mat roi = Mat(clone, rect);
+
+    waitKey(0);
+
+    cv::Size s2 = roi.size();
+    if (s2.width == 0 || s2.height == 0)
+    {
+        destroyWindow("Get ROI");
+        return roi;
+    }
+
+    destroyWindow("Get ROI");
+
+    return roi;
+}
+
 
 // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi)
@@ -83,7 +123,17 @@ void showImage(const Mat& img, const std::string& title)
 {
     cv::Size s = img.size();
     cv::namedWindow(title, cv::WINDOW_NORMAL);
-    cv::resizeWindow(title, s.width, s.height);
+
+    wxRect sizeScreen = wxGetClientDisplayRect();
+
+    if (s.width > sizeScreen.width || s.height > sizeScreen.height)
+    {
+        cv::resizeWindow(title, sizeScreen.width/4, sizeScreen.height/4);
+    }
+    else
+    {
+        cv::resizeWindow(title, s.width, s.height);
+    }
     imshow(title, img);
 }
 
@@ -208,6 +258,42 @@ Mat MedianImageSmooth(const Mat& img, int kernel_size)
     return MedianI;
 }
 
+/*
+
+src	Source 8-bit or floating-point, 1-channel or 3-channel image.
+dst	Destination image of the same size and type as src .
+d	Diameter of each pixel neighborhood that is used during filtering. If it is non-positive, it is computed from sigmaSpace.
+
+sigmaColor	Filter sigma in the color space. A larger value of the parameter means that farther colors within
+the pixel neighborhood (see sigmaSpace) will be mixed together, resulting in larger areas of semi-equal color.
+
+sigmaSpace	Filter sigma in the coordinate space. A larger value of the parameter means that farther pixels will 
+influence each other as long as their colors are close enough (see sigmaColor ). When d>0, it specifies the 
+neighborhood size regardless of sigmaSpace. Otherwise, d is proportional to sigmaSpace.
+borderType	border mode used to extrapolate pixels outside of the image, see BorderTypes
+
+*/
+
+Mat ApplyBilateralFilterExt(const Mat& img, int kernel_size, double sigma1, double sigma2)
+{
+    Mat Gray = convertograyScale(img);
+    Mat Blurred;
+
+    bilateralFilter(Gray, Blurred, -1, sigma1, sigma2);
+
+    return Blurred;
+}
+
+Mat ApplyBilateralFilter(const Mat& img, int kernel_size)
+{
+    Mat Gray = convertograyScale(img);
+    Mat Blurred;
+
+    Blurred = ApplyBilateralFilterExt(Gray, kernel_size, 150, 150);
+
+    return Blurred;
+}
+
 // https://docs.opencv.org/3.4/dc/dd3/tutorial_gausian_median_blur_bilateral_filter.html
 Mat GaussianImageSmooth(const Mat& img, int kernel_size)
 {
@@ -229,7 +315,7 @@ Mat GaussianImageSmoothExtended(    const Mat& img,
                     Blurred, 
                     Size(kernel_size, kernel_size), 
                     sigmaX, // sigmaX standard deviation in X direction
-                    sigmaY // sigmaY standard deviation in Y directiom 
+                    0 // sigmaY standard deviation in Y directiom 
                        //if sigmaY is zero, it is set to be equal to sigma                    
                 );
     return Blurred;
@@ -626,37 +712,6 @@ Mat ApplyTopHatAlgo(const Mat& img)
     cv::Mat element7(7, 7, CV_8U, cv::Scalar(1));
     cv::morphologyEx(img, result, cv::MORPH_BLACKHAT, element7);
     return result;
-}
-
-/**
-    This function is the one I use to test algorithms I am studing
-    and applying them together with other filters.
-*/
-Mat workingAlgorithm(const Mat& image)
-{
-    const std::string FOLDER = "Custom Algo";
-
-    if (directory_exists(FOLDER) == false)
-    {
-        create_dir(FOLDER);
-    }
-    cv::Mat imgclone1;
-
-    // Convert to gray scale
-    imgclone1 = convertograyScale(image);
-
-    double a = 1;
-    
-    for (int i = 0; i < 20; i++)
-    {
-        auto sigma = 10.0 * static_cast<double>(a * i);
-        imgclone1 = GaussianImageSmoothExtended(imgclone1, 5, sigma, sigma);
-        std::stringstream os;
-        os << FOLDER << "\\" << "Image" << i << "--" << sigma << ".jpg";
-        saveImage(os.str(), imgclone1);
-    }
-
-    return imgclone1;
 }
 
 

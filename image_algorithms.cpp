@@ -86,7 +86,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Laplacian"] = ApplyLaplacian;
     fsimple["Harris Algorithm"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
-    fsimple["Working Algorithm"] = workingAlgorithm;
+    fsimple["Select ROI"] = selectRoiFromCurrentImage;
     fsimple["Detect Corners"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Invert Image"] = InvertImage;
@@ -117,6 +117,7 @@ void CInputDialog::fillComboInfo()
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
     fadjust["Adjust Contrast"] = adjustContrast;
     fadjust["Adjust Brightness"] = adjustBrightness;
+    fmore["Bilateral Filter"] = ApplyBilateralFilter;
 
     // Now fill the combox box options with the algorithms
 
@@ -142,12 +143,13 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
 
-    // Custom algorithms I am working
-    comboBox1->Append("Working Algorithm");
+    // Select ROI
+    comboBox1->Append("Select ROI");
 
     // Gaussian Low pass filters
     comboBox1->Append("Gaussian");
     comboBox1->Append("Gaussian Extended");
+    comboBox1->Append("Bilateral Filter");
 
     // Median filters blurred images
     comboBox1->Append("Median");

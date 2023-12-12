@@ -63,6 +63,9 @@ Mat ApplyThreShold(const Mat& img);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat GaussianImageSmooth(const Mat& img, int kernel_size);
 
+Mat ApplyBilateralFilterExt(const Mat& img, int kernel_size, double sigma1, double sigma2);
+Mat ApplyBilateralFilter(const Mat& img, int kernel_size);
+
 Mat GaussianImageSmoothExtended(    const Mat& img,
                                     int kernel_size,
                                     double sigmaX,
@@ -173,7 +176,7 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 
 Mat detectCornersHarris(const Mat& image);
 Mat detectFastKeyPoints(const Mat& image);
-Mat workingAlgorithm(const Mat& image);
+Mat selectRoiFromCurrentImage(const Mat& image);
 Mat ApplyCanny(const Mat& img);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat WaterShed(const Mat& img);
