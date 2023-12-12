@@ -176,7 +176,7 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 
 Mat detectCornersHarris(const Mat& image);
 Mat detectFastKeyPoints(const Mat& image);
-Mat selectRoiFromCurrentImage(const Mat& image);
+Mat ApplyCustomAlgo(const Mat& image);
 Mat ApplyCanny(const Mat& img);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat WaterShed(const Mat& img);

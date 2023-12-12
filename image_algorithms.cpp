@@ -86,7 +86,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Laplacian"] = ApplyLaplacian;
     fsimple["Harris Algorithm"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
-    fsimple["Select ROI"] = selectRoiFromCurrentImage;
+    fsimple["Apply custom algo"] = ApplyCustomAlgo;
     fsimple["Detect Corners"] = detectCornersHarris;
     fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Invert Image"] = InvertImage;
@@ -144,7 +144,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Morphological Top Hat");
 
     // Select ROI
-    comboBox1->Append("Select ROI");
+    comboBox1->Append("Apply custom algo");
 
     // Gaussian Low pass filters
     comboBox1->Append("Gaussian");

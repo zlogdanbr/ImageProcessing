@@ -57,6 +57,46 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
     Centre();
 }
 
+void MyFrame::onSelectRoi(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+
+        Mat clone = ImageHelper.getOrginalImageOpenCV();
+        cv::Size s = clone.size();
+        wxRect sizeScreen = wxGetClientDisplayRect();
+        if (s.width > sizeScreen.width || s.height > sizeScreen.height)
+        {
+            auto rows = ImageHelper.getOrginalImageOpenCV().rows;
+            auto cols = ImageHelper.getOrginalImageOpenCV().cols;
+            Size _s;
+            _s.height = rows / 8;
+            _s.width = cols / 8;
+            resize(clone, clone, _s);
+        }
+
+        Rect rect = selectROI("Final", clone, false);
+        waitKey(0);
+
+        Mat out = Mat(clone, rect);
+
+        if (out.empty() == false)
+        {
+            ImageHelper.setFinalImageOpenCV(out);
+            outxt.writeTo("ROI selected.\n");
+            ImageHelper.SetOriginalNew();
+        }
+        else
+        {
+            outxt.writeTo("Algorithm error\n");
+        }
+    }
+    else
+    {
+        outxt.writeTo("Image not loaded\n");
+    }
+}
+
 void MyFrame::onHelpFile(wxCommandEvent& event)
 {
     std::stringstream os;

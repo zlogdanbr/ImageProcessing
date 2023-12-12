@@ -5,7 +5,7 @@
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.
 */
-Mat selectRoiFromCurrentImage(const Mat& image)
+Mat ApplyCustomAlgo(const Mat& image)
 {
     Mat clone = image.clone();
     cv::Size s = clone.size();
@@ -21,9 +21,11 @@ Mat selectRoiFromCurrentImage(const Mat& image)
         resize(clone, clone, _s);
     }
     
-
     Rect rect = selectROI("Get ROI", clone, false);
     Mat roi = Mat(clone, rect);
+
+    Mat saveroi = roi.clone();
+    saveroi = convertograyScale(saveroi);
 
     waitKey(0);
 
@@ -33,8 +35,15 @@ Mat selectRoiFromCurrentImage(const Mat& image)
         destroyWindow("Get ROI");
         return roi;
     }
-
     destroyWindow("Get ROI");
+
+    roi = ApplyOpening(roi);
+    //roi = ApplyCannyAlgoFull(roi, 125, 350);
+    roi = InvertImage(roi);
+    roi = detectFastKeyPoints(roi);
+
+    roi = saveroi - roi;
+
 
     return roi;
 }
