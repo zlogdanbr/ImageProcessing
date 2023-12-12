@@ -64,7 +64,7 @@ void MyFrame::onHelpFile(wxCommandEvent& event)
     outxt.writeInfo(os);
     wxAboutDialogInfo aboutInfo;
     aboutInfo.SetName(wxTheApp->GetAppName());
-    aboutInfo.SetVersion("1.0", "1.0.1");
+    aboutInfo.SetVersion("1.0", "1.0.2");
     aboutInfo.SetDescription("Image Processing Tool");
     aboutInfo.SetWebSite("http://zlogdan.wordpress.com");
     aboutInfo.SetLicence("GNU GENERAL PUBLIC LICENSE GPLv3");

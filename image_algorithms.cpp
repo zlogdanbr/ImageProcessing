@@ -268,7 +268,7 @@ void CInputDialog::DoFunction()
 
     if (f3 != nullptr)
     {
-        wxNumberEntryDialog dialog(this, "threshold", "threshold", "threshold", 1, 1, 1000);
+        wxNumberEntryDialog dialog(this, "low threshold", "low threshold", "low threshold", 125, 1, 1000);
         int threshold = 0;
         int Aperture = 0;
 
@@ -276,7 +276,7 @@ void CInputDialog::DoFunction()
         {
             threshold = dialog.GetValue();
 
-            wxNumberEntryDialog dialog2(this, "Aperture", "Aperture", "Aperture", 1, 1, 1000);
+            wxNumberEntryDialog dialog2(this, "high threshold", "high threshold", "high threshold", 350, 1, 1000);
             if (dialog2.ShowModal() == wxID_OK)
             {
                 Aperture = dialog2.GetValue();
@@ -288,10 +288,10 @@ void CInputDialog::DoFunction()
 
     if (f4 != nullptr)
     {
-        wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 10", 2, 1, 1000);
+        wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 100", 2, 1, 1000);
         if (dialog.ShowModal() == wxID_OK)
         {
-            double sigma = 0.1 * static_cast<double>(dialog.GetValue());
+            double sigma = 0.01 * static_cast<double>(dialog.GetValue());
             ApplyAlgorithm(f4, true, 3, sigma, sigma);
         }
         return;
@@ -299,7 +299,7 @@ void CInputDialog::DoFunction()
 
     if (f5 != nullptr)
     {
-        wxNumberEntryDialog dialog(this, "Scale", "Scale", "Divided by 10", 2, 1, 1000);
+        wxNumberEntryDialog dialog(this, "Scale", "Scale", "Scale", 1, 1, 1000);
         int scale = 0;
         int delta = 0;
 
@@ -307,7 +307,7 @@ void CInputDialog::DoFunction()
         {
             scale = dialog.GetValue();
 
-            wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 2, 1, 1000);
+            wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 0, 0, 1000);
             if (dialog2.ShowModal() == wxID_OK)
             {
                 delta = dialog2.GetValue();
