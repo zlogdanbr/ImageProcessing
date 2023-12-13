@@ -66,20 +66,17 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         cv::Size s = clone.size();
         wxRect sizeScreen = wxGetClientDisplayRect();
 
-        if (s.width > sizeScreen.width && s.height > sizeScreen.height)
-        {
-            int fx = (s.width / sizeScreen.width);
-            int fy = (s.height / sizeScreen.height);
-            cv::Size _s;
-            _s.width = fx / 4;
-            _s.height = fy / 4;
-            resize(clone, clone, _s);
-        }
+        // Set rows and columns
+        int up_width = sizeScreen.width;
+        int up_height = sizeScreen.height;
+        Mat resized_up;
+        //resize up
+        resize(clone, resized_up, Size(up_width, up_height), INTER_LINEAR);
 
-        Rect rect = selectROI("Final", clone, false);
+        Rect rect = selectROI("Final", resized_up, false);
         waitKey(0);
 
-        Mat out = Mat(clone, rect);
+        Mat out = Mat(resized_up, rect);
 
         if (out.empty() == false)
         {

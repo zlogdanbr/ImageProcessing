@@ -100,22 +100,18 @@ bool saveImage(const std::string& image_path, Mat& img)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 void showImage(const Mat& img, const std::string& title)
 {
-    cv::Size s = img.size();
+    cv::Size image_size = img.size();
     cv::namedWindow(title, cv::WINDOW_NORMAL);
-
     wxRect sizeScreen = wxGetClientDisplayRect();
 
-    if (s.width > sizeScreen.width && s.height > sizeScreen.height)
-    {
-        int fx = (s.width / sizeScreen.width);
-        int fy = (s.height / sizeScreen.height);
-        cv::resizeWindow(title, (s.width/4*fx), (s.height/4*fy));
-    }
-    else
-    {
-        cv::resizeWindow(title, s.width, s.height);
-    }
-    imshow(title, img);
+    // Set rows and columns
+    int up_width = sizeScreen.width;
+    int up_height = sizeScreen.height;
+    Mat resized_up;
+    //resize up
+    resize(img, resized_up, Size(up_width, up_height), INTER_LINEAR);
+
+    imshow(title, resized_up);
 }
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
