@@ -105,9 +105,11 @@ void showImage(const Mat& img, const std::string& title)
 
     wxRect sizeScreen = wxGetClientDisplayRect();
 
-    if (s.width > sizeScreen.width || s.height > sizeScreen.height)
+    if (s.width > sizeScreen.width && s.height > sizeScreen.height)
     {
-        cv::resizeWindow(title, sizeScreen.width/4, sizeScreen.height/4);
+        int fx = (s.width / sizeScreen.width);
+        int fy = (s.height / sizeScreen.height);
+        cv::resizeWindow(title, (s.width/4*fx), (s.height/4*fy));
     }
     else
     {
