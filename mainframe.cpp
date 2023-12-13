@@ -65,13 +65,14 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         Mat clone = ImageHelper.getOrginalImageOpenCV();
         cv::Size s = clone.size();
         wxRect sizeScreen = wxGetClientDisplayRect();
-        if (s.width > sizeScreen.width || s.height > sizeScreen.height)
+
+        if (s.width > sizeScreen.width && s.height > sizeScreen.height)
         {
-            auto rows = ImageHelper.getOrginalImageOpenCV().rows;
-            auto cols = ImageHelper.getOrginalImageOpenCV().cols;
-            Size _s;
-            _s.height = rows / 8;
-            _s.width = cols / 8;
+            int fx = (s.width / sizeScreen.width);
+            int fy = (s.height / sizeScreen.height);
+            cv::Size _s;
+            _s.width = fx / 4;
+            _s.height = fy / 4;
             resize(clone, clone, _s);
         }
 
