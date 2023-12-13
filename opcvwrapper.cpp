@@ -268,12 +268,12 @@ Mat GaussianImageSmoothExtended(    const Mat& img,
     return Blurred;
 }
 
-Mat ApplyThreShold(const Mat& img)
+Mat ApplyThreShold(const Mat& img, double _threshold)
 {
     cv::Mat out;
     cv::threshold(img,
         out,
-        40,
+        _threshold,
         255,
         cv::THRESH_BINARY);
     return out;

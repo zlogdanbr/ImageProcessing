@@ -88,7 +88,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
-    fsimple["Threshold"] = ApplyThreShold;
+    fslider["Threshold"] = ApplyThreShold;
     fmore3["Canny Extended"] = ApplyCannyAlgoFull;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
@@ -105,7 +105,8 @@ void CInputDialog::fillComboInfo()
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
     fadjust["Adjust Contrast"] = adjustContrast;
-    fadjust["Adjust Brightness"] = adjustBrightness;;
+    fadjust["Adjust Brightness"] = adjustBrightness;
+    fsobel["Sobel"] = ApplySobelExtended;
 
     // Now fill the combox box options with the algorithms
 
@@ -146,6 +147,8 @@ void CInputDialog::fillComboInfo()
     
     // Lapalcian second derivative edge detectors
     comboBox1->Append("Laplacian Extended");
+
+    comboBox1->Append("Sobel");
 
     // Gradient based algorithms
     comboBox1->Append("Canny Extended");
@@ -220,6 +223,27 @@ CInputDialog::getAlgoFunctionAdjust(wxString key)
     return nullptr;
 }
 
+std::function<Mat(Mat, double)>
+CInputDialog::getAlgoFunctionSlider(wxString key)
+{
+    if (fslider.find(key) != fslider.end())
+    {
+        return fslider[key];
+    }
+    return nullptr;
+}
+
+
+FunctionSobelParameters
+CInputDialog::getAlgoSobel(wxString key)
+{
+    if (fsobel.find(key) != fsobel.end())
+    {
+        return fsobel[key];
+    }
+    return nullptr;
+}
+
 void CInputDialog::DoFunction()
 {
     wxString opt = getSelectionText();
@@ -232,6 +256,8 @@ void CInputDialog::DoFunction()
     Function4Parameters f4 = getAlgoFunctionFourPar(opt);
     Function5Parameters f5 = getAlgoFunctionFivePar(opt);
     Function2Parameter  f6 = getAlgoFunctionAdjust(opt);
+    Function2Slider     f7 = getAlgoFunctionSlider(opt);
+    FunctionSobelParameters     f8 = getAlgoSobel(opt);
 
     if (f1 != nullptr)
     {
@@ -324,5 +350,80 @@ void CInputDialog::DoFunction()
             ApplyAlgorithm(f6, true, scale);
         }
         return;
+    }
+
+    if (f7 != nullptr)
+    {
+        if (opt == "Threshold")
+        {
+            double threshold = 0.0;
+
+            wxString tip;
+            int max = 255;
+            int min = 0;
+
+            wxNumberEntryDialog dialog(this, opt, "Threshold", opt, 1, min, max);
+
+            if (dialog.ShowModal() == wxID_OK)
+            {
+                auto v = dialog.GetValue();
+                threshold = static_cast<double>(v);
+                ApplyAlgorithm(f7, true, threshold);
+            }
+            return;           
+        }
+    }
+
+    if (f8 != nullptr)
+    {
+
+        int depth = 10;
+        int image_type = CV_8U;
+        int type = 0;
+        double delta = 10.0;
+        int kernel_size = 5;
+
+        wxString tip = "Depth";
+        int max = 1000;
+        int min = 1;
+
+        wxNumberEntryDialog dialog1(this, opt, tip, opt, 10, min, max);
+
+        if (dialog1.ShowModal() == wxID_OK)
+        {
+            depth =  dialog1.GetValue();
+        }
+
+        tip = "Type";
+        max = 10;
+        min = 1;
+
+        wxNumberEntryDialog dialog2(this, opt, tip, opt, 10, min, max);
+        if (dialog2.ShowModal() == wxID_OK)
+        {
+            type = dialog2.GetValue();
+        }
+
+        tip = "Delta";
+        max = 1000;
+        min = 1;
+
+        wxNumberEntryDialog dialog3(this, opt, tip, opt, 10, min, max);
+        if (dialog3.ShowModal() == wxID_OK)
+        {
+            delta = dialog3.GetValue();
+        }
+
+        tip = "Kernel Size";
+        max = 13;
+        min = 3;
+
+        wxNumberEntryDialog dialog4(this, opt, tip, opt, 3, min, max);
+        if (dialog4.ShowModal() == wxID_OK)
+        {
+            type = dialog4.GetValue();
+        }
+
+        ApplyAlgorithm(f8, true, image_type, depth, type, delta, kernel_size);
     }
 }

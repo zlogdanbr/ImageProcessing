@@ -37,7 +37,7 @@ Mat equalizeColorImage(const Mat& img);
 /*
 * Filters
 */
-Mat ApplyThreShold(const Mat& img);
+Mat ApplyThreShold(const Mat& img, double _threshold);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyBilateralFilterExt(    const Mat& img, 
                                 int kernel_size, 

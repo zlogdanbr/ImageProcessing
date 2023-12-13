@@ -45,7 +45,7 @@
     <ClCompile Include="image_algorithms.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="image_python.cpp">
+    <ClCompile Include="image_slide.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="image_util.cpp">

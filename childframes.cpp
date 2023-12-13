@@ -3,6 +3,7 @@
 
 CInputDialogBase::CInputDialogBase(wxFrame* parent, wxString name) :wxFrame{ parent, -1, name, wxPoint(-1, -1) }
 {
+    _parent = parent;
 }
 
 std::string 
@@ -165,6 +166,68 @@ CInputDialogBase::ApplyAlgorithm(   Function5Parameters& f,
     {
         Mat out;
         out = f(imghelper->getOrginalImageOpenCV(), kernel_size, p1, p2, p3);
+        setFinalImg(out);
+    }
+
+}
+
+void
+CInputDialogBase::ApplyAlgorithm(   Function2Slider& f,
+                                    bool Gray,
+                                    double t )
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, t);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), t);
+        setFinalImg(out);
+    }
+
+}
+
+void 
+CInputDialogBase::ApplyAlgorithm(
+    FunctionSobelParameters& f,
+    bool Gray, 
+    int image_type, 
+    int depth, 
+    int type, 
+    double delta, 
+    int kernel_size)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            // using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int
+            out = f(img, image_type, depth, type, delta, kernel_size);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), image_type, depth, type, delta, kernel_size);
         setFinalImg(out);
     }
 

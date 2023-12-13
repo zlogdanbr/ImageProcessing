@@ -12,6 +12,8 @@
 #include <wx/progdlg.h>
 #include <wx/numdlg.h>
 #include <wx/aboutdlg.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
 #include <functional>
 #include <thread>
 #include "image_helper.h"
@@ -24,12 +26,17 @@ using Function2Parameter    = std::function<Mat(Mat, int)>;
 using Function3Parameters   = std::function<Mat(Mat, int, int)>;
 using Function4Parameters   = std::function<Mat(Mat, int, double, double)>;
 using Function5Parameters   = std::function<Mat(Mat, int, int, int, int)>;
+using Function2Slider       = std::function<Mat(Mat, double)>;
+using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int)>;
+
 
 using Function1ParContainer = std::map < wxString, Function1Parameter >;
 using Function2ParContainer = std::map < wxString, Function2Parameter >;
 using Function3ParContainer = std::map < wxString, Function3Parameters >;
 using Function4ParContainer = std::map < wxString, Function4Parameters >;
 using Function5ParContainer = std::map < wxString, Function5Parameters >;
+using Function2SliderContainer = std::map < wxString, Function2Slider >;
+using FunctionSobelParametersContainer = std::map < wxString, FunctionSobelParameters >;
 
 using CPointCst = std::pair<int, int>;
 using CDataValue = std::vector<CPointCst>;
@@ -82,6 +89,8 @@ public:
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
 
+    wxFrame* _parent = nullptr;
+
 protected:
 
     //--------------------------------------------------------------
@@ -97,36 +106,14 @@ protected:
     void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
     void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
     void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
+    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);
+    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int,int,double,int);
 
     // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
     virtual void setControlslayout() = 0;
 
 };
 
-class CDataCapture : public CDataValue
-{
-public:
-    void insertPoint(int x, int y)
-    {
-        CPointCst p{ x,y };
-        this->push_back(p);
-    }
-
-    void clear_me()
-    {
-        this->clear();
-    }
-
-    bool isPointInThePicture(int x, int y)
-    {
-        CPointCst p(x, y);
-        if (std::find(this->begin(), this->end(), p) != this->end())
-        {
-            return true;
-        }
-        return false;
-    }
-};
 
 class CGridInputDialog : public CInputDialogBase
 {
@@ -192,6 +179,12 @@ public:
     std::function<Mat(Mat, int)>
         getAlgoFunctionAdjust(wxString key);
 
+    std::function<Mat(Mat, double)>
+        getAlgoFunctionSlider(wxString key);
+
+    FunctionSobelParameters
+        getAlgoSobel(wxString key);
+
     wxString getSelectionText() { return SelectionText;};
 
     void DoFunction();
@@ -218,6 +211,8 @@ private:
     Function3ParContainer fmore3;
     Function4ParContainer fmorep;
     Function5ParContainer fmorepp;
+    Function2SliderContainer fslider;
+    FunctionSobelParametersContainer fsobel;
 
     bool stop = false;
 
@@ -225,31 +220,45 @@ private:
 };
 
 
-class CSliderDialog : public CInputDialogBase
+class CSliderDialog : public wxDialog
 {
 public:
-    CSliderDialog(wxFrame* parent);
+    CSliderDialog(wxString _name);
+    double getValue() { return threshold_value; };
+
+    Mat out;
 
 private:
-    void setControlslayout() override;
+    void setControlslayout();
 
     wxPanel* basePanel = new wxPanel(this, -1);
-    wxPanel* panel1 = new wxPanel(basePanel, wxID_ANY, { -1,-1 }, { 400, 30 }, wxTAB_TRAVERSAL | wxBORDER_SIMPLE);
-    wxPanel* panel2 = new wxPanel(basePanel, wxID_ANY, { -1,-1}, { 400, 30 }, wxTAB_TRAVERSAL | wxBORDER_THEME);
+    wxPanel* panel1 = new wxPanel(basePanel, wxID_ANY, { -1,-1 }, { 140, 30 }, wxTAB_TRAVERSAL | wxBORDER_SIMPLE);
+    wxPanel* panel2 = new wxPanel(basePanel, wxID_ANY, { -1,-1}, { 140, 30 }, wxTAB_TRAVERSAL | wxBORDER_THEME);
 
     wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
     wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
     wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
 
-    wxButton* button1{ new wxButton(panel1, wxID_ANY, "Select") };
-    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Run") };
+    wxButton* button1{ new wxButton(panel1, wxID_ANY, "Apply") };
 
 
-    wxTextCtrl* textCtrl1 =     new wxTextCtrl(         panel2, 
-                                                        wxID_ANY, 
-                                                        "Script path", 
-                                                        { -1,-1 },
-                                                        { 380, 20 }); 
+    wxSlider* slider{ new wxSlider( panel2,
+                                    wxID_ANY,
+                                    50,
+                                    1,
+                                    254,
+                                    wxDefaultPosition,
+                                    wxDefaultSize,
+                                    wxSL_HORIZONTAL) };
+
+    wxStaticText* staticText{ new wxStaticText( panel2, 
+                                                wxID_ANY, 
+                                                "50", 
+                                                wxDefaultPosition,
+                                                wxDefaultSize, 
+                                                0) };
+    double threshold_value = 50.0;
+
 };
 
 #endif
