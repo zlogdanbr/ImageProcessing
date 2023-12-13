@@ -280,6 +280,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="image_algorithms.cpp" />
     <ClCompile Include="image_helper.cpp" />
     <ClCompile Include="image_python.cpp" />
+    <ClCompile Include="image_util.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
@@ -289,6 +290,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClInclude Include="childframes.h" />
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />
+    <ClInclude Include="image_util.h" />
     <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />

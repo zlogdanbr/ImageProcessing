@@ -47,7 +47,6 @@ private:
     void onAllMenu(wxCommandEvent& event);
     void onHelpFile(wxCommandEvent& event);
     void onRevert(wxCommandEvent& event);
-    void onPython(wxCommandEvent& event);
     void onSelectRoi(wxCommandEvent& event);
 
     enum  Opt 
@@ -59,7 +58,6 @@ private:
         SUB_IMG_ID,
         CONTRAST_ID_IMG,
         REVETR_IMG_ID,
-        PYTHON_SCRIPT,
         SELECT_ROI,
     };
 
@@ -74,7 +72,6 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
         Bind(wxEVT_MENU, &MyFrame::onRevert, this, REVETR_IMG_ID);
         Bind(wxEVT_MENU, &MyFrame::onSelectRoi, this, SELECT_ROI);
-        Bind(wxEVT_MENU, &MyFrame::onPython, this, PYTHON_SCRIPT);
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -84,8 +81,6 @@ private:
         
         auto menuCtsKernl = menuAlgo->Append(CUSTKERNEL,    "Kernels", "Input custom kernel");
         menuCtsKernl->SetBitmap(wxArtProvider::GetBitmap(wxART_PLUS, wxART_MENU));
-
-        //auto menuPython = menuAlgo->Append(PYTHON_SCRIPT, "Run Python Scripts", "Python");
         
         auto menuRevert = menuAlgo->Append(REVETR_IMG_ID, "Revert", "Revert");
         menuRevert->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_MENU));

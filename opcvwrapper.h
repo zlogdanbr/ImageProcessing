@@ -6,30 +6,10 @@
 #ifndef _CVWRAPPER_
 #define _CVWRAPPER_
 
-#include "opencv2/objdetect.hpp"
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/opencv.hpp>
-#include "opencv2/imgproc.hpp"
-#include <opencv2/dnn.hpp>
-#include <iostream>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include "filesys.h"
-
-
-using namespace cv;
-
-using UBYTE = unsigned char;
-using AbstractRegion = std::vector<std::pair<int, int>>;
-using TargetPoints = std::pair<std::vector<int>, std::vector<int>>;
-using TargetPointsDouble = std::pair<std::vector<double>, std::vector<double>>;
-using RoiAretype = std::vector< std::vector<Point> >;
+#include "image_util.h"
 
 /**
-* basic operation
+* basic operations
 */
 bool loadImage(const std::string& image_path, Mat& img);
 void showImage(const Mat& img, const std::string& title);
@@ -41,7 +21,6 @@ Mat InvertImage(const Mat& img);
 Mat getBinaryImage(const Mat& img);
 Mat adjustContrast(const Mat& img, int factor);
 Mat adjustBrightness(const Mat& img, int factor);
-
 
 /*
 * Gray Scale
@@ -55,38 +34,32 @@ Mat convertograyScale(const Mat& img);
 Mat equalizeGrayImage(const Mat& img);
 Mat equalizeColorImage(const Mat& img);
 
-
 /*
-* Fiters
+* Filters
 */
 Mat ApplyThreShold(const Mat& img);
 Mat blurImageSmooth(const Mat& img, int kernel_size);
-Mat GaussianImageSmooth(const Mat& img, int kernel_size);
-
-Mat ApplyBilateralFilterExt(const Mat& img, int kernel_size, double sigma1, double sigma2);
-Mat ApplyBilateralFilter(const Mat& img, int kernel_size);
+Mat ApplyBilateralFilterExt(    const Mat& img, 
+                                int kernel_size, 
+                                double sigma1, 
+                                double sigma2);
 
 Mat GaussianImageSmoothExtended(    const Mat& img,
                                     int kernel_size,
                                     double sigmaX,
                                     double sigmaY
                                 );
-
 Mat MedianImageSmooth(const Mat& img, int kernel_size);
 Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
 
 /*
 * Hough Transform
 */
-Mat ApplyHoughTransform(const Mat& img, int opt);
-Mat ApplyHoughTransformRegular(const Mat& img);
-Mat ApplyHoughTransformReProbabilistic(const Mat& img);
 Mat ApplyHoughTransformCustom(const Mat& img);
 
 /* 
 * Edge detectors Laplacian
 */
-Mat ApplyLaplacian(const Mat& src);
 Mat ApplyLaplacianExtended( const Mat& src, 
                             int kernel_size = 3,
                             int scale = 1, 
@@ -97,10 +70,6 @@ Mat ApplyLaplacianExtended( const Mat& src,
 /*
 * Edge detectors Sobel
 */
-Mat ApplySobelX(const Mat& img, int kernel_size);
-Mat ApplySobelY(const Mat& img, int kernel_size);
-Mat ApplySobel(const Mat& img, int kernel_size);
-
 Mat ApplySobelXExtended(const Mat& img,
     int image_type,
     int depth,
@@ -138,32 +107,6 @@ Mat ApplyOpening(const Mat& img);
 Mat ApplyMorphGradient(const Mat& img);
 Mat ApplyTopHatAlgo(const Mat& img);
 
-
-/*
-*  Helper functions
-*/
-static
-void visualize(Mat& input, int frame, Mat& faces, int thickness = 2);
-
-AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);
-
-void highlightFeature(  Mat& img, 
-                        AbstractRegion& abstract_region, 
-                        UBYTE, 
-                        UBYTE, 
-                        UBYTE,
-                        bool blank_bgr = false);
-
-TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
-
-Mat convertRectoImg(Rect& r, Mat& img);
-
-std::vector<Mat> splitChannel(Mat& img);
-
-void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
-void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
-
-
 /*
 *  Advanced Algorithms and detectors
 */
@@ -174,14 +117,9 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
                                 double Harris_parameter
                                 );
 
-Mat detectCornersHarris(const Mat& image);
-Mat detectFastKeyPoints(const Mat& image);
+
 Mat ApplyCustomAlgo(const Mat& image);
-Mat ApplyCanny(const Mat& img);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
-Mat WaterShed(const Mat& img);
-
-
 
 #endif
 

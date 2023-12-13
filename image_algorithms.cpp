@@ -83,26 +83,17 @@ void CInputDialog::fillComboInfo()
     fsimple["Convert to Gray Scale"] = convertograyScale;
     fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
-    fsimple["Laplacian"] = ApplyLaplacian;
-    fsimple["Harris Algorithm"] = detectCornersHarris;
-    fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Apply custom algo"] = ApplyCustomAlgo;
-    fsimple["Detect Corners"] = detectCornersHarris;
-    fsimple["Detect features"] = detectFastKeyPoints;
     fsimple["Invert Image"] = InvertImage;
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
     fsimple["Threshold"] = ApplyThreShold;
-    fsimple["Canny"] = ApplyCanny;
     fmore3["Canny Extended"] = ApplyCannyAlgoFull;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
-    fsimple["Hough Transform"] = ApplyHoughTransformRegular;
-    fsimple["Hough Transform Probabilistic"] = ApplyHoughTransformReProbabilistic;
     fsimple["Hough Transform Custom"] = ApplyHoughTransformCustom;
     fsimple["Convert to Binary"] = getBinaryImage;
-    fsimple["Watershed"] = WaterShed;
     fsimple["Erode"] = ApplyErode;
     fsimple["Dilate"] = ApplyDilate;
     fsimple["Closing"] = ApplyClosing;
@@ -110,14 +101,11 @@ void CInputDialog::fillComboInfo()
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fmore["Blur Image"] = blurImageSmooth;
-    fmore["Gaussian"] = GaussianImageSmooth;
     fmore["Median"] = MedianImageSmooth;
-    fmore["Sobel"] = ApplySobel;
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
     fadjust["Adjust Contrast"] = adjustContrast;
-    fadjust["Adjust Brightness"] = adjustBrightness;
-    fmore["Bilateral Filter"] = ApplyBilateralFilter;
+    fadjust["Adjust Brightness"] = adjustBrightness;;
 
     // Now fill the combox box options with the algorithms
 
@@ -147,9 +135,7 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Apply custom algo");
 
     // Gaussian Low pass filters
-    comboBox1->Append("Gaussian");
     comboBox1->Append("Gaussian Extended");
-    comboBox1->Append("Bilateral Filter");
 
     // Median filters blurred images
     comboBox1->Append("Median");
@@ -159,25 +145,16 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Unsharp");
     
     // Lapalcian second derivative edge detectors
-    comboBox1->Append("Laplacian");
     comboBox1->Append("Laplacian Extended");
 
     // Gradient based algorithms
-    comboBox1->Append("Sobel");
-    comboBox1->Append("Canny");
     comboBox1->Append("Canny Extended");
 
     // Circle detection algorithm
-    comboBox1->Append("Hough Transform");
-    comboBox1->Append("Hough Transform Probabilistic");
     comboBox1->Append("Hough Transform Custom");
 
     // feature detection algorithms
     comboBox1->Append("Harris Algorithm");
-    comboBox1->Append("Detect features");
-
-    // Watershed
-    comboBox1->Append("Watershed");
 }
 
 

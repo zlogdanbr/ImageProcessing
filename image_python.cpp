@@ -1,6 +1,6 @@
 #include "childframes.h"
 
-CPythonDialog::CPythonDialog(wxFrame* parent):CInputDialogBase { parent, "Pyton scripts" }
+CSliderDialog::CSliderDialog(wxFrame* parent):CInputDialogBase { parent, "Pyton scripts" }
 {
     this->SetSize(410, 103);
     setControlslayout();
@@ -31,7 +31,7 @@ CPythonDialog::CPythonDialog(wxFrame* parent):CInputDialogBase { parent, "Pyton 
         });
 }
 
-void CPythonDialog::setControlslayout()
+void CSliderDialog::setControlslayout()
 {
     // set base sizer
     

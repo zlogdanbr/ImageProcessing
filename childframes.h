@@ -225,10 +225,10 @@ private:
 };
 
 
-class CPythonDialog : public CInputDialogBase
+class CSliderDialog : public CInputDialogBase
 {
 public:
-    CPythonDialog(wxFrame* parent);
+    CSliderDialog(wxFrame* parent);
 
 private:
     void setControlslayout() override;
