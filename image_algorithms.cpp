@@ -38,7 +38,6 @@ CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Alg
             DoFunction();
             wxString msg = end_tracking(t).c_str();
             outxt->writeTo(msg);
-            Close();
         });
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)

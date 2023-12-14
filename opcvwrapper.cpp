@@ -101,19 +101,17 @@ bool saveImage(const std::string& image_path, Mat& img)
 void showImage(const Mat& img, const std::string& title)
 {
     cv::Size image_size = img.size();
-    cv::namedWindow(title, cv::WINDOW_NORMAL);
+
     wxRect sizeScreen = wxGetClientDisplayRect();
 
     if (sizeScreen.width < image_size.width || sizeScreen.height < image_size.height)
     {
-        // Set rows and columns
+        cv::namedWindow(title, cv::WINDOW_NORMAL);
         float ratio = static_cast<float>(image_size.width) / static_cast<float>(image_size.height);
         float up_width = static_cast<float>(sizeScreen.width / 2);
         float up_height = static_cast<float>(sizeScreen.height * ratio);
         Mat resized_up;
-        //resize up
         resize(img, resized_up, Size(up_width, up_height), INTER_LINEAR);
-
         imshow(title, resized_up);
     }
     else
