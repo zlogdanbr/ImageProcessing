@@ -33,6 +33,22 @@ Back in 1996 I had no idea if OpenCV existed or about libraries.
 The algorithms for face detection are not working. I have no idea why or how.
 I am running Windows 11, maybe that is it.
 
+## Bulding for Linux
+
+1-There is a file called CMakeLists.txt under the root dir. 
+2-Make sure you install OpenCV and wxWidgets
+
+sudo apt update
+sudo apt install libopencv-dev
+
+I suggest building wxWidgets from scratch.
+https://wiki.wxwidgets.org/Compiling_and_getting_started
+
+3- cmake .
+4- make
+
+And that will do.
+
 
 ## Tips
 
