@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+project(diMage)
+find_package(wxWidgets REQUIRED gl core base OPTIONAL_COMPONENTS net)
+include(${wxWidgets_USE_FILE})
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable(diMage main.cpp childframes.cpp filesys.cpp image_algorithms.cpp image_gridialog.cpp image_helper.cpp image_io.cpp image_slide.cpp image_util.cpp mainframe.cpp opcvwrapper.cpp savekernel.cpp)
+target_link_libraries(diMage PRIVATE ${wxWidgets_LIBRARIES} ${OpenCV_LIBS})
