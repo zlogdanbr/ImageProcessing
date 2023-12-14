@@ -362,7 +362,15 @@ void CInputDialog::DoFunction()
             int max = 255;
             int min = 0;
 
-            CSliderDialog dialog(this, "Threshold");
+            info inf;
+
+            inf.default_value = 50;
+            inf.max = 255;
+            inf.min = 0;
+            inf.title = "Threshold";
+            inf.default_value_string = "50";
+
+            CSliderDialog dialog(this, inf);
             auto nice = dialog.ShowModal();
             if ( nice == wxID_CANCEL)
             {

@@ -4,7 +4,8 @@
 
 MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
 {
-    SetClientSize(640, 480);
+    //SetClientSize(640, 480);
+    Maximize(true);
     wxInitAllImageHandlers();
     
     // ------------------------------------------------------------------------------  

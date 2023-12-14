@@ -219,11 +219,19 @@ private:
 
 };
 
+struct info
+{
+    int default_value;
+    int max;
+    int min;
+    wxString default_value_string;
+    wxString title;
+};
 
 class CSliderDialog : public wxDialog
 {
 public:
-    CSliderDialog(wxWindow* parent, wxString _name);
+    CSliderDialog(wxWindow* parent, info& inf);
     double getValue() { return threshold_value; };
 
     Mat out;

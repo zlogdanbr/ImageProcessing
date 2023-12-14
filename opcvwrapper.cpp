@@ -104,15 +104,22 @@ void showImage(const Mat& img, const std::string& title)
     cv::namedWindow(title, cv::WINDOW_NORMAL);
     wxRect sizeScreen = wxGetClientDisplayRect();
 
-    // Set rows and columns
-    float ratio = static_cast<float>(image_size.width)/static_cast<float>(image_size.height);
-    float up_width = static_cast<float>(sizeScreen.width/2);
-    float up_height = static_cast<float>(sizeScreen.height*ratio);
-    Mat resized_up;
-    //resize up
-    resize(img, resized_up, Size(up_width, up_height), INTER_LINEAR);
+    if (sizeScreen.width < image_size.width || sizeScreen.height < image_size.height)
+    {
+        // Set rows and columns
+        float ratio = static_cast<float>(image_size.width) / static_cast<float>(image_size.height);
+        float up_width = static_cast<float>(sizeScreen.width / 2);
+        float up_height = static_cast<float>(sizeScreen.height * ratio);
+        Mat resized_up;
+        //resize up
+        resize(img, resized_up, Size(up_width, up_height), INTER_LINEAR);
 
-    imshow(title, resized_up);
+        imshow(title, resized_up);
+    }
+    else
+    {
+        imshow(title, img);
+    }
 }
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
