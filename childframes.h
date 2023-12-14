@@ -223,7 +223,7 @@ private:
 class CSliderDialog : public wxDialog
 {
 public:
-    CSliderDialog(wxString _name);
+    CSliderDialog(wxWindow* parent, wxString _name);
     double getValue() { return threshold_value; };
 
     Mat out;

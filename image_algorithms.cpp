@@ -362,11 +362,11 @@ void CInputDialog::DoFunction()
             int max = 255;
             int min = 0;
 
-            wxNumberEntryDialog dialog(this, opt, "Threshold", opt, 1, min, max);
-
-            if (dialog.ShowModal() == wxID_OK)
+            CSliderDialog dialog(this, "Threshold");
+            auto nice = dialog.ShowModal();
+            if ( nice == wxID_CANCEL)
             {
-                auto v = dialog.GetValue();
+                auto v = dialog.getValue();
                 threshold = static_cast<double>(v);
                 ApplyAlgorithm(f7, true, threshold);
             }

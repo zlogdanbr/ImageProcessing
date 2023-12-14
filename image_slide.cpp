@@ -1,10 +1,11 @@
 #include "childframes.h"
 
-CSliderDialog::CSliderDialog(wxString _name ):wxDialog()
+CSliderDialog::CSliderDialog(wxWindow* parent, wxString _name ):
+    wxDialog(parent, wxID_ANY, _name)
 {
     this->SetSize(160, 103);
     setControlslayout();
-    this->SetTitle(_name);    
+    this->SetTitle(_name);   
 
     button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
         {
