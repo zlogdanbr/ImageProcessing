@@ -7,44 +7,13 @@
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat clone = image.clone();
-    cv::Size s = clone.size();
-    wxRect sizeScreen = wxGetClientDisplayRect();
+    Mat clone1 = convertograyScale(image.clone());
+    Mat clone2 = convertograyScale(image.clone());
+    clone2 = blurImageSmooth(clone2, 3);
+    clone2 = InvertImage(clone2);
+    Mat final = abs(clone1 - clone2);
 
-    if (s.width > sizeScreen.width || s.height > sizeScreen.height)
-    {
-        auto rows = clone.rows;
-        auto cols = clone.cols;
-        Size _s;
-        _s.height = rows/8;
-        _s.width  = cols/8;
-        resize(clone, clone, _s);
-    }
-    
-    Rect rect = selectROI("Get ROI", clone, false);
-    Mat roi = Mat(clone, rect);
-
-    Mat saveroi = roi.clone();
-    saveroi = convertograyScale(saveroi);
-
-    waitKey(0);
-
-    cv::Size s2 = roi.size();
-    if (s2.width == 0 || s2.height == 0)
-    {
-        destroyWindow("Get ROI");
-        return roi;
-    }
-    destroyWindow("Get ROI");
-
-    roi = ApplyOpening(roi);
-    //roi = ApplyCannyAlgoFull(roi, 125, 350);
-    roi = InvertImage(roi);
-
-    roi = saveroi - roi;
-
-
-    return roi;
+    return final;
 }
 
 Mat InvertImage(const Mat& img)

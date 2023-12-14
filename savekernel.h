@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 // used to save data that is entered in the wxGrid* grid dialog, eg, kernel definitions
-// author: Daniel Vasconcelos Gomes 2022
+// author: Daniel Vasconcelos Gomes 2023
 // if an external code has been used I indicate the sources
 //--------------------------------------------------------------------------------------------
 #ifndef _SAVEKERNEL_THIS_

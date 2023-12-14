@@ -20,39 +20,27 @@
 #include "opcvwrapper.h"
 #include "logs.h"
 #include "filesys.h"
+#include "image_util.h"
 
-using Function1Parameter    = std::function<Mat(Mat)>;
-using Function2Parameter    = std::function<Mat(Mat, int)>;
-using Function3Parameters   = std::function<Mat(Mat, int, int)>;
-using Function4Parameters   = std::function<Mat(Mat, int, double, double)>;
-using Function5Parameters   = std::function<Mat(Mat, int, int, int, int)>;
-using Function2Slider       = std::function<Mat(Mat, double)>;
-using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int)>;
+using namespace image_util;
 
-
-using Function1ParContainer = std::map < wxString, Function1Parameter >;
-using Function2ParContainer = std::map < wxString, Function2Parameter >;
-using Function3ParContainer = std::map < wxString, Function3Parameters >;
-using Function4ParContainer = std::map < wxString, Function4Parameters >;
-using Function5ParContainer = std::map < wxString, Function5Parameters >;
-using Function2SliderContainer = std::map < wxString, Function2Slider >;
-using FunctionSobelParametersContainer = std::map < wxString, FunctionSobelParameters >;
-
-using CPointCst = std::pair<int, int>;
-using CDataValue = std::vector<CPointCst>;
-using RGB_CST = unsigned char[3];
-
-class COpenImage
+class COpenImage final
 {
 public:
 
     COpenImage(CImageHelper* imghelper, CWriteLogs* outxt);
+    ~COpenImage()
+    {
+
+    }
 
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
     void OpenFile(wxFrame& frame);
 
 private:
+    COpenImage(COpenImage&) = delete;
+    COpenImage& operator=(COpenImage&) = delete;
 
     //--------------------------------------------------------------
     // Helpers
@@ -61,17 +49,23 @@ private:
     CWriteLogs* outxt{ nullptr };
 };
 
-class CSaveImage
+class CSaveImage final
 {
 public:
 
     CSaveImage(CImageHelper* imghelper, CWriteLogs* outxt);
+    ~CSaveImage()
+    {
+
+    }
 
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
     void SaveFile(wxFrame& frame);
 
 private:
+    CSaveImage(CSaveImage&) = delete;
+    CSaveImage& operator=(CSaveImage&) = delete;
 
     //--------------------------------------------------------------
     // Helpers
@@ -80,11 +74,15 @@ private:
     CWriteLogs* outxt{ nullptr };
 };
 
-class CInputDialogBase : public wxFrame
+class CInputDialogBase  : public wxFrame 
 {
 public:
 
     CInputDialogBase(wxFrame* parent, wxString name);
+    ~CInputDialogBase()
+    {
+
+    }
 
     void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
     void setLogs(CWriteLogs* l) { outxt = l; };
@@ -106,21 +104,23 @@ protected:
     void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
     void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
     void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
+    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
     void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);
-    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int,int,double,int);
-
-    // https://truelogic.org/wordpress/2021/12/17/5b-1-wxwidgets-wxboxsizer/
+    
     virtual void setControlslayout() = 0;
 
 };
 
 
-class CGridInputDialog : public CInputDialogBase
+class CGridInputDialog final : public CInputDialogBase
 {
 public:
 
     CGridInputDialog(wxFrame* parent);
-    void getGridData() const;
+    ~CGridInputDialog()
+    {
+
+    }
 
 private:
 
@@ -151,44 +151,21 @@ private:
                     };
 
     void setControlslayout() override;
+
+    void getGridData() const;
     
 
 };
 
-class CInputDialog : public CInputDialogBase
+class CInputDialog final : public CInputDialogBase
 {
 public:
 
     CInputDialog(wxFrame* parent);
+    ~CInputDialog()
+    {
 
-    std::function<Mat(Mat)> 
-        getAlgoFunctionOnePar(wxString key);
-
-    std::function<Mat(Mat, int)> 
-        getAlgoFunctionTwoPar(wxString key);
-
-    std::function<Mat(Mat, int, double, double)> 
-        getAlgoFunctionFourPar(wxString key);
-
-    std::function<Mat(Mat, int, int,int,int)>
-        getAlgoFunctionFivePar(wxString key);
-
-    std::function<Mat(Mat, int, int)>
-        getAlgoFunctionThreePar(wxString key);
-
-    std::function<Mat(Mat, int)>
-        getAlgoFunctionAdjust(wxString key);
-
-    std::function<Mat(Mat, double)>
-        getAlgoFunctionSlider(wxString key);
-
-    FunctionSobelParameters
-        getAlgoSobel(wxString key);
-
-    wxString getSelectionText() { return SelectionText;};
-
-    void DoFunction();
-
+    }
 
 private:
     wxString SelectionText;
@@ -216,6 +193,32 @@ private:
 
     bool stop = false;
 
+    wxString getSelectionText() { return SelectionText; };
+    void DoFunction();
+
+    std::function<Mat(Mat)>
+        getAlgoFunctionOnePar(wxString key);
+
+    std::function<Mat(Mat, int)>
+        getAlgoFunctionTwoPar(wxString key);
+
+    std::function<Mat(Mat, int, double, double)>
+        getAlgoFunctionFourPar(wxString key);
+
+    std::function<Mat(Mat, int, int, int, int)>
+        getAlgoFunctionFivePar(wxString key);
+
+    std::function<Mat(Mat, int, int)>
+        getAlgoFunctionThreePar(wxString key);
+
+    std::function<Mat(Mat, int)>
+        getAlgoFunctionAdjust(wxString key);
+
+    std::function<Mat(Mat, double)>
+        getAlgoFunctionSlider(wxString key);
+
+    FunctionSobelParameters
+        getAlgoSobel(wxString key);
 
 };
 
@@ -228,10 +231,15 @@ struct info
     wxString title;
 };
 
-class CSliderDialog : public wxDialog
+class CSliderDialog  final : public wxDialog
 {
 public:
     CSliderDialog(wxWindow* parent, info& inf);
+    ~CSliderDialog()
+    {
+
+    }
+
     double getValue() { return threshold_value; };
 
     Mat out;

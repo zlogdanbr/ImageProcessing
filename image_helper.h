@@ -1,10 +1,11 @@
-#ifndef _IMAGE_HELPER_FUNC_
-#define _IMAGE_HELPER_FUNC_
 //--------------------------------------------------------------------------------------------------
 // Helper class for converting images, manipulating them and storing
 // author: Daniel Vasconcelos Gomes 2023
 // if an external code has been used I indicate the sources
 //--------------------------------------------------------------------------------------------------
+
+#ifndef _IMAGE_HELPER_FUNC_
+#define _IMAGE_HELPER_FUNC_
 
 #include <wx/wx.h>
 #include <wx/statbmp.h>
@@ -88,7 +89,6 @@ public:
     }
 
 private:
-    int pog = 1;
     CImageHelper(CImageHelper&) = delete;
     CImageHelper& operator=(CImageHelper&) = delete;
     Mat Final_ImageOpenCVFormat;
@@ -96,26 +96,8 @@ private:
     bool original_initiated = false;
     bool final_isgray = false;
     std::string original = "";
-
     std::stack<Mat> cache;
 
-    template<typename T1, typename T2>
-    auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))
-    {
-        return std::forward<T1>(t1) + std::forward<T2>(t2);
-    }
-
-    template<typename T1, typename T2>
-    auto Sub(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) - std::forward<T2>(t2))
-    {
-        return std::forward<T1>(t1) - std::forward<T2>(t2);
-    }
-
-    template<typename T1, typename T2, typename F>
-    auto GenericFunction(T1&& t1, T2&& t2,F&& f) -> decltype(std::forward<T2>(t2))
-    {
-        return F(t1);
-    }
 
 };
 #endif

@@ -1,3 +1,9 @@
+//--------------------------------------------------------------------------------------------------
+// Helper class for converting images, manipulating them and storing
+// author: Daniel Vasconcelos Gomes 2023
+// if an external code has been used I indicate the sources
+//--------------------------------------------------------------------------------------------------
+
 #ifndef _MAIN_FRAME_MY_APP_DVG_
 #define _MAIN_FRAME_MY_APP_DVG_
 
@@ -12,6 +18,10 @@ class MyFrame : public wxFrame
 public:
 
     MyFrame();
+    ~MyFrame()
+    {
+
+    }
 
 private:
 

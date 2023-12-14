@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------------------------------
 // These functions have been taken from OpenCV documentation and made easier to use
-// author: Daniel Vasconcelos Gomes 2022
+// author: Daniel Vasconcelos Gomes 2022/2023
 // if an external code has been used I indicate the sources
 //--------------------------------------------------------------------------------------------------
 #ifndef _CVWRAPPER_
