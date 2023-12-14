@@ -85,8 +85,8 @@ private:
         auto menuRevert = menuAlgo->Append(REVETR_IMG_ID, "Revert", "Revert");
         menuRevert->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_MENU));
 
-        auto menuSelectRoi = menuAlgo->Append(SELECT_ROI, "Select Roi", "Select Roi");
-
+        auto menuSelectRoi = menuAlgo->Append(SELECT_ROI, "Select Roi", "Select Roi"); 
+        menuSelectRoi->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
     }
 
 
