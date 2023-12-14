@@ -12,7 +12,9 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 #include "opencv2/imgproc.hpp"
+#include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
+#include <opencv2/dnn/all_layers.hpp>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -22,6 +24,7 @@
 #include <wx/gdicmn.h> 
 
 using namespace cv;
+using namespace dnn;
 
 namespace image_util
 {

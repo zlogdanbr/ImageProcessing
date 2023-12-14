@@ -106,6 +106,7 @@ void CInputDialog::fillComboInfo()
     fadjust["Adjust Contrast"] = adjustContrast;
     fadjust["Adjust Brightness"] = adjustBrightness;
     fsobel["Sobel"] = ApplySobelExtended;
+    fsimple["Neural"] = NN;
 
     // Now fill the combox box options with the algorithms
 
@@ -157,6 +158,8 @@ void CInputDialog::fillComboInfo()
 
     // feature detection algorithms
     comboBox1->Append("Harris Algorithm");
+
+    comboBox1->Append("Neural");
 }
 
 
