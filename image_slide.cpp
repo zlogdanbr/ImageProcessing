@@ -4,24 +4,25 @@ CSliderDialog::CSliderDialog(wxWindow* parent, info& inf):
     wxDialog(parent, wxID_ANY, inf.title)
 {
     this->SetSize(160, 103);
-    setControlslayout();
     this->SetTitle(inf.title);
 
-    wxSlider* slider{ new wxSlider(panel2,
-                                    wxID_ANY,
-                                    inf.default_value,
-                                    inf.min,
-                                    inf.max,
-                                    wxDefaultPosition,
-                                    wxDefaultSize,
-                                    wxSL_HORIZONTAL) };
+    slider = new wxSlider( panel2,
+                           wxID_ANY,
+                           inf.default_value,
+                           inf.min,
+                           inf.max,
+                           wxDefaultPosition,
+                           wxDefaultSize,
+                           wxSL_HORIZONTAL);
 
-    wxStaticText* staticText{ new wxStaticText(panel2,
-                                                wxID_ANY,
-                                                inf.default_value_string,
-                                                wxDefaultPosition,
-                                                wxDefaultSize,
-                                                0) };
+    staticText = new wxStaticText(panel2,
+                                  wxID_ANY,
+                                  inf.default_value_string,
+                                  wxDefaultPosition,
+                                  wxDefaultSize,
+                                  0);
+
+    setControlslayout();
 
     button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
         {

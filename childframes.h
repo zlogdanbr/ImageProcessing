@@ -248,23 +248,8 @@ private:
     wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
 
     wxButton* button1{ new wxButton(panel1, wxID_ANY, "Apply") };
-
-
-    wxSlider* slider{ new wxSlider( panel2,
-                                    wxID_ANY,
-                                    50,
-                                    1,
-                                    254,
-                                    wxDefaultPosition,
-                                    wxDefaultSize,
-                                    wxSL_HORIZONTAL) };
-
-    wxStaticText* staticText{ new wxStaticText( panel2, 
-                                                wxID_ANY, 
-                                                "50", 
-                                                wxDefaultPosition,
-                                                wxDefaultSize, 
-                                                0) };
+    wxSlider* slider = nullptr;
+    wxStaticText* staticText = nullptr;
     double threshold_value = 50.0;
 
 };

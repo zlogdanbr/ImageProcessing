@@ -328,25 +328,36 @@ void CInputDialog::DoFunction()
         int max = 0;
         int min = 0;
 
+        info inf;
+
         if (opt == "Adjust Contrast")
         {
-           tip = "Percentage";
-           max = 100;
-           min = 0;
+            inf.default_value = 50;
+            inf.max = 100;
+            inf.min = 1;
+            inf.title = opt;
+            inf.default_value_string = "50";
         }
         else
         {
-            tip = "Values";
-            max = 1000;
-            min = 1;
+            inf.default_value = 50;
+            inf.max = 255;
+            inf.min = -255;
+            inf.title = opt;
+            inf.default_value_string = "50";
         }
 
-        wxNumberEntryDialog dialog(this, opt, tip, opt, 1, min, max);
-        int scale = 0;
+        CSliderDialog dialog(this, inf);
+        int scale = -90566;
 
-        if (dialog.ShowModal() == wxID_OK)
+        if (dialog.ShowModal() == wxID_CANCEL)
         {
-            scale = dialog.GetValue();
+            scale = dialog.getValue();
+
+            if (scale == -90566)
+            {
+                return;
+            }
             ApplyAlgorithm(f6, true, scale);
         }
         return;
@@ -356,12 +367,7 @@ void CInputDialog::DoFunction()
     {
         if (opt == "Threshold")
         {
-            double threshold = 0.0;
-
-            wxString tip;
-            int max = 255;
-            int min = 0;
-
+            double threshold = -90566.0;
             info inf;
 
             inf.default_value = 50;
@@ -375,6 +381,12 @@ void CInputDialog::DoFunction()
             if ( nice == wxID_CANCEL)
             {
                 auto v = dialog.getValue();
+
+                if (threshold == -90566.0)
+                {
+                    return;
+                }
+
                 threshold = static_cast<double>(v);
                 ApplyAlgorithm(f7, true, threshold);
             }
