@@ -231,34 +231,32 @@ struct info
     wxString title;
 };
 
-class CSliderDialog  final : public wxDialog
-{
-public:
-    CSliderDialog(wxWindow* parent, info& inf);
-    ~CSliderDialog()
-    {
 
-    }
+class CSliderDialog final : public wxDialog
+{
+private:
+    double threshold_value = 50.0;
+protected:
+    wxButton* m_button5;
+    wxSlider* m_slider5;
+    wxStaticText* m_staticText3;
+
+public:
+
+    CSliderDialog(  wxWindow* parent, 
+                info& inf,
+                wxWindowID id = wxID_ANY, 
+                const wxString& title = wxEmptyString, 
+                const wxPoint& pos = wxDefaultPosition, 
+                const wxSize& size = wxSize(301, 77), 
+                long style = wxDEFAULT_DIALOG_STYLE
+                );
+
+    ~CSliderDialog();
 
     double getValue() { return threshold_value; };
 
     Mat out;
-
-private:
-    void setControlslayout();
-
-    wxPanel* basePanel = new wxPanel(this, -1);
-    wxPanel* panel1 = new wxPanel(basePanel, wxID_ANY, { -1,-1 }, { 140, 30 }, wxTAB_TRAVERSAL | wxBORDER_SIMPLE);
-    wxPanel* panel2 = new wxPanel(basePanel, wxID_ANY, { -1,-1}, { 140, 30 }, wxTAB_TRAVERSAL | wxBORDER_THEME);
-
-    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
-    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
-    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
-
-    wxButton* button1{ new wxButton(panel1, wxID_ANY, "Apply") };
-    wxSlider* slider = nullptr;
-    wxStaticText* staticText = nullptr;
-    double threshold_value = 50.0;
 
 };
 

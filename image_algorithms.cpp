@@ -384,7 +384,7 @@ void CInputDialog::DoFunction()
             {
                 auto v = dialog.getValue();
 
-                if (threshold == -90566.0)
+                if (v == -90566.0)
                 {
                     return;
                 }
