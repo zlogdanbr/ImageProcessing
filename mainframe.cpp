@@ -67,8 +67,9 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         wxRect sizeScreen = wxGetClientDisplayRect();
 
         // Set rows and columns
-        int up_width = sizeScreen.width;
-        int up_height = sizeScreen.height;
+        float ratio = static_cast<float>(clone.size().width) / static_cast<float>(clone.size().height);
+        float up_width = static_cast<float>(sizeScreen.width / 2);
+        float up_height = static_cast<float>(sizeScreen.height * ratio);
         Mat resized_up;
         //resize up
         resize(clone, resized_up, Size(up_width, up_height), INTER_LINEAR);

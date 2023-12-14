@@ -105,8 +105,9 @@ void showImage(const Mat& img, const std::string& title)
     wxRect sizeScreen = wxGetClientDisplayRect();
 
     // Set rows and columns
-    int up_width = sizeScreen.width;
-    int up_height = sizeScreen.height;
+    float ratio = static_cast<float>(image_size.width)/static_cast<float>(image_size.height);
+    float up_width = static_cast<float>(sizeScreen.width/2);
+    float up_height = static_cast<float>(sizeScreen.height*ratio);
     Mat resized_up;
     //resize up
     resize(img, resized_up, Size(up_width, up_height), INTER_LINEAR);
