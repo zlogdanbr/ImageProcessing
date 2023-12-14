@@ -35,8 +35,8 @@ I am running Windows 11, maybe that is it.
 
 ## Bulding for Linux
 
-1-There is a file called CMakeLists.txt under the root dir. 
-2-Make sure you install OpenCV and wxWidgets
+- There is a file called CMakeLists.txt under the root dir. 
+- Make sure you install OpenCV and wxWidgets
 
 sudo apt update
 sudo apt install libopencv-dev
@@ -44,8 +44,8 @@ sudo apt install libopencv-dev
 I suggest building wxWidgets from scratch.
 https://wiki.wxwidgets.org/Compiling_and_getting_started
 
-3- cmake .
-4- make
+- cmake .
+- make
 
 And that will do.
 
