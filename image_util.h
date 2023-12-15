@@ -87,6 +87,8 @@ namespace image_util
 	//------------------------------------------------------------------------
 	void drawcircle(int x0, int y0, int radius, wxImage img, RGB& r);
 
+	Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen);
+
 	template<typename T1, typename T2>
 	auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))
 	{

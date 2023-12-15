@@ -63,22 +63,16 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
     {
 
         Mat clone = ImageHelper.getOrginalImageOpenCV();
-        cv::Size s = clone.size();
+
         wxRect sizeScreen = wxGetClientDisplayRect();
+        int hs = sizeScreen.height;
+        int ws = sizeScreen.width;
 
-        // Set rows and columns
-        float ratio = static_cast<float>(clone.size().width) / static_cast<float>(clone.size().height);
-        float up_width = static_cast<float>(sizeScreen.width / 2);
-        float up_height = static_cast<float>(sizeScreen.height * ratio);
-        Mat resized_up;
-        //resize up
-        resize(clone, resized_up, Size(up_width, up_height), INTER_LINEAR);
-
-        Rect rect = selectROI("Final", resized_up, false);
-        waitKey(0);
-
-        Mat out = Mat(resized_up, rect);
-
+        clone = fitImageOnScreen(clone,ws,hs);
+        Mat out;
+        Rect rect = selectROI("Final", clone, false);
+        out = Mat(clone, rect);
+        out = fitImageOnScreen(out,ws, hs);
         if (out.empty() == false)
         {
             ImageHelper.setFinalImageOpenCV(out);
