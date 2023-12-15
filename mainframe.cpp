@@ -137,15 +137,20 @@ void MyFrame::onCompare(wxCommandEvent& event)
     {
         Mat i1 = convertograyScale(ImageHelper.getOriginalInFact());
         Mat i2 = convertograyScale(ImageHelper.getOrginalImageOpenCV());
-        Mat final;
-        hconcat(i1, i2, final);
-        wxRect sizeScreen = wxGetClientDisplayRect();
+        Mat clone;
 
-        Mat clone = final.clone();
-        cv::namedWindow("Comparison", cv::WINDOW_NORMAL);
-        clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
-
-        imshow("Comparison", clone);
+        try
+        {
+            hconcat(i1, i2, clone);
+            wxRect sizeScreen = wxGetClientDisplayRect();
+            cv::namedWindow("Comparison", cv::WINDOW_NORMAL);
+            clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
+            imshow("Comparison", clone);
+        }
+        catch (...)
+        {
+            outxt.writeTo("Error. Cannot compare images.\n");
+        }
     }
 
 }
