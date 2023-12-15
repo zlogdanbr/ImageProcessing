@@ -34,6 +34,7 @@ void COpenImage::OpenFile(wxFrame& frame)
                 imghelper->setOrginalImageOpenCV(img);
                 imghelper->setOriginalImage(spath);
                 imghelper->addtoCache(img);
+                imghelper->setOriginalInfact(img);
             }
             else
             {

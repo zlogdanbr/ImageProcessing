@@ -131,6 +131,25 @@ void MyFrame::OnOpen(wxCommandEvent& event)
     openFileCustom->OpenFile(*this);
 }
 
+void MyFrame::onCompare(wxCommandEvent& event)
+{
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        Mat i1 = convertograyScale(ImageHelper.getOriginalInFact());
+        Mat i2 = convertograyScale(ImageHelper.getOrginalImageOpenCV());
+        Mat final;
+        hconcat(i1, i2, final);
+        wxRect sizeScreen = wxGetClientDisplayRect();
+
+        Mat clone = final.clone();
+        cv::namedWindow("Comparison", cv::WINDOW_NORMAL);
+        clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
+
+        imshow("Comparison", clone);
+    }
+
+}
+
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {   
     CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);

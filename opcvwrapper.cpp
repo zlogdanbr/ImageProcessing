@@ -7,16 +7,18 @@
 /**
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.
+
+// MORPH_RECT
+// MORPH_CROSS
+// MORPH_ELLIPSE;
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat clone1 = convertograyScale(image.clone());
-    Mat clone2 = convertograyScale(image.clone());
-    clone2 = blurImageSmooth(clone2, 3);
-    clone2 = InvertImage(clone2);
-    Mat final = abs(clone1 - clone2);
+    Mat clone1 = convertograyScale(image.clone());;
 
-    return final;
+    Mat final1 = clone1 - ApplyErodeEx(clone1, MORPH_RECT);
+
+    return final1;
 }
 
 Mat InvertImage(const Mat& img)

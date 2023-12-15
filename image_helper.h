@@ -87,6 +87,8 @@ public:
             cache.pop();
         }
     }
+    void setOriginalInfact(Mat& m) { _Save_Original_ = m; };
+    Mat  getOriginalInFact() { return _Save_Original_; };
 
 private:
     CImageHelper(CImageHelper&) = delete;
@@ -98,7 +100,7 @@ private:
     std::string original = "";
     std::stack<Mat> cache;
 
-
+    Mat _Save_Original_;
 };
 #endif
 //--------------------------------------------------------------------------------------------------
