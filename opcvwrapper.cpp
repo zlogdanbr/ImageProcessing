@@ -14,11 +14,57 @@
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat clone1 = convertograyScale(image.clone());;
+    Mat bw = getBinaryImage(image);
 
-    Mat final1 = clone1 - ApplyErodeEx(clone1, MORPH_RECT);
+    Mat horizontal = bw.clone();
+    Mat vertical = bw.clone();
 
-    return final1;
+    // Specify size on horizontal axis
+    int horizontal_size = horizontal.cols / 30;
+    // Create structure element for extracting horizontal lines through morphology operations
+    Mat horizontalStructure = getStructuringElement(MORPH_RECT, Size(horizontal_size, 1));
+    // Apply morphology operations
+    erode(horizontal, horizontal, horizontalStructure, Point(-1, -1));
+    dilate(horizontal, horizontal, horizontalStructure, Point(-1, -1));
+
+
+    // Specify size on vertical axis
+    int vertical_size = vertical.rows / 30;
+    // Create structure element for extracting vertical lines through morphology operations
+    Mat verticalStructure = getStructuringElement(MORPH_RECT, Size(1, vertical_size));
+    // Apply morphology operations
+    erode(vertical, vertical, verticalStructure, Point(-1, -1));
+    dilate(vertical, vertical, verticalStructure, Point(-1, -1));
+    bitwise_not(vertical, vertical);
+
+
+    // Extract edges and smooth image according to the logic
+    // 1. extract edges
+    // 2. dilate(edges)
+    // 3. src.copyTo(smooth)
+    // 4. blur smooth img
+    // 5. smooth.copyTo(src, edges)
+    
+    // 1. extract edges
+    Mat edges;
+    adaptiveThreshold(vertical, edges, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, -2);
+
+    //2. dilate(edges)
+    Mat kernel = Mat::ones(2, 2, CV_8UC1);
+    dilate(edges, edges, kernel);
+
+    // Step 3
+    Mat smooth;
+    vertical.copyTo(smooth);
+    
+    // Step 4
+    blur(smooth, smooth, Size(2, 2));
+
+    // Step 5
+    smooth.copyTo(vertical, edges);
+
+    return edges;
+
 }
 
 Mat InvertImage(const Mat& img)
