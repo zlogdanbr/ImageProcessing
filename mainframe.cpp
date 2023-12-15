@@ -137,6 +137,15 @@ void MyFrame::onCompare(wxCommandEvent& event)
     {
         Mat i1 = convertograyScale(ImageHelper.getOriginalInFact());
         Mat i2 = convertograyScale(ImageHelper.getOrginalImageOpenCV());
+        i1.convertTo(i1, CV_8UC1);
+        i2.convertTo(i2, CV_8UC1);
+
+        Size s = i1.size();
+        int w = s.width;
+        int h = s.height;
+
+        resize(i1, i1, Size(w/2, h/2), INTER_LINEAR);
+        resize(i2, i2, Size(w/2, h/2), INTER_LINEAR);
         Mat clone;
 
         try
