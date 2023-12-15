@@ -103,6 +103,9 @@ Mat Unsharp(const Mat& img);
 */
 Mat ApplyErode(const Mat& img);
 Mat ApplyDilate(const Mat& img);
+Mat ApplyErodeEx(const Mat& img,int);
+Mat ApplyDilateEx(const Mat& img,int);
+
 Mat ApplyClosing(const Mat& img);
 Mat ApplyOpening(const Mat& img);
 Mat ApplyMorphGradient(const Mat& img);

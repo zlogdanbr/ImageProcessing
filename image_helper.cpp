@@ -1,5 +1,7 @@
 #include "image_helper.h"
 #include <wx/numdlg.h>
+#include "image_util.h"
+
 
 std::string convertWxStringToString(const wxString wsx)
 {
@@ -51,6 +53,13 @@ void CImageHelper::SetOriginalNew()
 
     destroyAllWindows();
     clean();
+
+    cv::namedWindow("Final", cv::WINDOW_NORMAL);
+    wxRect sizeScreen = wxGetClientDisplayRect();
+    int hs = sizeScreen.height;
+    int ws = sizeScreen.width;
+    savefinal = image_util::fitImageOnScreen(savefinal, ws, hs);
+
     addtoCache(savefinal);
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;

@@ -1,6 +1,7 @@
 #include "childframes.h"
 #include <chrono>
 #include <ctime>
+#include <wx/textdlg.h>
 
 using namespace std::chrono;
 using   tp = high_resolution_clock::time_point;
@@ -84,7 +85,7 @@ outxt{ outxt }
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();
             tp t = start_tracking();
-            DoFunction();
+            DoFunction();      
             wxString msg = end_tracking(t).c_str();
             outxt->writeTo(msg);
         });
@@ -363,6 +364,9 @@ void CInputDialog::fillComboInfo()
     fsobel["Sobel"] = ApplySobelExtended;
     fsimple["Neural"] = NN;
 
+    fmore["Erosion+"] = ApplyErodeEx;
+    fmore["Dilate+"] = ApplyDilateEx;
+
     // Now fill the combox box options with the algorithms
 
     // Basic operations
@@ -385,6 +389,10 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Dilate");
     comboBox1->Append("Closing");
     comboBox1->Append("Opening");
+
+    comboBox1->Append("Erosion+");
+    comboBox1->Append("Dilate+");
+
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
 
@@ -524,7 +532,43 @@ void CInputDialog::DoFunction()
 
     if (f2 != nullptr)
     {
-        ApplyAlgorithm(f2, true, 3);
+        int option = 3;
+        if (opt == "Erosion+" || "Dilate+")
+        {      
+            std::vector<wxString> choices = { "MORPH_RECT","MORPH_CROSS","MORPH_ELLIPSE" };
+            wxSingleChoiceDialog dialog(
+                                            this, 
+                                            "Choose Basic Element", 
+                                            "Choose Basic Element",
+                                            static_cast<int>(choices.size()), choices.data());
+
+            if (dialog.ShowModal() == wxID_OK)
+            {
+                wxString selection = dialog.GetStringSelection();
+
+                if (selection == "MORPH_RECT")
+                {
+                    option = MORPH_RECT;
+                }
+                else
+                if (selection == "MORPH_CROSS")
+                {
+                    option = MORPH_CROSS;
+                }
+                else
+                if (selection == "MORPH_ELLIPSE")
+                {
+                    option = MORPH_ELLIPSE;
+                }
+                else
+                {
+                    option = MORPH_CROSS;
+                }
+            }
+ 
+        }
+
+        ApplyAlgorithm(f2, true, option);
         return;
     }
 

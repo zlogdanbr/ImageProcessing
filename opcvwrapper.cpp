@@ -434,11 +434,36 @@ Mat Unsharp(const Mat& img)
     return (1.5) * igray - 0.5 * Iconv;
 }
 
+// MORPH_RECT
+// MORPH_CROSS
+// MORPH_ELLIPSE;
+
+Mat ApplyErodeEx(const Mat& img,int type)
+{
+    cv::Mat eroded; // the destination image
+    cv::erode(img, eroded, type);
+    return eroded;
+}
+
+Mat ApplyDilateEx(const Mat& img,int type)
+{
+    cv::Mat dilated; // the destination image
+    cv::dilate(img, dilated, type);
+    return dilated;
+}
+
 Mat ApplyErode(const Mat& img)
 {
     cv::Mat eroded; // the destination image
     cv::erode(img, eroded, cv::Mat());
     return eroded;
+}
+
+Mat ApplyDilate(const Mat& img)
+{
+    cv::Mat dilated; // the destination image
+    cv::dilate(img, dilated, cv::Mat());
+    return dilated;
 }
 
 Mat ApplyClosing(const Mat& img)
@@ -457,12 +482,7 @@ Mat ApplyOpening(const Mat& img)
     return final;
 }
 
-Mat ApplyDilate(const Mat& img)
-{
-    cv::Mat dilated; // the destination image
-    cv::dilate(img, dilated, cv::Mat());
-    return dilated;
-}
+
 
 Mat ApplyMorphGradient(const Mat& img)
 {
