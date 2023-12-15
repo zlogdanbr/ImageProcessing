@@ -168,24 +168,21 @@ namespace image_util
     Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen)
     {
         Mat out;
-        if (wscreen < img.size().width && hscreen < img.size().height)
-        {
-            Mat out;
-            int h = img.size().height;
-            int w = img.size().width;
-            float ratio = 1.0;
-            ratio = static_cast<float>(h) / static_cast<float>(w);
-            if (ratio > 1.0)
-            {
-                ratio = (1 / ratio);
-            }
+        int h = img.size().height;
+        int w = img.size().width;
+
+        if ( ( wscreen < img.size().width && hscreen > img.size().height) ||
+             (wscreen < img.size().width && hscreen < img.size().height)  ||
+             (wscreen > img.size().width && hscreen < img.size().height))
+        {         
+            float ratio = 0.5;
             float up_width = static_cast<float>(wscreen * ratio);
             float up_height = static_cast<float>(hscreen * ratio);
             resize(img, out, Size(up_width, up_height), INTER_LINEAR);
             return out;
         }
-
-        return img;
+        out = img.clone();
+        return out;
     }
 
 }

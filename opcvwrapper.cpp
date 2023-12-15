@@ -78,17 +78,11 @@ void showImage(const Mat& img, const std::string& title)
 
     wxRect sizeScreen = wxGetClientDisplayRect();
 
-    if (sizeScreen.width < image_size.width && sizeScreen.height < image_size.height)
-    {
-        Mat clone = img.clone();
-        cv::namedWindow(title, cv::WINDOW_NORMAL);
-        clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
-        imshow(title, clone);
-    }
-    else
-    {
-        imshow(title, img);
-    }
+    Mat clone = img.clone();
+    cv::namedWindow(title, cv::WINDOW_NORMAL);
+    clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
+    imshow(title, clone);
+    
 }
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html

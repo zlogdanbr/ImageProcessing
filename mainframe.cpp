@@ -68,14 +68,13 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         int hs = sizeScreen.height;
         int ws = sizeScreen.width;
 
-        clone = fitImageOnScreen(clone,ws,hs);
-        Mat out;
+        clone = fitImageOnScreen(clone, ws, hs);
         Rect rect = selectROI("Final", clone, false);
-        out = Mat(clone, rect);
-        out = fitImageOnScreen(out,ws, hs);
-        if (out.empty() == false)
+        clone = Mat(clone, rect);
+        clone = fitImageOnScreen(clone,ws, hs);
+        if (clone.empty() == false)
         {
-            ImageHelper.setFinalImageOpenCV(out);
+            ImageHelper.setFinalImageOpenCV(clone);
             outxt.writeTo("ROI selected.\n");
             ImageHelper.SetOriginalNew();
         }
