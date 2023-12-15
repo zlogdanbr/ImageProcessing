@@ -168,24 +168,17 @@ namespace image_util
     Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen)
     {
         Mat out;
-        // Set rows and columns
         if (wscreen < img.size().width && hscreen < img.size().height)
         {
             Mat out;
             int h = img.size().height;
             int w = img.size().width;
             float ratio = 1.0;
-
-            if (h >= w)
+            ratio = static_cast<float>(h) / static_cast<float>(w);
+            if (ratio > 1.0)
             {
-                ratio = static_cast<float>(w)/static_cast<float>(h) ;
+                ratio = (1 / ratio);
             }
-            else
-            if (w >= h)
-            {
-                ratio = static_cast<float>(h) / static_cast<float>(w);
-            }
-
             float up_width = static_cast<float>(wscreen * ratio);
             float up_height = static_cast<float>(hscreen * ratio);
             resize(img, out, Size(up_width, up_height), INTER_LINEAR);

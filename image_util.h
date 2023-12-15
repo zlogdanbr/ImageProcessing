@@ -104,6 +104,7 @@ namespace image_util
 	template<typename T1, typename T2, typename F>
 	auto GenericFunction(T1&& t1, T2&& t2, F&& f) -> decltype(std::forward<T2>(t2))
 	{
-		return F(t1);
+		t2 = F(t1);
+		return t2;
 	}
 }
