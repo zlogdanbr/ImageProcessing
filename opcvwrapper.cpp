@@ -120,6 +120,21 @@ Mat adjustBrightness(const Mat& img, int factor)
     return final;
 }
 
+Mat adjustGama(const Mat& img, double gamma)
+{
+    Mat lookUpTable(1, 256, CV_8U);
+    uchar* p = lookUpTable.ptr();
+    for (int i = 0; i < 256; ++i)
+    {
+        p[i] = saturate_cast<uchar>(pow(i / 255.0, gamma) * 255.0);
+    }
+        
+    Mat res = img.clone();
+    LUT(img, lookUpTable, res);
+    return res;
+}
+
+
 Mat getBinaryImage(const Mat& img)
 {
     // Create binary image from source image

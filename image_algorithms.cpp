@@ -342,6 +342,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
     fslider["Threshold"] = ApplyThreShold;
+    fslider["Gamma Correction"] = adjustGama;
     fmore3["Canny Extended"] = ApplyCannyAlgoFull;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
@@ -376,7 +377,8 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Convert to Binary");
     comboBox1->Append("Threshold");
     comboBox1->Append("Adjust Contrast");
-    comboBox1->Append("Adjust Brightness");
+    comboBox1->Append("Adjust Brightness"); 
+    comboBox1->Append("Gamma Correction");
 
     // Morphological operations
     comboBox1->Append("Erode");
@@ -620,16 +622,27 @@ void CInputDialog::DoFunction()
 
     if (f7 != nullptr)
     {
-        if (opt == "Threshold")
+        if (opt == "Threshold" || opt == "Gamma Correction")
         {
-            double threshold = -90566.0;
+            double threshold = 0.0;
             info inf;
 
-            inf.default_value = 50;
-            inf.max = 255;
-            inf.min = 0;
-            inf.title = "Threshold";
-            inf.default_value_string = "50";
+            if (opt == "Threshold")
+            {
+                inf.default_value = 50;
+                inf.max = 255;
+                inf.min = 0;
+                inf.title = "Threshold";
+                inf.default_value_string = "50";
+            }
+            else
+            {
+                inf.default_value = 50;
+                inf.max = 100;
+                inf.min = 1;
+                inf.title = "Gamma Correction %";
+                inf.default_value_string = "50";
+            }
 
             CSliderDialog dialog(this, inf);
             auto nice = dialog.ShowModal();
@@ -637,12 +650,15 @@ void CInputDialog::DoFunction()
             {
                 auto v = dialog.getValue();
 
-                if (v == -90566.0)
+                if (opt == "Threshold")
                 {
-                    return;
+                    threshold = static_cast<double>(v);
                 }
-
-                threshold = static_cast<double>(v);
+                else
+                {
+                    threshold = static_cast<double>(v)/100;
+                }
+                
                 ApplyAlgorithm(f7, true, threshold);
             }
             return;
