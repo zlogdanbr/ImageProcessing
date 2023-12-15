@@ -25,9 +25,58 @@ end_tracking(tp& start)
     return os.str();
 }
 
-CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Algorithms Selection" }
+CInputDialog::CInputDialog(   wxWindow* parent,
+                        CImageHelper* imghelper,
+                        CWriteLogs* outxt,
+                        wxWindowID id, 
+                        const wxString& title, 
+                        const wxPoint& pos, 
+                        const wxSize& size, 
+                        long style) : 
+wxDialog(parent, id, title, pos, size, style), 
+imghelper{ imghelper },
+outxt{ outxt }
 {
-    setControlslayout();
+    this->SetTitle("Algorithms");
+    this->SetSizeHints(wxDefaultSize, wxDefaultSize);
+
+    wxBoxSizer* bSizer1;
+    bSizer1 = new wxBoxSizer(wxHORIZONTAL);
+
+    wxBoxSizer* bSizer2;
+    bSizer2 = new wxBoxSizer(wxVERTICAL);
+
+    button1 = new wxButton(this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxSize(70, -1), 0);
+    bSizer2->Add(button1, 0, wxALL, 5);
+
+
+    bSizer1->Add(bSizer2, 1, wxEXPAND, 5);
+
+    wxBoxSizer* bSizer3;
+    bSizer3 = new wxBoxSizer(wxVERTICAL);
+
+    button2 = new wxButton(this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxSize(70, -1), 0);
+    bSizer3->Add(button2, 0, wxALL, 5);
+
+
+    bSizer1->Add(bSizer3, 1, wxEXPAND, 5);
+
+    wxBoxSizer* bSizer4;
+    bSizer4 = new wxBoxSizer(wxVERTICAL);
+
+    comboBox1 = new wxComboBox(this, wxID_ANY, wxT("Algorithms"), wxDefaultPosition, wxSize(150, -1), 0, NULL, 0);
+    bSizer4->Add(comboBox1, 0, wxALL, 5);
+
+
+    bSizer1->Add(bSizer4, 1, wxEXPAND, 5);
+
+
+    this->SetSizer(bSizer1);
+    this->Layout();
+
+    this->Centre(wxBOTH);
+
+    fillComboInfo();
 
     button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
         {
@@ -47,30 +96,235 @@ CInputDialog::CInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Basic Alg
         });
 }
 
-void CInputDialog::setControlslayout()
+CInputDialog::~CInputDialog()
 {
-    this->SetSize(350, 70);
-    // set base sizer
-    basePanel->SetSize(350, 70);
-    basePanel->SetSizer(baseSizer);
+}
 
-    // add buttons to the horizontal box
-    hbox1->Add(button1);
-    hbox1->Add(button2);
+std::string
+CInputDialog::setPath(bool Gray)
+{
+    auto spath = imghelper->getOriginalImage();
+    imghelper->setFinalGray(Gray);
+    return spath;
+}
 
-    // add buttons to the horizontal box
-    hbox1->Add(comboBox1);
+void
+CInputDialog::setFinalImg(Mat& out)
+{
+    if (out.empty() == false)
+    {
+        imghelper->setFinalImageOpenCV(out);
+        outxt->writeTo("Algorithm applied correctly\n");
+        imghelper->SetOriginalNew();
+    }
+    else
+    {
+        outxt->writeTo("Algorithm error\n");
+    }
+}
 
-    // set horizontal base sizer at panel1
-    panel1->SetSize(350, 70);
-    panel1->SetSizer(hbox1);
+void
+CInputDialog::ApplyAlgorithm(Function1Parameter& f,
+    bool Gray)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img);
+            auto s = out.size();
 
-    // add panel1 to the base sizer at the base panel
-    baseSizer->Add(panel1);
+            if (s.height == 0 || s.width == 0)
+            {
+                return;
+            }
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV());
+        setFinalImg(out);
+    }
+}
 
-    fillComboInfo();
+void
+CInputDialog::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, kernel_size);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), kernel_size);
+        setFinalImg(out);
+    }
+}
 
-    Center();
+void
+CInputDialog::ApplyAlgorithm(Function4Parameters& f,
+    bool Gray,
+    int kernel_size,
+    double p1,
+    double p2)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, kernel_size, p1, p2);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), kernel_size, p1, p2);
+        setFinalImg(out);
+    }
+}
+
+void
+CInputDialog::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, p1, p2);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), p1, p2);
+        setFinalImg(out);
+    }
+}
+
+void
+CInputDialog::ApplyAlgorithm(Function5Parameters& f,
+    bool Gray,
+    int kernel_size,
+    int p1,
+    int p2,
+    int p3)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, kernel_size, p1, p2, p3);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), kernel_size, p1, p2, p3);
+        setFinalImg(out);
+    }
+
+}
+
+void
+CInputDialog::ApplyAlgorithm(Function2Slider& f,
+    bool Gray,
+    double t)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            out = f(img, t);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), t);
+        setFinalImg(out);
+    }
+
+}
+
+void
+CInputDialog::ApplyAlgorithm(
+    FunctionSobelParameters& f,
+    bool Gray,
+    int image_type,
+    int depth,
+    int type,
+    double delta,
+    int kernel_size)
+{
+    if (imghelper->getOriginalImageInitiated() == false)
+    {
+        Mat out;
+        Mat img;
+        if (loadImage(setPath(Gray), img) == true)
+        {
+            // using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int
+            out = f(img, image_type, depth, type, delta, kernel_size);
+            setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
+    }
+    else
+    {
+        Mat out;
+        out = f(imghelper->getOrginalImageOpenCV(), image_type, depth, type, delta, kernel_size);
+        setFinalImg(out);
+    }
+
 }
 
 
@@ -144,7 +398,7 @@ void CInputDialog::fillComboInfo()
     // Sharp algorithms
     comboBox1->Append("Sharpening");
     comboBox1->Append("Unsharp");
-    
+
     // Lapalcian second derivative edge detectors
     comboBox1->Append("Laplacian Extended");
 
@@ -163,7 +417,7 @@ void CInputDialog::fillComboInfo()
 }
 
 
-std::function<Mat(Mat)> 
+std::function<Mat(Mat)>
 CInputDialog::getAlgoFunctionOnePar(wxString key)
 {
     if (fsimple.find(key) != fsimple.end())
@@ -173,7 +427,7 @@ CInputDialog::getAlgoFunctionOnePar(wxString key)
     return nullptr;
 }
 
-std::function<Mat(Mat, int)> 
+std::function<Mat(Mat, int)>
 CInputDialog::getAlgoFunctionTwoPar(wxString key)
 {
     if (fmore.find(key) != fmore.end())
@@ -234,7 +488,6 @@ CInputDialog::getAlgoFunctionSlider(wxString key)
     }
     return nullptr;
 }
-
 
 FunctionSobelParameters
 CInputDialog::getAlgoSobel(wxString key)
@@ -380,7 +633,7 @@ void CInputDialog::DoFunction()
 
             CSliderDialog dialog(this, inf);
             auto nice = dialog.ShowModal();
-            if ( nice == wxID_CANCEL)
+            if (nice == wxID_CANCEL)
             {
                 auto v = dialog.getValue();
 
@@ -392,7 +645,7 @@ void CInputDialog::DoFunction()
                 threshold = static_cast<double>(v);
                 ApplyAlgorithm(f7, true, threshold);
             }
-            return;           
+            return;
         }
     }
 
@@ -413,7 +666,7 @@ void CInputDialog::DoFunction()
 
         if (dialog1.ShowModal() == wxID_OK)
         {
-            depth =  dialog1.GetValue();
+            depth = dialog1.GetValue();
         }
 
         tip = "Type";
@@ -449,3 +702,5 @@ void CInputDialog::DoFunction()
         ApplyAlgorithm(f8, true, image_type, depth, type, delta, kernel_size);
     }
 }
+
+

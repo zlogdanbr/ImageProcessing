@@ -97,16 +97,7 @@ protected:
     CImageHelper* imghelper{ nullptr };
     CWriteLogs* outxt{ nullptr };
     std::string  setPath(bool Gray);
-    void  setFinalImg(Mat& out);
-
-    void ApplyAlgorithm(Function1Parameter& f, bool Gray);
-    void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
-    void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
-    void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
-    void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
-    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
-    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);
-    
+    void  setFinalImg(Mat& out);   
     virtual void setControlslayout() = 0;
 
 };
@@ -157,30 +148,70 @@ private:
 
 };
 
-class CInputDialog final : public CInputDialogBase
+
+struct info
 {
+    int default_value;
+    int max;
+    int min;
+    wxString default_value_string;
+    wxString title;
+};
+
+
+class CSliderDialog final : public wxDialog
+{
+private:
+    double threshold_value = 50.0;
+protected:
+    wxButton* m_button5;
+    wxSlider* m_slider5;
+    wxStaticText* m_staticText3;
+
 public:
 
-    CInputDialog(wxFrame* parent);
-    ~CInputDialog()
-    {
+    CSliderDialog(  wxWindow* parent, 
+                info& inf,
+                wxWindowID id = wxID_ANY, 
+                const wxString& title = wxEmptyString, 
+                const wxPoint& pos = wxDefaultPosition, 
+                const wxSize& size = wxSize(301, 77), 
+                long style = wxDEFAULT_DIALOG_STYLE
+                );
 
-    }
+    ~CSliderDialog();
 
+    double getValue() { return threshold_value; };
+
+    Mat out;
+
+};
+
+class CInputDialog final : public wxDialog
+{
 private:
+
+protected:
+    wxButton* button1 = nullptr;
+    wxButton* button2 = nullptr;
+    wxComboBox* comboBox1 = nullptr;
+
+    CImageHelper* imghelper{ nullptr };
+    CWriteLogs* outxt{ nullptr };
+    std::string  setPath(bool Gray);
+    void  setFinalImg(Mat& out);
+
     wxString SelectionText;
-    wxPanel* basePanel = new wxPanel(this, -1);
-    wxPanel* panel1{ new wxPanel(basePanel) };
 
-    wxBoxSizer* baseSizer{ new wxBoxSizer(wxHORIZONTAL) };
-    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
-
-    wxComboBox* comboBox1{ new wxComboBox(panel1, wxID_ANY, wxEmptyString, { 10, 10 } )};
-    wxButton* button1{ new wxButton(panel1, wxID_ANY, "Select") };
-    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel") };
+    void ApplyAlgorithm(Function1Parameter& f, bool Gray);
+    void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
+    void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
+    void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
+    void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
+    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
+    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);
 
     void fillComboInfo();
-    void setControlslayout() override;
 
     Function1ParContainer fsimple;
     Function2ParContainer fadjust;
@@ -220,43 +251,18 @@ private:
     FunctionSobelParameters
         getAlgoSobel(wxString key);
 
-};
-
-struct info
-{
-    int default_value;
-    int max;
-    int min;
-    wxString default_value_string;
-    wxString title;
-};
-
-
-class CSliderDialog final : public wxDialog
-{
-private:
-    double threshold_value = 50.0;
-protected:
-    wxButton* m_button5;
-    wxSlider* m_slider5;
-    wxStaticText* m_staticText3;
-
 public:
 
-    CSliderDialog(  wxWindow* parent, 
-                info& inf,
+    CInputDialog(  wxWindow* parent, 
+                CImageHelper* imghelper,
+                CWriteLogs* outxt,
                 wxWindowID id = wxID_ANY, 
                 const wxString& title = wxEmptyString, 
                 const wxPoint& pos = wxDefaultPosition, 
-                const wxSize& size = wxSize(301, 77), 
-                long style = wxDEFAULT_DIALOG_STYLE
-                );
+                const wxSize& size = wxSize(335, 75), 
+                long style = wxDEFAULT_DIALOG_STYLE);
 
-    ~CSliderDialog();
-
-    double getValue() { return threshold_value; };
-
-    Mat out;
+    ~CInputDialog();
 
 };
 

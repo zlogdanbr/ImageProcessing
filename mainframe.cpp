@@ -133,13 +133,14 @@ void MyFrame::OnOpen(wxCommandEvent& event)
 }
 
 void MyFrame::onAllMenu(wxCommandEvent& event)
-{
-   
-    CInputDialog* InputDialog = new CInputDialog(this);
-    InputDialog->setImageHelper(&ImageHelper);
-    InputDialog->setLogs(&outxt);
+{   
+    CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);
     outxt.writeTo("Open Data Input dialog.\n");
-    InputDialog->Show(true);
+    
+    if (InputDialog->ShowModal() == wxID_CANCEL)
+    {
+        outxt.writeTo("Apply Data Input dialog.\n");
+    }
 
 }
 
