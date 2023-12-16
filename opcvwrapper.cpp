@@ -7,14 +7,13 @@
 /**
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.
-
-// MORPH_RECT
-// MORPH_CROSS
-// MORPH_ELLIPSE;
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    return image;
+    Mat clone = image.clone();
+    clone = convertograyScale(clone);
+    clone = getBinaryImage(clone);  
+    return clone;
 }
 
 Mat InvertImage(const Mat& img)

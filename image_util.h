@@ -15,9 +15,12 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/all_layers.hpp>
+#include <opencv2/core/types.hpp>
 #include <iostream>
 #include <vector>
 #include <map>
+#include <stack>
+#include <set>
 #include <algorithm>
 #include "filesys.h"
 #include "wx/wx.h"
@@ -108,4 +111,5 @@ namespace image_util
 		t2 = F(t1);
 		return t2;
 	}
+
 }

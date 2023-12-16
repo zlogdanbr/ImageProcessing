@@ -184,6 +184,5 @@ namespace image_util
         out = img.clone();
         return out;
     }
-
-
+            
 }
