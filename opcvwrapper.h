@@ -125,8 +125,6 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 Mat ApplyCustomAlgo(const Mat& image);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 
-// https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/
-Mat NN(const Mat& img);
 
 #endif
 

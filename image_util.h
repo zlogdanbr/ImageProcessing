@@ -87,6 +87,7 @@ namespace image_util
 	//------------------------------------------------------------------------
 	void drawcircle(int x0, int y0, int radius, wxImage img, RGB& r);
 
+
 	Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen);
 
 	template<typename T1, typename T2>

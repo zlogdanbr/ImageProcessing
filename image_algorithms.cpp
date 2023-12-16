@@ -362,8 +362,6 @@ void CInputDialog::fillComboInfo()
     fadjust["Adjust Contrast"] = adjustContrast;
     fadjust["Adjust Brightness"] = adjustBrightness;
     fsobel["Sobel"] = ApplySobelExtended;
-    fsimple["Neural"] = NN;
-
     fmore["Erosion+"] = ApplyErodeEx;
     fmore["Dilate+"] = ApplyDilateEx;
 
@@ -389,14 +387,12 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Dilate");
     comboBox1->Append("Closing");
     comboBox1->Append("Opening");
-
     comboBox1->Append("Erosion+");
     comboBox1->Append("Dilate+");
-
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
 
-    // Select ROI
+    // custom
     comboBox1->Append("Apply custom algo");
 
     // Gaussian Low pass filters
@@ -409,9 +405,8 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Sharpening");
     comboBox1->Append("Unsharp");
 
-    // Lapalcian second derivative edge detectors
+    // Laplacian second derivative edge detectors
     comboBox1->Append("Laplacian Extended");
-
     comboBox1->Append("Sobel");
 
     // Gradient based algorithms
@@ -420,10 +415,7 @@ void CInputDialog::fillComboInfo()
     // Circle detection algorithm
     comboBox1->Append("Hough Transform Custom");
 
-    // feature detection algorithms
-    comboBox1->Append("Harris Algorithm");
 
-    comboBox1->Append("Neural");
 }
 
 
