@@ -50,6 +50,8 @@ outxt{ outxt }
     button1 = new wxButton(this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxSize(70, -1), 0);
     bSizer2->Add(button1, 0, wxALL, 5);
 
+    button1->SetDefault();
+    button1->SetFocus();
 
     bSizer1->Add(bSizer2, 1, wxEXPAND, 5);
 
@@ -534,28 +536,25 @@ void CInputDialog::DoFunction()
                                             "Choose Basic Element",
                                             static_cast<int>(choices.size()), choices.data());
 
-            if (dialog.ShowModal() == wxID_OK)
-            {
-                wxString selection = dialog.GetStringSelection();
+            wxString selection = dialog.GetStringSelection();
 
-                if (selection == "MORPH_RECT")
-                {
-                    option = MORPH_RECT;
-                }
-                else
-                if (selection == "MORPH_CROSS")
-                {
-                    option = MORPH_CROSS;
-                }
-                else
-                if (selection == "MORPH_ELLIPSE")
-                {
-                    option = MORPH_ELLIPSE;
-                }
-                else
-                {
-                    option = MORPH_CROSS;
-                }
+            if (selection == "MORPH_RECT")
+            {
+                option = MORPH_RECT;
+            }
+            else
+            if (selection == "MORPH_CROSS")
+            {
+                option = MORPH_CROSS;
+            }
+            else
+            if (selection == "MORPH_ELLIPSE")
+            {
+                option = MORPH_ELLIPSE;
+            }
+            else
+            {
+                option = MORPH_CROSS;
             }
  
         }
@@ -641,18 +640,17 @@ void CInputDialog::DoFunction()
         }
 
         CSliderDialog dialog(this, inf);
-        int scale = -90566;
+        int scale = -90566000;
 
-        if (dialog.ShowModal() == wxID_CANCEL)
+        dialog.ShowModal();
+        scale = dialog.getValue();
+
+        if (scale == -9056600)
         {
-            scale = dialog.getValue();
-
-            if (scale == -90566)
-            {
-                return;
-            }
-            ApplyAlgorithm(f6, true, scale);
+            return;
         }
+        ApplyAlgorithm(f6, true, scale);
+
         return;
     }
 
@@ -681,22 +679,28 @@ void CInputDialog::DoFunction()
             }
 
             CSliderDialog dialog(this, inf);
-            auto nice = dialog.ShowModal();
-            if (nice == wxID_CANCEL)
-            {
-                auto v = dialog.getValue();
+            dialog.ShowModal();
 
-                if (opt == "Threshold")
-                {
-                    threshold = static_cast<double>(v);
-                }
-                else
-                {
-                    threshold = static_cast<double>(v)/100;
-                }
-                
-                ApplyAlgorithm(f7, true, threshold);
+            int value = -9056600;
+
+            value = dialog.getValue();
+
+            if (value == -9056600)
+            {
+                return;
             }
+
+            if (opt == "Threshold")
+            {
+                threshold = static_cast<double>(value);
+            }
+            else
+            {
+                threshold = static_cast<double>(value)/100;
+            }
+                
+            ApplyAlgorithm(f7, true, threshold);
+
             return;
         }
     }
