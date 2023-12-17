@@ -128,7 +128,6 @@ CInputDialog::setFinalImg(Mat& out)
     {
         imghelper->setFinalImageOpenCV(out);
         imghelper->SetOriginalNew();
-        //imghelper->ShowFinal();
     }
 }
 
@@ -182,11 +181,11 @@ CInputDialog::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size)
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function4Parameters& f,
-    bool Gray,
-    int kernel_size,
-    double p1,
-    double p2)
+CInputDialog::ApplyAlgorithm(   Function4Parameters& f,
+                                bool Gray,
+                                int kernel_size,
+                                double p1,
+                                double p2)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -228,12 +227,12 @@ CInputDialog::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function5Parameters& f,
-    bool Gray,
-    int kernel_size,
-    int p1,
-    int p2,
-    int p3)
+CInputDialog::ApplyAlgorithm(   Function5Parameters& f,
+                                bool Gray,
+                                int kernel_size,
+                                int p1,
+                                int p2,
+                                int p3)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -255,9 +254,9 @@ CInputDialog::ApplyAlgorithm(Function5Parameters& f,
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function2Slider& f,
-    bool Gray,
-    double t)
+CInputDialog::ApplyAlgorithm(   Function2Slider& f,
+                                bool Gray,
+                                double t)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -280,13 +279,13 @@ CInputDialog::ApplyAlgorithm(Function2Slider& f,
 
 void
 CInputDialog::ApplyAlgorithm(
-    FunctionSobelParameters& f,
-    bool Gray,
-    int image_type,
-    int depth,
-    int type,
-    double delta,
-    int kernel_size)
+                                FunctionSobelParameters& f,
+                                bool Gray,
+                                int image_type,
+                                int depth,
+                                int type,
+                                double delta,
+                                int kernel_size)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -507,12 +506,11 @@ void CInputDialog::DoFunction()
 
     if (f5 != nullptr)
     {
-        int scale = 0;
-        int delta = 0;
+        int scale = 4;
+        int delta = 5;
         ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
         return;
     }
-
  
     if (f6 != nullptr)
     {

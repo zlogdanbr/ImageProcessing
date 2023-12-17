@@ -1,4 +1,3 @@
-
 #include "mainframe.h"
 
 
@@ -55,6 +54,24 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
     outxt.writeTo("Application initiated.\n");
 
     Centre();
+}
+
+void MyFrame::OnSettings(wxCommandEvent& event)
+{
+    CSettingsDialog SettingsDialog(this);
+
+    if (_settings.empty == true)
+    {
+        SettingsDialog.initSettings();
+        _settings.empty = false;
+    }
+    else
+    {
+        SettingsDialog.setSettings(_settings);
+    }
+    SettingsDialog.setValuesInTheUI();
+    SettingsDialog.ShowModal();
+    _settings = SettingsDialog.getSettings().clone();
 }
 
 void MyFrame::saveShowImage(Mat& img)

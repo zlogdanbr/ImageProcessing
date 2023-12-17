@@ -11,6 +11,7 @@
 #include "childframes.h"
 #include "logs.h"
 #include <chrono>
+#include "settings_dialog.cpp.h"
 
 
 class MyFrame : public wxFrame
@@ -22,6 +23,8 @@ public:
     {
 
     }
+
+    Settings _settings;
 
 private:
 
@@ -65,6 +68,8 @@ private:
     void OnAdjustGama(wxCommandEvent& event);
     void OnAdjustThreshold(wxCommandEvent& event);
 
+    void OnSettings(wxCommandEvent& event);
+
     enum  Opt 
     {
         CUSTKERNEL,
@@ -79,7 +84,8 @@ private:
         ADJUST_CONTRAST,
         ADJUST_BRIGHT,
         ADJUST_GAMA,
-        ADJUST_THRESHOLD
+        ADJUST_THRESHOLD,
+        SETTINGS_ID_DIALOG
     };
 
     void BinAllEvents()
@@ -99,6 +105,9 @@ private:
         Bind(wxEVT_MENU, &MyFrame::OnAdjusyBright, this, ADJUST_BRIGHT);
         Bind(wxEVT_MENU, &MyFrame::OnAdjustGama, this, ADJUST_GAMA);
         Bind(wxEVT_MENU, &MyFrame::OnAdjustThreshold, this, ADJUST_THRESHOLD);
+
+        Bind(wxEVT_MENU, &MyFrame::OnSettings, this, SETTINGS_ID_DIALOG);
+        
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -116,6 +125,7 @@ private:
         auto menuBright = menuAlgo->Append(ADJUST_BRIGHT, "Adjust Brightness", "Adjust Brightness");
         auto menuGama = menuAlgo->Append(ADJUST_GAMA, "Adjust Gamma", "Adjust Gamma");
         auto menuThreshold = menuAlgo->Append(ADJUST_THRESHOLD, "Threshold", "Threshold");
+        auto menuSettings = menuAlgo->Append(SETTINGS_ID_DIALOG, "Algorithm Settings", "Algorithm Settings");
 
         auto menuSelectRoi = menuAlgo->Append(SELECT_ROI, "Select Roi", "Select Roi"); 
         menuSelectRoi->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
@@ -126,4 +136,6 @@ private:
     void saveShowImage(Mat& img);
 
 };
+
+
 #endif
