@@ -38,8 +38,8 @@ I am running Windows 11, maybe that is it.
 
 - Make sure you install OpenCV and wxWidgets
 
-  sudo apt update
-  sudo apt install libopencv-dev
+    sudo apt update
+    sudo apt install libopencv-dev
 
 I suggest building wxWidgets from scratch.
 https://wiki.wxwidgets.org/Compiling_and_getting_started
