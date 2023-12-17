@@ -171,12 +171,12 @@ protected:
 public:
 
     CSliderDialog(  wxWindow* parent, 
-                info& inf,
-                wxWindowID id = wxID_ANY, 
-                const wxString& title = wxEmptyString, 
-                const wxPoint& pos = wxDefaultPosition, 
-                const wxSize& size = wxSize(301, 77), 
-                long style = wxDEFAULT_DIALOG_STYLE
+                    info& inf,
+                    wxWindowID id = wxID_ANY, 
+                    const wxString& title = wxEmptyString, 
+                    const wxPoint& pos = wxDefaultPosition, 
+                    const wxSize& size = wxSize(301, 77), 
+                    long style = wxDEFAULT_DIALOG_STYLE
                 );
 
     ~CSliderDialog();
@@ -253,14 +253,14 @@ protected:
 
 public:
 
-    CInputDialog(  wxWindow* parent, 
-                CImageHelper* imghelper,
-                CWriteLogs* outxt,
-                wxWindowID id = wxID_ANY, 
-                const wxString& title = wxEmptyString, 
-                const wxPoint& pos = wxDefaultPosition, 
-                const wxSize& size = wxSize(335, 75), 
-                long style = wxDEFAULT_DIALOG_STYLE);
+    CInputDialog(   wxWindow* parent, 
+                    CImageHelper* imghelper,
+                    CWriteLogs* outxt,
+                    wxWindowID id = wxID_ANY, 
+                    const wxString& title = wxEmptyString, 
+                    const wxPoint& pos = wxDefaultPosition, 
+                    const wxSize& size = wxSize(335, 75), 
+                    long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CInputDialog();
 

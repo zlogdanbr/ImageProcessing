@@ -26,17 +26,17 @@ end_tracking(tp& start)
     return os.str();
 }
 
-CInputDialog::CInputDialog(   wxWindow* parent,
-                        CImageHelper* imghelper,
-                        CWriteLogs* outxt,
-                        wxWindowID id, 
-                        const wxString& title, 
-                        const wxPoint& pos, 
-                        const wxSize& size, 
-                        long style) : 
-wxDialog(parent, id, title, pos, size, style), 
-imghelper{ imghelper },
-outxt{ outxt }
+CInputDialog::CInputDialog(     wxWindow* parent,
+                                CImageHelper* imghelper,
+                                CWriteLogs* outxt,
+                                wxWindowID id, 
+                                const wxString& title, 
+                                const wxPoint& pos, 
+                                const wxSize& size, 
+                                long style) : 
+                                wxDialog(parent, id, title, pos, size, style), 
+                                imghelper{ imghelper },
+                                outxt{ outxt }
 {
     this->SetTitle("Algorithms");
     this->SetSizeHints(wxDefaultSize, wxDefaultSize);
@@ -49,28 +49,20 @@ outxt{ outxt }
 
     button1 = new wxButton(this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxSize(70, -1), 0);
     bSizer2->Add(button1, 0, wxALL, 5);
-
-
     bSizer1->Add(bSizer2, 1, wxEXPAND, 5);
 
     wxBoxSizer* bSizer3;
     bSizer3 = new wxBoxSizer(wxVERTICAL);
-
     button2 = new wxButton(this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxSize(70, -1), 0);
     bSizer3->Add(button2, 0, wxALL, 5);
 
-
     bSizer1->Add(bSizer3, 1, wxEXPAND, 5);
-
     wxBoxSizer* bSizer4;
     bSizer4 = new wxBoxSizer(wxVERTICAL);
 
     comboBox1 = new wxComboBox(this, wxID_ANY, wxT("Convert to Gray Scale"), wxDefaultPosition, wxSize(150, -1), 0, NULL, 0);
     bSizer4->Add(comboBox1, 0, wxALL, 5);
-
-
     bSizer1->Add(bSizer4, 1, wxEXPAND, 5);
-
 
     this->SetSizer(bSizer1);
     this->Layout();
@@ -362,7 +354,6 @@ void CInputDialog::fillComboInfo()
     fadjust["Adjust Contrast"] = adjustContrast;
     fadjust["Adjust Brightness"] = adjustBrightness;
     fsobel["Sobel"] = ApplySobelExtended;
-    fsimple["Neural"] = NN;
 
     fmore["Erosion+"] = ApplyErodeEx;
     fmore["Dilate+"] = ApplyDilateEx;
@@ -423,7 +414,6 @@ void CInputDialog::fillComboInfo()
     // feature detection algorithms
     comboBox1->Append("Harris Algorithm");
 
-    comboBox1->Append("Neural");
 }
 
 
@@ -542,28 +532,25 @@ void CInputDialog::DoFunction()
                                             "Choose Basic Element",
                                             static_cast<int>(choices.size()), choices.data());
 
-            if (dialog.ShowModal() == wxID_OK)
+            dialog.ShowModal();
+            wxString selection = dialog.GetStringSelection();
+            if (selection == "MORPH_RECT")
             {
-                wxString selection = dialog.GetStringSelection();
-
-                if (selection == "MORPH_RECT")
-                {
-                    option = MORPH_RECT;
-                }
-                else
-                if (selection == "MORPH_CROSS")
-                {
-                    option = MORPH_CROSS;
-                }
-                else
-                if (selection == "MORPH_ELLIPSE")
-                {
-                    option = MORPH_ELLIPSE;
-                }
-                else
-                {
-                    option = MORPH_CROSS;
-                }
+                option = MORPH_RECT;
+            }
+            else
+            if (selection == "MORPH_CROSS")
+            {
+                option = MORPH_CROSS;
+            }
+            else
+            if (selection == "MORPH_ELLIPSE")
+            {
+                option = MORPH_ELLIPSE;
+            }
+            else
+            {
+                return;
             }
  
         }
@@ -651,16 +638,16 @@ void CInputDialog::DoFunction()
         CSliderDialog dialog(this, inf);
         int scale = -90566;
 
-        if (dialog.ShowModal() == wxID_CANCEL)
-        {
-            scale = dialog.getValue();
+        dialog.ShowModal();
 
-            if (scale == -90566)
-            {
-                return;
-            }
-            ApplyAlgorithm(f6, true, scale);
+        scale = dialog.getValue();
+
+        if (scale == -90566)
+        {
+            return;
         }
+        ApplyAlgorithm(f6, true, scale);
+
         return;
     }
 
@@ -688,24 +675,28 @@ void CInputDialog::DoFunction()
                 inf.default_value_string = "50";
             }
 
-            CSliderDialog dialog(this, inf);
-            auto nice = dialog.ShowModal();
-            if (nice == wxID_CANCEL)
-            {
-                auto v = dialog.getValue();
+            double v = -0299999998.0;
 
-                if (opt == "Threshold")
-                {
-                    threshold = static_cast<double>(v);
-                }
-                else
-                {
-                    threshold = static_cast<double>(v)/100;
-                }
-                
-                ApplyAlgorithm(f7, true, threshold);
+            CSliderDialog dialog(this, inf);
+            dialog.ShowModal();
+
+            v = dialog.getValue();
+
+            if (v == -0299999998.0)
+            {
+                return;
             }
-            return;
+
+            if (opt == "Threshold")
+            {
+                threshold = static_cast<double>(v);
+            }
+            else
+            {
+                threshold = static_cast<double>(v)/100;
+            }
+                
+            ApplyAlgorithm(f7, true, threshold);
         }
     }
 
