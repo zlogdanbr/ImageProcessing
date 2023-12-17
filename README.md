@@ -56,6 +56,7 @@ This is a CMakeList.txt file that works
     add_executable(diMage ../main.cpp ../childframes.cpp ../filesys.cpp ../image_algorithms.cpp ../image_gridialog.cpp ../image_helper.cpp ../image_io.cpp ../image_slide.cpp ../image_util.cpp ../mainframe.cpp ../opcvwrapper.cpp ../savekernel.cpp)
     target_link_libraries(diMage PRIVATE ${wxWidgets_LIBRARIES} ${OpenCV_LIBS})
 
+- Create a folder under the root folder of the project and create a CMakeList.txt file there.
 - cmake .
 - make
 
