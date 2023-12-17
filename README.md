@@ -38,14 +38,12 @@ I am running Windows 11, maybe that is it.
 
 - Make sure you install OpenCV and wxWidgets
 
-    sudo apt update
-    sudo apt install libopencv-dev
+I suggest building wxWidgets from scratch, as explained here.
 
-I suggest building wxWidgets from scratch.
 https://wiki.wxwidgets.org/Compiling_and_getting_started
 
 
-This is a CMakeList.txt file that works
+This is a CMakeList.txt file that works:
 
     cmake_minimum_required(VERSION 3.20)
     project(diMage)
