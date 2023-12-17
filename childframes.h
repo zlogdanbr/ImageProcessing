@@ -225,6 +225,7 @@ protected:
     bool stop = false;
 
     wxString getSelectionText() { return SelectionText; };
+    void DoFunction();
 
     std::function<Mat(Mat)>
         getAlgoFunctionOnePar(wxString key);
@@ -262,8 +263,6 @@ public:
                 long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CInputDialog();
-
-    void DoFunction();
 
 };
 

@@ -11,7 +11,6 @@
 #include "childframes.h"
 #include "logs.h"
 #include <chrono>
-#include "settings_dialog.cpp.h"
 
 
 class MyFrame : public wxFrame
@@ -23,8 +22,6 @@ public:
     {
 
     }
-
-    Settings _settings;
 
 private:
 
@@ -63,13 +60,6 @@ private:
     void onSelectRoi(wxCommandEvent& event);
     void onCompare(wxCommandEvent& event);
 
-    void OnAdjustContrast(wxCommandEvent& event);
-    void OnAdjusyBright(wxCommandEvent& event);
-    void OnAdjustGama(wxCommandEvent& event);
-    void OnAdjustThreshold(wxCommandEvent& event);
-
-    void OnSettings(wxCommandEvent& event);
-
     enum  Opt 
     {
         CUSTKERNEL,
@@ -80,12 +70,7 @@ private:
         CONTRAST_ID_IMG,
         REVETR_IMG_ID,
         SELECT_ROI,
-        COMPARE_IMG,
-        ADJUST_CONTRAST,
-        ADJUST_BRIGHT,
-        ADJUST_GAMA,
-        ADJUST_THRESHOLD,
-        SETTINGS_ID_DIALOG
+        COMPARE_IMG
     };
 
     void BinAllEvents()
@@ -100,14 +85,6 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onRevert, this, REVETR_IMG_ID);
         Bind(wxEVT_MENU, &MyFrame::onSelectRoi, this, SELECT_ROI);
         Bind(wxEVT_MENU, &MyFrame::onCompare, this, COMPARE_IMG);
-
-        Bind(wxEVT_MENU, &MyFrame::OnAdjustContrast, this, ADJUST_CONTRAST);
-        Bind(wxEVT_MENU, &MyFrame::OnAdjusyBright, this, ADJUST_BRIGHT);
-        Bind(wxEVT_MENU, &MyFrame::OnAdjustGama, this, ADJUST_GAMA);
-        Bind(wxEVT_MENU, &MyFrame::OnAdjustThreshold, this, ADJUST_THRESHOLD);
-
-        Bind(wxEVT_MENU, &MyFrame::OnSettings, this, SETTINGS_ID_DIALOG);
-        
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -121,21 +98,13 @@ private:
         auto menuRevert = menuAlgo->Append(REVETR_IMG_ID, "Revert", "Revert");
         menuRevert->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_MENU));
 
-        auto menuContrast = menuAlgo->Append(ADJUST_CONTRAST, "Adjust contrast", "Adjust contrast");
-        auto menuBright = menuAlgo->Append(ADJUST_BRIGHT, "Adjust Brightness", "Adjust Brightness");
-        auto menuGama = menuAlgo->Append(ADJUST_GAMA, "Adjust Gamma", "Adjust Gamma");
-        auto menuThreshold = menuAlgo->Append(ADJUST_THRESHOLD, "Threshold", "Threshold");
-        auto menuSettings = menuAlgo->Append(SETTINGS_ID_DIALOG, "Algorithm Settings", "Algorithm Settings");
-
         auto menuSelectRoi = menuAlgo->Append(SELECT_ROI, "Select Roi", "Select Roi"); 
         menuSelectRoi->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
 
         auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Compare", "Compare");
     }
 
-    void saveShowImage(Mat& img);
+
 
 };
-
-
 #endif

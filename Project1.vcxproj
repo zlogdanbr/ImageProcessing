@@ -285,7 +285,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
     <ClCompile Include="savekernel.cpp" />
-    <ClCompile Include="settings_dialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframes.h" />
@@ -296,7 +295,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />
     <ClInclude Include="savekernel.h" />
-    <ClInclude Include="settings_dialog.cpp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

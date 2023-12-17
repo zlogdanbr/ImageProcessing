@@ -1,3 +1,4 @@
+
 #include "mainframe.h"
 
 
@@ -55,160 +56,6 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
 
     Centre();
 }
-
-void MyFrame::OnSettings(wxCommandEvent& event)
-{
-    CSettingsDialog SettingsDialog(this);
-
-    if (_settings.empty == true)
-    {
-        SettingsDialog.initSettings();
-        _settings.empty = false;
-    }
-    else
-    {
-        SettingsDialog.setSettings(_settings);
-    }
-    SettingsDialog.setValuesInTheUI();
-    SettingsDialog.ShowModal();
-    _settings = SettingsDialog.getSettings().clone();
-}
-
-void MyFrame::saveShowImage(Mat& img)
-{
-    if (img.empty() == false)
-    {
-        ImageHelper.setFinalImageOpenCV(img);
-        ImageHelper.SetOriginalNew();
-        ImageHelper.ShowFinal();
-    }
-    else
-    {
-        outxt.writeTo("Algorithm error\n");
-    }
-}
-
-void MyFrame::OnAdjustContrast(wxCommandEvent& event)
-{
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        // Mat adjustContrast(const Mat& img, int factor)
-        info inf;
-        inf.default_value = 50;
-        inf.max = 100;
-        inf.min = 1;
-        inf.title = "Adjust Contrast";
-        inf.default_value_string = "50";
-
-        CSliderDialog dialog(this, inf);
-        int scale = -90566000;
-
-        dialog.ShowModal();
-        scale = dialog.getValue();
-
-        if (scale == -9056600)
-        {
-            return;
-        }
-
-        Mat clone = ImageHelper.getOrginalImageOpenCV();
-        clone = adjustContrast(clone, scale);
-        saveShowImage(clone);
-    }
-}
-
-void MyFrame::OnAdjusyBright(wxCommandEvent& event)
-{
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        // Mat adjustBrightness(const Mat& img, int factor)
-        info inf;
-        inf.default_value = 50;
-        inf.max = 255;
-        inf.min = -255;
-        inf.title = "Adjust Brightness";
-        inf.default_value_string = "50";
-
-        CSliderDialog dialog(this, inf);
-        int scale = -90566000;
-
-        dialog.ShowModal();
-        scale = dialog.getValue();
-
-        if (scale == -9056600)
-        {
-            return;
-        }
-
-        Mat clone = ImageHelper.getOrginalImageOpenCV();
-        clone = adjustBrightness(clone, scale);
-        saveShowImage(clone);
-    }
-}
-
-void MyFrame::OnAdjustGama(wxCommandEvent& event)
-{    
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        //Mat adjustGama(const Mat & img, double gamma)
-        info inf;
-        inf.default_value = 50;
-        inf.max = 100;
-        inf.min = 1;
-        inf.title = "Gamma Correction %";
-        inf.default_value_string = "50";
-
-        CSliderDialog dialog(this, inf);
-        dialog.ShowModal();
-
-        int value = -9056600;
-
-        value = dialog.getValue();
-
-        if (value == -9056600)
-        {
-            return;
-        }
-
-        double gamma = static_cast<double>(value) / 100;
-        Mat clone = ImageHelper.getOrginalImageOpenCV();
-        clone = adjustGama(clone, gamma);
-        saveShowImage(clone);
-    }
-}
-
-void MyFrame::OnAdjustThreshold(wxCommandEvent& event)
-{
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        //Mat ApplyThreShold(const Mat & img, double _threshold)
-        info inf;
-        inf.default_value = 50;
-        inf.max = 255;
-        inf.min = 0;
-        inf.title = "Threshold";
-        inf.default_value_string = "50";
-
-        CSliderDialog dialog(this, inf);
-        dialog.ShowModal();
-
-        int value = -9056600;
-
-        value = dialog.getValue();
-
-        if (value == -9056600)
-        {
-            return;
-        }
-
-        double threshold = static_cast<double>(value);
-
-        Mat clone = ImageHelper.getOrginalImageOpenCV();
-        clone = ApplyThreShold(clone, threshold);
-        saveShowImage(clone);
-    }
-}
-
 
 void MyFrame::onSelectRoi(wxCommandEvent& event)
 {
@@ -321,7 +168,12 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
 {   
     CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);
     outxt.writeTo("Open Data Input dialog.\n");
-    InputDialog->ShowModal();
+    
+    if (InputDialog->ShowModal() == wxID_CANCEL)
+    {
+        outxt.writeTo("Apply Data Input dialog.\n");
+    }
+
 }
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)

@@ -15,12 +15,9 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/all_layers.hpp>
-#include <opencv2/core/types.hpp>
 #include <iostream>
 #include <vector>
 #include <map>
-#include <stack>
-#include <set>
 #include <algorithm>
 #include "filesys.h"
 #include "wx/wx.h"
@@ -90,7 +87,6 @@ namespace image_util
 	//------------------------------------------------------------------------
 	void drawcircle(int x0, int y0, int radius, wxImage img, RGB& r);
 
-
 	Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen);
 
 	template<typename T1, typename T2>
@@ -111,5 +107,4 @@ namespace image_util
 		t2 = F(t1);
 		return t2;
 	}
-
 }

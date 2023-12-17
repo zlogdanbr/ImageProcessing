@@ -26,14 +26,6 @@ end_tracking(tp& start)
     return os.str();
 }
 
-class th_obj {
-public:
-    void operator()(CInputDialog* d)
-    {
-        d-> DoFunction();
-    }
-};
-
 CInputDialog::CInputDialog(   wxWindow* parent,
                         CImageHelper* imghelper,
                         CWriteLogs* outxt,
@@ -58,8 +50,6 @@ outxt{ outxt }
     button1 = new wxButton(this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxSize(70, -1), 0);
     bSizer2->Add(button1, 0, wxALL, 5);
 
-    button1->SetDefault();
-    button1->SetFocus();
 
     bSizer1->Add(bSizer2, 1, wxEXPAND, 5);
 
@@ -95,9 +85,7 @@ outxt{ outxt }
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();
             tp t = start_tracking();
-            std::thread DoIt(th_obj(), this);
-            DoIt.join();
-            imghelper->ShowFinal();
+            DoFunction();      
             wxString msg = end_tracking(t).c_str();
             outxt->writeTo(msg);
         });
@@ -127,7 +115,12 @@ CInputDialog::setFinalImg(Mat& out)
     if (out.empty() == false)
     {
         imghelper->setFinalImageOpenCV(out);
+        outxt->writeTo("Algorithm applied correctly\n");
         imghelper->SetOriginalNew();
+    }
+    else
+    {
+        outxt->writeTo("Algorithm error\n");
     }
 }
 
@@ -150,6 +143,10 @@ CInputDialog::ApplyAlgorithm(Function1Parameter& f,
             }
             setFinalImg(out);
         }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
     }
     else
     {
@@ -171,6 +168,10 @@ CInputDialog::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size)
             out = f(img, kernel_size);
             setFinalImg(out);
         }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
     }
     else
     {
@@ -181,11 +182,11 @@ CInputDialog::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size)
 }
 
 void
-CInputDialog::ApplyAlgorithm(   Function4Parameters& f,
-                                bool Gray,
-                                int kernel_size,
-                                double p1,
-                                double p2)
+CInputDialog::ApplyAlgorithm(Function4Parameters& f,
+    bool Gray,
+    int kernel_size,
+    double p1,
+    double p2)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -195,6 +196,10 @@ CInputDialog::ApplyAlgorithm(   Function4Parameters& f,
         {
             out = f(img, kernel_size, p1, p2);
             setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
         }
     }
     else
@@ -217,6 +222,10 @@ CInputDialog::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
             out = f(img, p1, p2);
             setFinalImg(out);
         }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
     }
     else
     {
@@ -227,12 +236,12 @@ CInputDialog::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
 }
 
 void
-CInputDialog::ApplyAlgorithm(   Function5Parameters& f,
-                                bool Gray,
-                                int kernel_size,
-                                int p1,
-                                int p2,
-                                int p3)
+CInputDialog::ApplyAlgorithm(Function5Parameters& f,
+    bool Gray,
+    int kernel_size,
+    int p1,
+    int p2,
+    int p3)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -242,6 +251,10 @@ CInputDialog::ApplyAlgorithm(   Function5Parameters& f,
         {
             out = f(img, kernel_size, p1, p2, p3);
             setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
         }
     }
     else
@@ -254,9 +267,9 @@ CInputDialog::ApplyAlgorithm(   Function5Parameters& f,
 }
 
 void
-CInputDialog::ApplyAlgorithm(   Function2Slider& f,
-                                bool Gray,
-                                double t)
+CInputDialog::ApplyAlgorithm(Function2Slider& f,
+    bool Gray,
+    double t)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -266,6 +279,10 @@ CInputDialog::ApplyAlgorithm(   Function2Slider& f,
         {
             out = f(img, t);
             setFinalImg(out);
+        }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
         }
     }
     else
@@ -279,13 +296,13 @@ CInputDialog::ApplyAlgorithm(   Function2Slider& f,
 
 void
 CInputDialog::ApplyAlgorithm(
-                                FunctionSobelParameters& f,
-                                bool Gray,
-                                int image_type,
-                                int depth,
-                                int type,
-                                double delta,
-                                int kernel_size)
+    FunctionSobelParameters& f,
+    bool Gray,
+    int image_type,
+    int depth,
+    int type,
+    double delta,
+    int kernel_size)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -297,6 +314,10 @@ CInputDialog::ApplyAlgorithm(
             out = f(img, image_type, depth, type, delta, kernel_size);
             setFinalImg(out);
         }
+        else
+        {
+            outxt->writeTo("Image not loaded\n");
+        }
     }
     else
     {
@@ -306,6 +327,7 @@ CInputDialog::ApplyAlgorithm(
     }
 
 }
+
 
 void CInputDialog::fillComboInfo()
 {
@@ -317,6 +339,11 @@ void CInputDialog::fillComboInfo()
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
     fsimple["Apply custom algo"] = ApplyCustomAlgo;
     fsimple["Invert Image"] = InvertImage;
+    fsimple["Flip Image Horizontally"] = flipImageHorizontal;
+    fsimple["Flip Image Vertically"] = flipImageVertical;
+    fsimple["Flip Image"] = flipImage;
+    fslider["Threshold"] = ApplyThreShold;
+    fslider["Gamma Correction"] = adjustGama;
     fmore3["Canny Extended"] = ApplyCannyAlgoFull;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
@@ -332,7 +359,11 @@ void CInputDialog::fillComboInfo()
     fmore["Median"] = MedianImageSmooth;
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
+    fadjust["Adjust Contrast"] = adjustContrast;
+    fadjust["Adjust Brightness"] = adjustBrightness;
     fsobel["Sobel"] = ApplySobelExtended;
+    fsimple["Neural"] = NN;
+
     fmore["Erosion+"] = ApplyErodeEx;
     fmore["Dilate+"] = ApplyDilateEx;
 
@@ -342,21 +373,30 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Convert to Gray Scale");
     comboBox1->Append("Equalize Gray Scale Image");
     comboBox1->Append("Equalize Color Scale Image");
+    comboBox1->Append("Flip Image Horizontally");
+    comboBox1->Append("Flip Image Vertically");
+    comboBox1->Append("Flip Image");
     comboBox1->Append("Blur Image");
     comboBox1->Append("Invert Image");
     comboBox1->Append("Convert to Binary");
+    comboBox1->Append("Threshold");
+    comboBox1->Append("Adjust Contrast");
+    comboBox1->Append("Adjust Brightness"); 
+    comboBox1->Append("Gamma Correction");
 
     // Morphological operations
     comboBox1->Append("Erode");
     comboBox1->Append("Dilate");
     comboBox1->Append("Closing");
     comboBox1->Append("Opening");
+
     comboBox1->Append("Erosion+");
     comboBox1->Append("Dilate+");
+
     comboBox1->Append("Morpholgical Gradient");
     comboBox1->Append("Morphological Top Hat");
 
-    // custom
+    // Select ROI
     comboBox1->Append("Apply custom algo");
 
     // Gaussian Low pass filters
@@ -369,8 +409,9 @@ void CInputDialog::fillComboInfo()
     comboBox1->Append("Sharpening");
     comboBox1->Append("Unsharp");
 
-    // Laplacian second derivative edge detectors
+    // Lapalcian second derivative edge detectors
     comboBox1->Append("Laplacian Extended");
+
     comboBox1->Append("Sobel");
 
     // Gradient based algorithms
@@ -379,6 +420,10 @@ void CInputDialog::fillComboInfo()
     // Circle detection algorithm
     comboBox1->Append("Hough Transform Custom");
 
+    // feature detection algorithms
+    comboBox1->Append("Harris Algorithm");
+
+    comboBox1->Append("Neural");
 }
 
 
@@ -468,12 +513,16 @@ void CInputDialog::DoFunction()
 {
     wxString opt = getSelectionText();
 
-    Function1Parameter          f1 = getAlgoFunctionOnePar(opt);
-    Function2Parameter          f2 = getAlgoFunctionTwoPar(opt);
-    Function3Parameters         f3 = getAlgoFunctionThreePar(opt);
-    Function4Parameters         f4 = getAlgoFunctionFourPar(opt);
-    Function5Parameters         f5 = getAlgoFunctionFivePar(opt);
-    FunctionSobelParameters     f6 = getAlgoSobel(opt);
+    outxt->writeTo("Applying algorithm: " + opt + " please wait...\n");
+
+    Function1Parameter  f1 = getAlgoFunctionOnePar(opt);
+    Function2Parameter  f2 = getAlgoFunctionTwoPar(opt);
+    Function3Parameters f3 = getAlgoFunctionThreePar(opt);
+    Function4Parameters f4 = getAlgoFunctionFourPar(opt);
+    Function5Parameters f5 = getAlgoFunctionFivePar(opt);
+    Function2Parameter  f6 = getAlgoFunctionAdjust(opt);
+    Function2Slider     f7 = getAlgoFunctionSlider(opt);
+    FunctionSobelParameters     f8 = getAlgoSobel(opt);
 
     if (f1 != nullptr)
     {
@@ -483,47 +532,234 @@ void CInputDialog::DoFunction()
 
     if (f2 != nullptr)
     {
-        int option = MORPH_CROSS;
+        int option = 3;
+        if (opt == "Erosion+" || "Dilate+")
+        {      
+            std::vector<wxString> choices = { "MORPH_RECT","MORPH_CROSS","MORPH_ELLIPSE" };
+            wxSingleChoiceDialog dialog(
+                                            this, 
+                                            "Choose Basic Element", 
+                                            "Choose Basic Element",
+                                            static_cast<int>(choices.size()), choices.data());
+
+            if (dialog.ShowModal() == wxID_OK)
+            {
+                wxString selection = dialog.GetStringSelection();
+
+                if (selection == "MORPH_RECT")
+                {
+                    option = MORPH_RECT;
+                }
+                else
+                if (selection == "MORPH_CROSS")
+                {
+                    option = MORPH_CROSS;
+                }
+                else
+                if (selection == "MORPH_ELLIPSE")
+                {
+                    option = MORPH_ELLIPSE;
+                }
+                else
+                {
+                    option = MORPH_CROSS;
+                }
+            }
+ 
+        }
+
         ApplyAlgorithm(f2, true, option);
         return;
     }
 
     if (f3 != nullptr)
     {
-        int lthreshold = 125;
-        int hthreshold = 350;
-        ApplyAlgorithm(f3, true, lthreshold, hthreshold);
+        wxNumberEntryDialog dialog(this, "low threshold", "low threshold", "low threshold", 125, 1, 1000);
+        int threshold = 0;
+        int Aperture = 0;
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            threshold = dialog.GetValue();
+
+            wxNumberEntryDialog dialog2(this, "high threshold", "high threshold", "high threshold", 350, 1, 1000);
+            if (dialog2.ShowModal() == wxID_OK)
+            {
+                Aperture = dialog2.GetValue();
+                ApplyAlgorithm(f3, true, threshold, Aperture);
+            }
+        }
         return;
     }
 
     if (f4 != nullptr)
     {
-        double p1 = 1.0;
-        double p2 = 1.0;
-        ApplyAlgorithm(f4, true, 3, p1, p2);
+        wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 100", 2, 1, 1000);
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            double sigma = 0.01 * static_cast<double>(dialog.GetValue());
+            ApplyAlgorithm(f4, true, 3, sigma, sigma);
+        }
         return;
     }
 
     if (f5 != nullptr)
     {
-        int scale = 4;
-        int delta = 5;
-        ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
+        wxNumberEntryDialog dialog(this, "Scale", "Scale", "Scale", 1, 1, 1000);
+        int scale = 0;
+        int delta = 0;
+
+        if (dialog.ShowModal() == wxID_OK)
+        {
+            scale = dialog.GetValue();
+
+            wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 0, 0, 1000);
+            if (dialog2.ShowModal() == wxID_OK)
+            {
+                delta = dialog2.GetValue();
+                ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
+            }
+        }
         return;
     }
- 
+
     if (f6 != nullptr)
     {
+        wxString tip;
+        int max = 0;
+        int min = 0;
+
+        info inf;
+
+        if (opt == "Adjust Contrast")
+        {
+            inf.default_value = 50;
+            inf.max = 100;
+            inf.min = 1;
+            inf.title = opt;
+            inf.default_value_string = "50";
+        }
+        else
+        {
+            inf.default_value = 50;
+            inf.max = 255;
+            inf.min = -255;
+            inf.title = opt;
+            inf.default_value_string = "50";
+        }
+
+        CSliderDialog dialog(this, inf);
+        int scale = -90566;
+
+        if (dialog.ShowModal() == wxID_CANCEL)
+        {
+            scale = dialog.getValue();
+
+            if (scale == -90566)
+            {
+                return;
+            }
+            ApplyAlgorithm(f6, true, scale);
+        }
+        return;
+    }
+
+    if (f7 != nullptr)
+    {
+        if (opt == "Threshold" || opt == "Gamma Correction")
+        {
+            double threshold = 0.0;
+            info inf;
+
+            if (opt == "Threshold")
+            {
+                inf.default_value = 50;
+                inf.max = 255;
+                inf.min = 0;
+                inf.title = "Threshold";
+                inf.default_value_string = "50";
+            }
+            else
+            {
+                inf.default_value = 50;
+                inf.max = 100;
+                inf.min = 1;
+                inf.title = "Gamma Correction %";
+                inf.default_value_string = "50";
+            }
+
+            CSliderDialog dialog(this, inf);
+            auto nice = dialog.ShowModal();
+            if (nice == wxID_CANCEL)
+            {
+                auto v = dialog.getValue();
+
+                if (opt == "Threshold")
+                {
+                    threshold = static_cast<double>(v);
+                }
+                else
+                {
+                    threshold = static_cast<double>(v)/100;
+                }
+                
+                ApplyAlgorithm(f7, true, threshold);
+            }
+            return;
+        }
+    }
+
+    if (f8 != nullptr)
+    {
+
         int depth = 10;
         int image_type = CV_8U;
         int type = 0;
         double delta = 10.0;
         int kernel_size = 5;
+
         wxString tip = "Depth";
         int max = 1000;
         int min = 1;
 
-        ApplyAlgorithm(f6, true, image_type, depth, type, delta, kernel_size);
+        wxNumberEntryDialog dialog1(this, opt, tip, opt, 10, min, max);
+
+        if (dialog1.ShowModal() == wxID_OK)
+        {
+            depth = dialog1.GetValue();
+        }
+
+        tip = "Type";
+        max = 10;
+        min = 1;
+
+        wxNumberEntryDialog dialog2(this, opt, tip, opt, 10, min, max);
+        if (dialog2.ShowModal() == wxID_OK)
+        {
+            type = dialog2.GetValue();
+        }
+
+        tip = "Delta";
+        max = 1000;
+        min = 1;
+
+        wxNumberEntryDialog dialog3(this, opt, tip, opt, 10, min, max);
+        if (dialog3.ShowModal() == wxID_OK)
+        {
+            delta = dialog3.GetValue();
+        }
+
+        tip = "Kernel Size";
+        max = 13;
+        min = 3;
+
+        wxNumberEntryDialog dialog4(this, opt, tip, opt, 3, min, max);
+        if (dialog4.ShowModal() == wxID_OK)
+        {
+            type = dialog4.GetValue();
+        }
+
+        ApplyAlgorithm(f8, true, image_type, depth, type, delta, kernel_size);
     }
 }
 
