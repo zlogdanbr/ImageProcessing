@@ -49,6 +49,18 @@ public:
 
     bool revert();
 
+    void ShowFinal()
+    {
+        cv::namedWindow("Final", cv::WINDOW_NORMAL);
+        wxRect sizeScreen = wxGetClientDisplayRect();
+        int hs = sizeScreen.height;
+        int ws = sizeScreen.width;
+        Mat savefinal = getOrginalImageOpenCV();
+        savefinal = image_util::fitImageOnScreen(savefinal, ws, hs);
+        destroyAllWindows();
+        showImage(savefinal, "Final");
+    }
+
     std::string getOriginalImage() { return original; };
 
     Mat getOrginalImageOpenCV() const { return Original_ImageOpenCVFormat; };

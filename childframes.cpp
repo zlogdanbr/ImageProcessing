@@ -22,6 +22,7 @@ CInputDialogBase::setFinalImg(Mat& out)
         imghelper->setFinalImageOpenCV(out);
         outxt->writeTo("Algorithm applied correctly\n");
         imghelper->SetOriginalNew();
+        imghelper->ShowFinal();
     }
     else
     {

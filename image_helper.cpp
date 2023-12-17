@@ -48,23 +48,11 @@ bool CImageHelper::revert()
 void CImageHelper::SetOriginalNew()
 {
     Mat savefinal;
-
     savefinal = Final_ImageOpenCVFormat.clone();
-
-    destroyAllWindows();
     clean();
-
-    cv::namedWindow("Final", cv::WINDOW_NORMAL);
-    wxRect sizeScreen = wxGetClientDisplayRect();
-    int hs = sizeScreen.height;
-    int ws = sizeScreen.width;
-    savefinal = image_util::fitImageOnScreen(savefinal, ws, hs);
-
     addtoCache(savefinal);
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
-    showImage(savefinal, "Final");
-
 }
 
 bool CImageHelper::SaveImage(std::string& Path)
