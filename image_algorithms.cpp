@@ -116,9 +116,10 @@ CInputDialog::setFinalImg(Mat& out)
     }
 }
 
-void
-CInputDialog::ApplyAlgorithm(Function1Parameter& f,
-    bool Gray)
+
+template<typename F, typename...Args>
+void 
+CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
 {
     if (imghelper->getOriginalImageInitiated() == false)
     {
@@ -126,7 +127,7 @@ CInputDialog::ApplyAlgorithm(Function1Parameter& f,
         Mat img;
         if (loadImage(setPath(Gray), img) == true)
         {
-            out = f(img);
+            out = f(img, args ...);
             auto s = out.size();
 
             if (s.height == 0 || s.width == 0)
@@ -143,181 +144,59 @@ CInputDialog::ApplyAlgorithm(Function1Parameter& f,
     else
     {
         Mat out;
-        out = f(imghelper->getOrginalImageOpenCV());
+        out = f(imghelper->getOrginalImageOpenCV(), args ...);
         setFinalImg(out);
     }
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size)
+CInputDialog::ApplyAlgorithm(Function1Parameter& f,bool Gray)
 {
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
-        {
-            out = f(img, kernel_size);
-            setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-    else
-    {
-        Mat out;
-        out = f(imghelper->getOrginalImageOpenCV(), kernel_size);
-        setFinalImg(out);
-    }
+    ApplyAlgorithmEffective(f, Gray);
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function4Parameters& f,
-    bool Gray,
-    int kernel_size,
-    double p1,
-    double p2)
+CInputDialog::ApplyAlgorithm(Function2Parameter& f,bool Gray, int kernel_size)
 {
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
-        {
-            out = f(img, kernel_size, p1, p2);
-            setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-    else
-    {
-        Mat out;
-        out = f(imghelper->getOrginalImageOpenCV(), kernel_size, p1, p2);
-        setFinalImg(out);
-    }
+    ApplyAlgorithmEffective(f, Gray, kernel_size);
+}
+
+void
+CInputDialog::ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size,double p1, double p2)
+{
+    ApplyAlgorithmEffective(f, Gray, kernel_size, p1, p2);
 }
 
 void
 CInputDialog::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
 {
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
-        {
-            out = f(img, p1, p2);
-            setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-    else
-    {
-        Mat out;
-        out = f(imghelper->getOrginalImageOpenCV(), p1, p2);
-        setFinalImg(out);
-    }
+    ApplyAlgorithmEffective(f, Gray, p1, p2); 
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function5Parameters& f,
-    bool Gray,
-    int kernel_size,
-    int p1,
-    int p2,
-    int p3)
+CInputDialog::ApplyAlgorithm(Function5Parameters& f, bool Gray,int kernel_size,int p1,int p2,int p3)
 {
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
-        {
-            out = f(img, kernel_size, p1, p2, p3);
-            setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-    else
-    {
-        Mat out;
-        out = f(imghelper->getOrginalImageOpenCV(), kernel_size, p1, p2, p3);
-        setFinalImg(out);
-    }
-
+    ApplyAlgorithmEffective(f, Gray, kernel_size, p1, p2, p3);
 }
 
 void
-CInputDialog::ApplyAlgorithm(Function2Slider& f,
-    bool Gray,
-    double t)
+CInputDialog::ApplyAlgorithm(Function2Slider& f, bool Gray, double t)
 {
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
-        {
-            out = f(img, t);
-            setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-    else
-    {
-        Mat out;
-        out = f(imghelper->getOrginalImageOpenCV(), t);
-        setFinalImg(out);
-    }
-
+    ApplyAlgorithmEffective(f, Gray, t);
 }
 
 void
 CInputDialog::ApplyAlgorithm(
-    FunctionSobelParameters& f,
-    bool Gray,
-    int image_type,
-    int depth,
-    int type,
-    double delta,
-    int kernel_size)
+                                FunctionSobelParameters& f,
+                                bool Gray,
+                                int image_type,
+                                int depth,
+                                int type,
+                                double delta,
+                                int kernel_size
+                            )
 {
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
-        {
-            // using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int
-            out = f(img, image_type, depth, type, delta, kernel_size);
-            setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
-        }
-    }
-    else
-    {
-        Mat out;
-        out = f(imghelper->getOrginalImageOpenCV(), image_type, depth, type, delta, kernel_size);
-        setFinalImg(out);
-    }
-
+    ApplyAlgorithmEffective(f, Gray, image_type, depth, type, delta, kernel_size);
 }
 
 void CInputDialog::setSimpleMaps()
@@ -366,7 +245,6 @@ void CInputDialog::fillComboInfo()
     // algorithm to be applied
     setSimpleMaps();
     setOtherMaps();
-
     // Now fill the combox box options with the algorithms
 
     for (const auto& name : algo_names)

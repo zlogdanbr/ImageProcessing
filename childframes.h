@@ -212,7 +212,10 @@ protected:
     void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
     void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
     void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
-    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);
+    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);   
+
+    template<typename F, typename...Args>
+    void ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args);
 
     void fillComboInfo();
 
