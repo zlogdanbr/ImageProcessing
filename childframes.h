@@ -228,6 +228,10 @@ protected:
     bool stop = false;
 
     wxString getSelectionText() { return SelectionText; };
+
+    void setSimpleMaps();
+    void setOtherMaps();
+
     void DoFunction();
 
     std::function<Mat(Mat)>
@@ -253,6 +257,43 @@ protected:
 
     FunctionSobelParameters
         getAlgoSobel(wxString key);
+
+    std::vector<wxString> 
+        algo_names =
+                            { 
+                                "Convert to Gray Scale",
+                                "Equalize Gray Scale Image",
+                                "Equalize Color Scale Image",
+                                "Flip Image Horizontally",
+                                "Flip Image Vertically",
+                                "Flip Image",
+                                "Blur Image",
+                                "Invert Image",
+                                "Convert to Binary",
+                                "Threshold",
+                                "Adjust Contrast",
+                                "Adjust Brightness",
+                                "Gamma Correction",
+                                "Erode",
+                                "Dilate",
+                                "Closing",
+                                "Opening",
+                                "Erosion+",
+                                "Dilate+",
+                                "Morpholgical Gradient",
+                                "Morphological Top Hat",
+                                "Apply custom algo",
+                                "Gaussian Extended",
+                                "Difference of Gaussians",
+                                "Median",
+                                "Sharpening",
+                                "Unsharp",
+                                "Laplacian Extended",
+                                "Sobel",
+                                "Canny Extended",
+                                "Hough Transform Custom",
+                                "Harris Algorithm"
+                            };
 
 public:
 

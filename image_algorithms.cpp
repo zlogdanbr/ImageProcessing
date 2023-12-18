@@ -320,12 +320,8 @@ CInputDialog::ApplyAlgorithm(
 
 }
 
-
-void CInputDialog::fillComboInfo()
+void CInputDialog::setSimpleMaps()
 {
-    // Add functors to the functor mapping
-    // this will allow the program to find the appropriate
-    // algorithm to be applied
     fsimple["Convert to Gray Scale"] = convertograyScale;
     fsimple["Equalize Gray Scale Image"] = equalizeGrayImage;
     fsimple["Equalize Color Scale Image"] = equalizeColorImage;
@@ -334,9 +330,7 @@ void CInputDialog::fillComboInfo()
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
-    fslider["Threshold"] = ApplyThreShold;
-    fslider["Gamma Correction"] = adjustGama;
-    fmore3["Canny Extended"] = ApplyCannyAlgoFull;
+    fsimple["Difference of Gaussians"] = ApplyDoG;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
     fsimple["Hough Transform Custom"] = ApplyHoughTransformCustom;
@@ -347,75 +341,38 @@ void CInputDialog::fillComboInfo()
     fsimple["Opening"] = ApplyOpening;
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
+}
+
+void CInputDialog::setOtherMaps()
+{
+    fmore["Erosion+"] = ApplyErodeEx;
+    fmore["Dilate+"] = ApplyDilateEx;
     fmore["Blur Image"] = blurImageSmooth;
     fmore["Median"] = MedianImageSmooth;
+    fmore3["Canny Extended"] = ApplyCannyAlgoFull;
     fmorep["Gaussian Extended"] = GaussianImageSmoothExtended;
     fmorepp["Laplacian Extended"] = ApplyLaplacianExtended;
     fadjust["Adjust Contrast"] = adjustContrast;
     fadjust["Adjust Brightness"] = adjustBrightness;
     fsobel["Sobel"] = ApplySobelExtended;
+    fslider["Threshold"] = ApplyThreShold;
+    fslider["Gamma Correction"] = adjustGama;
+}
 
-    fmore["Erosion+"] = ApplyErodeEx;
-    fmore["Dilate+"] = ApplyDilateEx;
-    fsimple["Difference of Gaussians"] = ApplyDoG;
+void CInputDialog::fillComboInfo()
+{
+    // Add functors to the functor mapping
+    // this will allow the program to find the appropriate
+    // algorithm to be applied
+    setSimpleMaps();
+    setOtherMaps();
 
     // Now fill the combox box options with the algorithms
 
-    // Basic operations
-    comboBox1->Append("Convert to Gray Scale");
-    comboBox1->Append("Equalize Gray Scale Image");
-    comboBox1->Append("Equalize Color Scale Image");
-    comboBox1->Append("Flip Image Horizontally");
-    comboBox1->Append("Flip Image Vertically");
-    comboBox1->Append("Flip Image");
-    comboBox1->Append("Blur Image");
-    comboBox1->Append("Invert Image");
-    comboBox1->Append("Convert to Binary");
-    comboBox1->Append("Threshold");
-    comboBox1->Append("Adjust Contrast");
-    comboBox1->Append("Adjust Brightness"); 
-    comboBox1->Append("Gamma Correction");
-
-    // Morphological operations
-    comboBox1->Append("Erode");
-    comboBox1->Append("Dilate");
-    comboBox1->Append("Closing");
-    comboBox1->Append("Opening");
-
-    comboBox1->Append("Erosion+");
-    comboBox1->Append("Dilate+");
-
-    comboBox1->Append("Morpholgical Gradient");
-    comboBox1->Append("Morphological Top Hat");
-
-    // Select ROI
-    comboBox1->Append("Apply custom algo");
-
-    // Gaussian Low pass filters
-    comboBox1->Append("Gaussian Extended");
-    comboBox1->Append("Difference of Gaussians");
-
-    // Median filters blurred images
-    comboBox1->Append("Median");
-
-    // Sharp algorithms
-    comboBox1->Append("Sharpening");
-    comboBox1->Append("Unsharp");
-
-    // Lapalcian second derivative edge detectors
-    comboBox1->Append("Laplacian Extended");
-
-    comboBox1->Append("Sobel");
-
-    // Gradient based algorithms
-    comboBox1->Append("Canny Extended");
-
-    // Circle detection algorithm
-    comboBox1->Append("Hough Transform Custom");
-
-    // feature detection algorithms
-    comboBox1->Append("Harris Algorithm");
-
+    for (const auto& name : algo_names)
+    {
+        comboBox1->Append(name);
+    }
 }
 
 
