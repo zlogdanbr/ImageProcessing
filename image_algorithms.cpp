@@ -357,6 +357,7 @@ void CInputDialog::fillComboInfo()
 
     fmore["Erosion+"] = ApplyErodeEx;
     fmore["Dilate+"] = ApplyDilateEx;
+    fsimple["Difference of Gaussians"] = ApplyDoG;
 
     // Now fill the combox box options with the algorithms
 
@@ -392,6 +393,7 @@ void CInputDialog::fillComboInfo()
 
     // Gaussian Low pass filters
     comboBox1->Append("Gaussian Extended");
+    comboBox1->Append("Difference of Gaussians");
 
     // Median filters blurred images
     comboBox1->Append("Median");

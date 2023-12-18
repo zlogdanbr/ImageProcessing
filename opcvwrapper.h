@@ -7,6 +7,7 @@
 #define _CVWRAPPER_
 
 #include "image_util.h"
+#include <thread>
 
 /**
 * basic operations
@@ -123,7 +124,11 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 
 
 Mat ApplyCustomAlgo(const Mat& image);
+void ApplyCustomAlgoThread(const Mat& image, Mat& out);
+
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
+
+Mat ApplyDoG(const Mat& im);
 
 // https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/
 Mat NN(const Mat& img);

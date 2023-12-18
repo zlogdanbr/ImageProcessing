@@ -7,17 +7,37 @@
 /**
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.
-
-// MORPH_RECT
-// MORPH_CROSS
-// MORPH_ELLIPSE;
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat bw = getBinaryImage(image);
+    Mat img1 = GaussianImageSmoothExtended(image, 3, 0.1, 0.1);
+    Mat img2 = GaussianImageSmoothExtended(image, 3, 1, 1);
+    img1 = ApplyLaplacianExtended(img1);
+    img2 = ApplyLaplacianExtended(img2);
 
-    return bw;
+    Mat final =  img1 - img2;
 
+    return final;
+
+}
+
+
+Mat ApplyDoG(const Mat& im)
+{
+    Mat img1 = GaussianImageSmoothExtended(im, 3, 0.1, 0.1);
+    Mat img2 = GaussianImageSmoothExtended(im, 3, 1, 1);
+    img1 = ApplyLaplacianExtended(img1);
+    img2 = ApplyLaplacianExtended(img2);
+
+    Mat final = img1 - img2;
+
+    return final;
+}
+
+void ApplyCustomAlgoThread(const Mat& image, Mat& out)
+{
+    std::thread _thread(ApplyCustomAlgo, image);
+    _thread.join();
 }
 
 Mat InvertImage(const Mat& img)

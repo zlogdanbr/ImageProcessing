@@ -61,7 +61,7 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
 {
     if (ImageHelper.getOriginalImageInitiated() == true)
     {
-
+     
         Mat clone = ImageHelper.getOrginalImageOpenCV();
 
         wxRect sizeScreen = wxGetClientDisplayRect();
@@ -77,6 +77,7 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
             ImageHelper.setFinalImageOpenCV(clone);
             outxt.writeTo("ROI selected.\n");
             ImageHelper.SetOriginalNew();
+            ImageHelper.setOriginalInfact(clone);
         }
         else
         {
