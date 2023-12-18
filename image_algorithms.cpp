@@ -460,29 +460,24 @@ CInputDialog::getAlgoSobel(wxString key)
 
 void CInputDialog::DoFunction()
 {
-    wxString opt = getSelectionText();
+    wxString _algorithm = getSelectionText();
 
-    outxt->writeTo("Applying algorithm: " + opt + " please wait...\n");
+    outxt->writeTo("Applying algorithm: " + _algorithm + " please wait...\n");
 
-    Function1Parameter  f1 = getAlgoFunctionOnePar(opt);
-    Function2Parameter  f2 = getAlgoFunctionTwoPar(opt);
-    Function3Parameters f3 = getAlgoFunctionThreePar(opt);
-    Function4Parameters f4 = getAlgoFunctionFourPar(opt);
-    Function5Parameters f5 = getAlgoFunctionFivePar(opt);
-    Function2Parameter  f6 = getAlgoFunctionAdjust(opt);
-    Function2Slider     f7 = getAlgoFunctionSlider(opt);
-    FunctionSobelParameters     f8 = getAlgoSobel(opt);
+    Function1Parameter  function1P  = getAlgoFunctionOnePar(_algorithm);
 
-    if (f1 != nullptr)
+    if (function1P != nullptr)
     {
-        ApplyAlgorithm(f1, true);
+        ApplyAlgorithm(function1P, true);
         return;
     }
 
-    if (f2 != nullptr)
+    Function2Parameter  function2P = getAlgoFunctionTwoPar(_algorithm);
+
+    if (function2P != nullptr)
     {
         int option = 3;
-        if (opt == "Erosion+" || "Dilate+")
+        if (_algorithm == "Erosion+" || "Dilate+")
         {      
             std::vector<wxString> choices = { "MORPH_RECT","MORPH_CROSS","MORPH_ELLIPSE" };
             wxSingleChoiceDialog dialog(
@@ -492,18 +487,18 @@ void CInputDialog::DoFunction()
                                             static_cast<int>(choices.size()), choices.data());
 
             dialog.ShowModal();
-            wxString selection = dialog.GetStringSelection();
-            if (selection == "MORPH_RECT")
+            wxString structural_element = dialog.GetStringSelection();
+            if (structural_element == "MORPH_RECT")
             {
                 option = MORPH_RECT;
             }
             else
-            if (selection == "MORPH_CROSS")
+            if (structural_element == "MORPH_CROSS")
             {
                 option = MORPH_CROSS;
             }
             else
-            if (selection == "MORPH_ELLIPSE")
+            if (structural_element == "MORPH_ELLIPSE")
             {
                 option = MORPH_ELLIPSE;
             }
@@ -513,12 +508,13 @@ void CInputDialog::DoFunction()
             }
  
         }
-
-        ApplyAlgorithm(f2, true, option);
+        ApplyAlgorithm(function2P, true, option);
         return;
     }
 
-    if (f3 != nullptr)
+    Function3Parameters function3P = getAlgoFunctionThreePar(_algorithm);
+
+    if (function3P != nullptr)
     {
         wxNumberEntryDialog dialog(this, "low threshold", "low threshold", "low threshold", 125, 1, 1000);
         int threshold = 0;
@@ -532,24 +528,27 @@ void CInputDialog::DoFunction()
             if (dialog2.ShowModal() == wxID_OK)
             {
                 Aperture = dialog2.GetValue();
-                ApplyAlgorithm(f3, true, threshold, Aperture);
+                ApplyAlgorithm(function3P, true, threshold, Aperture);
             }
         }
         return;
     }
 
-    if (f4 != nullptr)
+    Function4Parameters function4P = getAlgoFunctionFourPar(_algorithm);
+
+    if (function4P != nullptr)
     {
         wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 100", 2, 1, 1000);
         if (dialog.ShowModal() == wxID_OK)
         {
             double sigma = 0.01 * static_cast<double>(dialog.GetValue());
-            ApplyAlgorithm(f4, true, 3, sigma, sigma);
+            ApplyAlgorithm(function4P, true, 3, sigma, sigma);
         }
         return;
     }
 
-    if (f5 != nullptr)
+    Function5Parameters function5P = getAlgoFunctionFivePar(_algorithm);
+    if (function5P != nullptr)
     {
         wxNumberEntryDialog dialog(this, "Scale", "Scale", "Scale", 1, 1, 1000);
         int scale = 0;
@@ -563,13 +562,15 @@ void CInputDialog::DoFunction()
             if (dialog2.ShowModal() == wxID_OK)
             {
                 delta = dialog2.GetValue();
-                ApplyAlgorithm(f5, true, 3, scale, delta, CV_16S);
+                ApplyAlgorithm(function5P, true, 3, scale, delta, CV_16S);
             }
         }
         return;
     }
 
-    if (f6 != nullptr)
+    Function2Parameter  functionAdjust = getAlgoFunctionAdjust(_algorithm);
+
+    if (functionAdjust != nullptr)
     {
         wxString tip;
         int max = 0;
@@ -577,12 +578,12 @@ void CInputDialog::DoFunction()
 
         info inf;
 
-        if (opt == "Adjust Contrast")
+        if (_algorithm == "Adjust Contrast")
         {
             inf.default_value = 50;
             inf.max = 100;
             inf.min = 1;
-            inf.title = opt;
+            inf.title = _algorithm;
             inf.default_value_string = "50";
         }
         else
@@ -590,7 +591,7 @@ void CInputDialog::DoFunction()
             inf.default_value = 50;
             inf.max = 255;
             inf.min = -255;
-            inf.title = opt;
+            inf.title = _algorithm;
             inf.default_value_string = "50";
         }
 
@@ -605,19 +606,22 @@ void CInputDialog::DoFunction()
         {
             return;
         }
-        ApplyAlgorithm(f6, true, scale);
+
+        ApplyAlgorithm(functionAdjust, true, scale);
 
         return;
     }
 
-    if (f7 != nullptr)
+    Function2Slider     functionSlider = getAlgoFunctionSlider(_algorithm);
+
+    if (functionSlider != nullptr)
     {
-        if (opt == "Threshold" || opt == "Gamma Correction")
+        if (_algorithm == "Threshold" || _algorithm == "Gamma Correction")
         {
             double threshold = 0.0;
             info inf;
 
-            if (opt == "Threshold")
+            if (_algorithm == "Threshold")
             {
                 inf.default_value = 50;
                 inf.max = 255;
@@ -646,7 +650,7 @@ void CInputDialog::DoFunction()
                 return;
             }
 
-            if (opt == "Threshold")
+            if (_algorithm == "Threshold")
             {
                 threshold = static_cast<double>(v);
             }
@@ -655,24 +659,27 @@ void CInputDialog::DoFunction()
                 threshold = static_cast<double>(v)/100;
             }
                 
-            ApplyAlgorithm(f7, true, threshold);
+            ApplyAlgorithm(functionSlider, true, threshold);
+
         }
+
+        return;
     }
 
-    if (f8 != nullptr)
-    {
+    FunctionSobelParameters     functionS = getAlgoSobel(_algorithm);
 
+    if (functionS != nullptr)
+    {
         int depth = 10;
         int image_type = CV_8U;
         int type = 0;
-        double delta = 10.0;
-        int kernel_size = 5;
-
-        wxString tip = "Depth";
         int max = 1000;
         int min = 1;
+        double delta = 10.0;
+        int kernel_size = 5;
+        wxString tip = "Depth";
 
-        wxNumberEntryDialog dialog1(this, opt, tip, opt, 10, min, max);
+        wxNumberEntryDialog dialog1(this, _algorithm, tip, _algorithm, 10, min, max);
 
         if (dialog1.ShowModal() == wxID_OK)
         {
@@ -683,7 +690,7 @@ void CInputDialog::DoFunction()
         max = 10;
         min = 1;
 
-        wxNumberEntryDialog dialog2(this, opt, tip, opt, 10, min, max);
+        wxNumberEntryDialog dialog2(this, _algorithm, tip, _algorithm, 10, min, max);
         if (dialog2.ShowModal() == wxID_OK)
         {
             type = dialog2.GetValue();
@@ -693,7 +700,7 @@ void CInputDialog::DoFunction()
         max = 1000;
         min = 1;
 
-        wxNumberEntryDialog dialog3(this, opt, tip, opt, 10, min, max);
+        wxNumberEntryDialog dialog3(this, _algorithm, tip, _algorithm, 10, min, max);
         if (dialog3.ShowModal() == wxID_OK)
         {
             delta = dialog3.GetValue();
@@ -703,13 +710,15 @@ void CInputDialog::DoFunction()
         max = 13;
         min = 3;
 
-        wxNumberEntryDialog dialog4(this, opt, tip, opt, 3, min, max);
+        wxNumberEntryDialog dialog4(this, _algorithm, tip, _algorithm, 3, min, max);
         if (dialog4.ShowModal() == wxID_OK)
         {
             type = dialog4.GetValue();
         }
 
-        ApplyAlgorithm(f8, true, image_type, depth, type, delta, kernel_size);
+        ApplyAlgorithm(functionS, true, image_type, depth, type, delta, kernel_size);
+
+        return;
     }
 }
 

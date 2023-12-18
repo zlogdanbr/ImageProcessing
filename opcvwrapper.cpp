@@ -11,16 +11,10 @@
 Mat ApplyCustomAlgo(const Mat& image)
 {
     Mat img1 = GaussianImageSmoothExtended(image, 3, 0.1, 0.1);
-    Mat img2 = GaussianImageSmoothExtended(image, 3, 1, 1);
-    img1 = ApplyLaplacianExtended(img1);
-    img2 = ApplyLaplacianExtended(img2);
 
-    Mat final =  img1 - img2;
-
-    return final;
+    return img1;
 
 }
-
 
 Mat ApplyDoG(const Mat& im)
 {
@@ -32,12 +26,6 @@ Mat ApplyDoG(const Mat& im)
     Mat final = img1 - img2;
 
     return final;
-}
-
-void ApplyCustomAlgoThread(const Mat& image, Mat& out)
-{
-    std::thread _thread(ApplyCustomAlgo, image);
-    _thread.join();
 }
 
 Mat InvertImage(const Mat& img)
@@ -96,7 +84,6 @@ void showImage(const Mat& img, const std::string& title)
     using namespace image_util;
     cv::Size image_size = img.size();
 
-
     wxRect sizeScreen = wxGetClientDisplayRect();
 
     Mat clone = img.clone();
@@ -109,7 +96,6 @@ void showImage(const Mat& img, const std::string& title)
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
 Mat convertograyScale(const Mat& img)
 {
-
     if (isGrayScaleImage(img) )
     {
         return img;
@@ -154,7 +140,6 @@ Mat adjustGama(const Mat& img, double gamma)
     LUT(img, lookUpTable, res);
     return res;
 }
-
 
 Mat getBinaryImage(const Mat& img)
 {
@@ -225,22 +210,6 @@ Mat MedianImageSmooth(const Mat& img, int kernel_size)
     return MedianI;
 }
 
-/*
-
-src	Source 8-bit or floating-point, 1-channel or 3-channel image.
-dst	Destination image of the same size and type as src .
-d	Diameter of each pixel neighborhood that is used during filtering. If it is non-positive, it is computed from sigmaSpace.
-
-sigmaColor	Filter sigma in the color space. A larger value of the parameter means that farther colors within
-the pixel neighborhood (see sigmaSpace) will be mixed together, resulting in larger areas of semi-equal color.
-
-sigmaSpace	Filter sigma in the coordinate space. A larger value of the parameter means that farther pixels will 
-influence each other as long as their colors are close enough (see sigmaColor ). When d>0, it specifies the 
-neighborhood size regardless of sigmaSpace. Otherwise, d is proportional to sigmaSpace.
-borderType	border mode used to extrapolate pixels outside of the image, see BorderTypes
-
-*/
-
 Mat ApplyBilateralFilterExt(const Mat& img, int kernel_size, double sigma1, double sigma2)
 {
     Mat Gray = convertograyScale(img);
@@ -250,7 +219,6 @@ Mat ApplyBilateralFilterExt(const Mat& img, int kernel_size, double sigma1, doub
 
     return Blurred;
 }
-
 
 Mat GaussianImageSmoothExtended(    const Mat& img, 
                                     int kernel_size,
@@ -455,10 +423,6 @@ Mat Unsharp(const Mat& img)
     return (1.5) * igray - 0.5 * Iconv;
 }
 
-// MORPH_RECT
-// MORPH_CROSS
-// MORPH_ELLIPSE;
-
 Mat ApplyErodeEx(const Mat& img,int type)
 {
     cv::Mat eroded; // the destination image
@@ -503,8 +467,6 @@ Mat ApplyOpening(const Mat& img)
     return final;
 }
 
-
-
 Mat ApplyMorphGradient(const Mat& img)
 {
     cv::Mat result;
@@ -524,7 +486,6 @@ Mat ApplyTopHatAlgo(const Mat& img)
     return result;
 }
 
-
 /* -------------------------------------------------------------------------------------------
 OpenCV 3 Computer Vision
 Application Programming
@@ -532,7 +493,7 @@ Cookbook
 Third Edition
 Robert Laganiere
 Page [ 239 ]
-See page [245 ] for the math
+Page [245 ] for the math
 ----------------------------------------------------------------------------------------------*/
 Mat detectCornersHarrisAlgoFull(    const Mat& image,
                                     int neighborhood_size,
@@ -564,8 +525,6 @@ Mat detectCornersHarrisAlgoFull(    const Mat& image,
     return harrisCorners;
 }
 
-
-
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)
 {
     Mat contours;
@@ -578,6 +537,14 @@ Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)
     return contours;
 }
 
+/*
+I have just copied and pasted and edited here so I could see this working
+it is not active at all unless you run this code using the function
+ApplyCustomAlgo, replacing the body function with
+
+MM(img);
+
+*/
 Mat NN(const Mat& img)
 {
     const std::string NNFolder = "C:\\Users\\Administrador\\Documents\\GitHub\\Image Data\\NN";
