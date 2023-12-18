@@ -130,6 +130,8 @@ Mat ApplyDoG(const Mat& im);
 // https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/
 Mat NN(const Mat& img);
 
+Mat segmentationDVG(Mat& image);
+
 #endif
 
 //--------------------------------------------------------------------------------------------------
