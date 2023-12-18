@@ -355,7 +355,7 @@ void CInputDialog::DoFunction()
     if (function2P != nullptr)
     {
         int option = 3;
-        if (_algorithm == "Erosion+" || "Dilate+")
+        if (_algorithm == "Erosion+" || _algorithm == "Dilate+")
         {      
             std::vector<wxString> choices = { "MORPH_RECT","MORPH_CROSS","MORPH_ELLIPSE" };
             wxSingleChoiceDialog dialog(

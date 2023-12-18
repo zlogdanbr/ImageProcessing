@@ -10,9 +10,26 @@
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat img1 = GaussianImageSmoothExtended(image, 3, 0.1, 0.1);
+    Mat img1 = ApplyTopHatAlgo(image);
+    img1 = convertograyScale(img1);
+    img1 = GaussianImageSmoothExtended(img1, 3, 0.1, 0.1);
+    img1 = getBinaryImage(img1);
 
-    return img1;
+
+    cv::floodFill(img1, // input/ouput image
+        cv::Point(1, 1), // seed point
+        cv::Scalar(45, 134, 200), // repainted color
+        (cv::Rect*)0, // bounding rect of the repainted set
+        cv::Scalar(35, 35, 35), // low/high difference threshold
+        cv::Scalar(35, 35, 35), // identical most of the time
+        cv::FLOODFILL_FIXED_RANGE);// pixels compared to seed
+
+
+    img1 = InvertImage(img1);
+
+    Mat final = convertograyScale(image) + img1;
+
+    return final;
 
 }
 
