@@ -86,7 +86,7 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"C
                 std::string spath = convertWxStringToString(path);
                 std::vector<std::vector<double>> obs;
                 readCSV(obs, spath);
-                LoadDataToFile(obs, grid);
+                LoadDataFromFile(obs, grid);
             }
 
         });

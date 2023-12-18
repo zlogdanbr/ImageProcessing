@@ -129,16 +129,11 @@ CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
         {
             out = f(img, args ...);
             auto s = out.size();
-
             if (s.height == 0 || s.width == 0)
             {
                 return;
             }
             setFinalImg(out);
-        }
-        else
-        {
-            outxt->writeTo("Image not loaded\n");
         }
     }
     else

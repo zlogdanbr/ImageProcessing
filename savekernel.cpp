@@ -75,7 +75,7 @@ bool SaveDataToFile(std::string fname, wxGrid* grid)
 	return true;
 }
 
-bool LoadDataToFile(std::vector<std::vector<double>> obs, wxGrid* grid)
+bool LoadDataFromFile(std::vector<std::vector<double>> obs, wxGrid* grid)
 {
     // grid->SetCellValue(3, 3, "green on grey");
     int i = 0;
