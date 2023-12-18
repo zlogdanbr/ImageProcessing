@@ -638,13 +638,13 @@ void CInputDialog::DoFunction()
         }
 
         CSliderDialog dialog(this, inf);
-        int scale = -90566;
+        int scale = INVALID_VALUE_INT;
 
         dialog.ShowModal();
 
         scale = dialog.getValue();
 
-        if (scale == -90566)
+        if (scale == INVALID_VALUE_INT)
         {
             return;
         }
@@ -677,14 +677,14 @@ void CInputDialog::DoFunction()
                 inf.default_value_string = "50";
             }
 
-            double v = -0299999998.0;
+            double v = INVALID_VALUE_DOUBLE;
 
             CSliderDialog dialog(this, inf);
             dialog.ShowModal();
 
             v = dialog.getValue();
 
-            if (v == -0299999998.0)
+            if (v == INVALID_VALUE_DOUBLE)
             {
                 return;
             }

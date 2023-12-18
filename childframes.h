@@ -24,6 +24,9 @@
 
 using namespace image_util;
 
+constexpr int INVALID_VALUE_INT = -90566;
+constexpr double INVALID_VALUE_DOUBLE = -9056698.01;
+
 class COpenImage final
 {
 public:
@@ -189,7 +192,7 @@ public:
 
 class CInputDialog final : public wxDialog
 {
-private:
+private:   
 
 protected:
     wxButton* button1 = nullptr;
