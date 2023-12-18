@@ -111,6 +111,7 @@ Mat ApplyClosing(const Mat& img);
 Mat ApplyOpening(const Mat& img);
 Mat ApplyMorphGradient(const Mat& img);
 Mat ApplyTopHatAlgo(const Mat& img);
+Mat segmentErode(const Mat& img);
 
 /*
 *  Advanced Algorithms and detectors

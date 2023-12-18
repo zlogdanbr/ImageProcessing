@@ -288,6 +288,7 @@ protected:
                                 "Opening",
                                 "Erosion+",
                                 "Dilate+",
+                                "Segmentation Erode",
                                 "Morpholgical Gradient",
                                 "Morphological Top Hat",
                                 "Apply custom algo",

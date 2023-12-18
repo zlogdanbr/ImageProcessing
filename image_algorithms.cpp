@@ -199,13 +199,6 @@ CInputDialog::ApplyAlgorithm(
     ApplyAlgorithmEffective(f, Gray, image_type, depth, type, delta, kernel_size);
 }
 
-/*
-Mat detectCornersHarrisAlgoFull(const Mat& image,
-                                int neighborhood_size,
-                                int aperture_size,
-                                double threshold,
-                                double Harris_parameter
-*/
 void CInputDialog::ApplyAlgorithm(
                                 FunctionHarris& f, 
                                 bool Gray, 
@@ -238,6 +231,7 @@ void CInputDialog::setSimpleMaps()
     fsimple["Opening"] = ApplyOpening;
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
+    fsimple["Segmentation Erode"] = segmentErode;
 }
 
 void CInputDialog::setOtherMaps()
