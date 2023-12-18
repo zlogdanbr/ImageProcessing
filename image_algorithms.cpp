@@ -199,6 +199,24 @@ CInputDialog::ApplyAlgorithm(
     ApplyAlgorithmEffective(f, Gray, image_type, depth, type, delta, kernel_size);
 }
 
+/*
+Mat detectCornersHarrisAlgoFull(const Mat& image,
+                                int neighborhood_size,
+                                int aperture_size,
+                                double threshold,
+                                double Harris_parameter
+*/
+void CInputDialog::ApplyAlgorithm(
+                                FunctionHarris& f, 
+                                bool Gray, 
+                                int neighborhood_size, 
+                                int aperture_size, 
+                                double threshold, 
+                                double Harris_parameter)
+{
+    ApplyAlgorithmEffective(f, Gray, neighborhood_size, aperture_size, threshold, Harris_parameter);
+}
+
 void CInputDialog::setSimpleMaps()
 {
     fsimple["Convert to Gray Scale"] = convertograyScale;
@@ -236,6 +254,7 @@ void CInputDialog::setOtherMaps()
     fsobel["Sobel"] = ApplySobelExtended;
     fslider["Threshold"] = ApplyThreShold;
     fslider["Gamma Correction"] = adjustGama;
+    fharris["Harris Algorithm"] = detectCornersHarrisAlgoFull;
 }
 
 void CInputDialog::fillComboInfo()
@@ -335,6 +354,17 @@ CInputDialog::getAlgoSobel(wxString key)
     }
     return nullptr;
 }
+
+FunctionHarris
+CInputDialog::getAlgoHarris(wxString key)
+{
+    if (fharris.find(key) != fharris.end())
+    {
+        return fharris[key];
+    }
+    return nullptr;
+}
+
 
 void CInputDialog::DoFunction()
 {
@@ -596,6 +626,14 @@ void CInputDialog::DoFunction()
 
         ApplyAlgorithm(functionS, true, image_type, depth, type, delta, kernel_size);
 
+        return;
+    }
+
+    FunctionHarris farris = getAlgoHarris(_algorithm);
+
+    if (farris != nullptr)
+    {
+        ApplyAlgorithm(farris, true, 3, 3, 0.001, 0.0001);
         return;
     }
 }

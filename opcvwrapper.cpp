@@ -552,20 +552,20 @@ Mat detectCornersHarrisAlgoFull(    const Mat& image,
     cv::Mat imgclone;
     imgclone = convertograyScale(image);
 
-    cv::cornerHarris(imgclone, // input image
-        cornerStrength, // image of cornerness
-        neighborhood_size, // neighborhood size
-        aperture_size, // aperture size
-        Harris_parameter); // Harris parameter
+    cv::cornerHarris(   imgclone, // input image
+                        cornerStrength, // image of cornerness
+                        neighborhood_size, // neighborhood size
+                        aperture_size, // aperture size
+                        Harris_parameter); // Harris parameter
 
     cv::Mat harrisCorners;
 
     // threshold the corner strengths
-    cv::threshold(cornerStrength,
-        harrisCorners,
-        threshold,
-        255,
-        cv::THRESH_BINARY);
+    cv::threshold(  cornerStrength,
+                    harrisCorners,
+                    threshold,
+                    255,
+                    cv::THRESH_BINARY);
 
     return harrisCorners;
 }
