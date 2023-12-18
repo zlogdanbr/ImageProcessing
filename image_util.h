@@ -56,7 +56,7 @@ namespace image_util
 	using CDataValue = std::vector<CPointCst>;
 	using RGB_CST = unsigned char[3];
 
-	AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints);
+	AbstractRegion convertKeyPointsToAbstract(std::vector<Point>& keypoints);
 
 	void highlightFeature(Mat& img,
 		AbstractRegion& abstract_region,

@@ -45,13 +45,13 @@ namespace image_util
 
     }
 
-    AbstractRegion convertKeyPointsToAbstract(std::vector<cv::KeyPoint>& keypoints)
+    AbstractRegion convertKeyPointsToAbstract(std::vector<Point>& keypoints)
     {
         AbstractRegion  AbstractPoints;
         for (const auto& p : keypoints)
         {
-            int ix = static_cast<int>(p.pt.x);
-            int iy = static_cast<int>(p.pt.y);
+            int ix = static_cast<int>(p.x);
+            int iy = static_cast<int>(p.y);
             std::pair<int, int> pr{ ix,iy };
             AbstractPoints.push_back(pr);
         }
