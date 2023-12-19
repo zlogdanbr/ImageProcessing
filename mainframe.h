@@ -107,8 +107,10 @@ private:
         menuSelectRoi->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
 
         auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Show Difference", "Show Difference");
+        menuCompare->SetBitmap(wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_MENU));
 
         auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Compare Two Images", "Compare Two Images");
+        menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
     }
 
 
