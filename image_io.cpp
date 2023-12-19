@@ -11,8 +11,8 @@ void COpenImage::OpenFile(wxFrame& frame)
         wxEmptyString,
         wxEmptyString,
         wxEmptyString,
-        "jpg and tif files(*.jpg; *.tif) | *.jpg; *.tif",
-        wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+        //"Text Files (*.txt)|*.txt|All Files (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+        "jpg and tif files(*.jpg; *.tif)| *.jpg; *.tif|All Files (*.*)|*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     imghelper->clean();
     openFileDialog.SetFilterIndex(0);
