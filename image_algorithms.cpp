@@ -361,6 +361,18 @@ void CInputDialog::DoFunction()
 
     outxt->writeTo("Applying algorithm: " + _algorithm + " please wait...\n");
 
+    if (_algorithm == "Undo")
+    {
+        if (imghelper->getOriginalImageInitiated() == true)
+        {
+            if (imghelper->revert() == false)
+            {
+                outxt->writeTo("Error, final image not loaded\n");
+            }
+        }
+        return;
+    }
+
     Function1Parameter  function1P  = getAlgoFunctionOnePar(_algorithm);
 
     if (function1P != nullptr)

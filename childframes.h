@@ -269,6 +269,7 @@ protected:
     std::vector<wxString> 
         algo_names =
                             { 
+                                "Undo",
                                 "Convert to Gray Scale",
                                 "Equalize Gray Scale Image",
                                 "Equalize Color Scale Image",
