@@ -573,9 +573,9 @@ Mat detectCornersHarrisAlgoFull(    const Mat& image,
 
     cv::cornerHarris(   imgclone, // input image
                         cornerStrength, // image of cornerness
-                        neighborhood_size, // neighborhood size
-                        aperture_size, // aperture size
-                        Harris_parameter); // Harris parameter
+                        2, // neighborhood size
+                        3, // aperture size
+                        0.04); // Harris parameter
 
     cv::Mat harrisCorners;
 

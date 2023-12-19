@@ -634,7 +634,7 @@ void CInputDialog::DoFunction()
 
     if (farris != nullptr)
     {
-        ApplyAlgorithm(farris, true, 3, 3, 0.001, 0.0001);
+        ApplyAlgorithm(farris, true, 3, 2, 0.001, 0.0001);
         return;
     }
 }

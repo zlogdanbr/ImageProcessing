@@ -25,7 +25,6 @@ std::string getPathOfFile(const std::string& _file)
 	return fpath.string();
 }
 
-
 bool file_exists(const std::string& file)
 {
 	return fs::exists(file);
@@ -36,6 +35,7 @@ uintmax_t getFileSize(const std::string& _file)
 	std::filesystem::directory_entry File{ _file };
 	return File.file_size();
 }
+
 // you can add try catches to every call, this is only an example
 bool directory_exists(const std::string& _directory)
 {
