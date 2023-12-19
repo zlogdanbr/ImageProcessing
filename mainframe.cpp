@@ -1,5 +1,6 @@
 
 #include "mainframe.h"
+#include "CProcessSeveral.h"
 
 
 MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
@@ -55,6 +56,19 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
     outxt.writeTo("Application initiated.\n");
 
     Centre();
+}
+
+void MyFrame::onMakeSameSize(wxCommandEvent& event)
+{
+
+    CProcessSeveral several;
+    if (several.readImagesToInternal(this) == false)
+    {
+        outxt.writeTo("Error reading images.\n");
+        return;
+    }
+
+    several.doProcess();
 }
 
 void MyFrame::onSelectRoi(wxCommandEvent& event)

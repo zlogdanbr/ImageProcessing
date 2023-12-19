@@ -274,6 +274,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="childframes.cpp" />
+    <ClCompile Include="CProcessSeveral.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_gridialog.cpp" />
     <ClCompile Include="image_io.cpp" />
@@ -288,6 +289,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframes.h" />
+    <ClInclude Include="CProcessSeveral.h" />
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />
     <ClInclude Include="image_util.h" />

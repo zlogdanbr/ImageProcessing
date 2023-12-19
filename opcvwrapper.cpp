@@ -4,6 +4,31 @@
 #include <fstream>
 #include <wx/gdicmn.h> 
 
+
+void applyMultiple(std::vector<Mat>& images)
+{
+    Mat Standard = images[0];
+
+    int standard_size_width = Standard.size().width;
+    int standard_size_height = Standard.size().height;
+
+    for (int i = 0; i < images.size(); i++)
+    {
+        resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_LINEAR);
+        images[i] = convertograyScale(images[i]);
+        images[i] = getBinaryImage(images[i]);
+        images[i] = InvertImage(images[i]);
+    }
+
+    int cnt = 0;
+    for (const auto& i : images)
+    {
+        showImage(i, std::to_string(cnt));
+        cnt++;
+    }
+
+
+}
 /**
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.

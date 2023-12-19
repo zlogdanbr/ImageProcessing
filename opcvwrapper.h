@@ -133,6 +133,8 @@ Mat NN(const Mat& img);
 
 Mat segmentationDVG(Mat& image);
 
+void applyMultiple(std::vector<Mat>& images);
+
 #endif
 
 //--------------------------------------------------------------------------------------------------

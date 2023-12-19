@@ -59,6 +59,7 @@ private:
     void onRevert(wxCommandEvent& event);
     void onSelectRoi(wxCommandEvent& event);
     void onCompare(wxCommandEvent& event);
+    void onMakeSameSize(wxCommandEvent& event);
 
     enum  Opt 
     {
@@ -70,7 +71,8 @@ private:
         CONTRAST_ID_IMG,
         REVETR_IMG_ID,
         SELECT_ROI,
-        COMPARE_IMG
+        COMPARE_IMG,
+        MAKE_SAME_SIZE
     };
 
     void BinAllEvents()
@@ -85,6 +87,9 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onRevert, this, REVETR_IMG_ID);
         Bind(wxEVT_MENU, &MyFrame::onSelectRoi, this, SELECT_ROI);
         Bind(wxEVT_MENU, &MyFrame::onCompare, this, COMPARE_IMG);
+        Bind(wxEVT_MENU, &MyFrame::onMakeSameSize, this, MAKE_SAME_SIZE);
+
+        
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -101,7 +106,9 @@ private:
         auto menuSelectRoi = menuAlgo->Append(SELECT_ROI, "Select Roi", "Select Roi"); 
         menuSelectRoi->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
 
-        auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Compare", "Compare");
+        auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Show Difference", "Show Difference");
+
+        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Compare Two Images", "Compare Two Images");
     }
 
 
