@@ -31,7 +31,7 @@ Back in 1996 I had no idea if OpenCV existed or about libraries.
 
 ** WARNING **
 The algorithms for face detection are not working. I have no idea why or how.
-I am running Windows 11, maybe that is it.
+I am running Windows 11, maybe that is it. I have removed them from the code.
 
 ## Bulding for Linux
 
@@ -67,7 +67,7 @@ And that will do.
 
 The menu Algorithms->Basic Algorithms Selection allows you to choose between several algorithms.
 
-So, edit the sources detect.h and detect.cpp adding a function with the signature cv::Mat foo( cv::Mat& m ).
+So, edit the sources opcvwrapper.h and opcvwrapper.cpp adding a function with the signature cv::Mat foo( cv::Mat& m ).
 
 Do all your processing inside this function then at childframe add the following:
 
@@ -118,7 +118,7 @@ OpenCV:
 
 https://opencv.org
 
-###
+### Tools used
 
 - I use Visual Studio 2022
 - c++17
