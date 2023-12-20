@@ -274,12 +274,14 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="childframes.cpp" />
+    <ClCompile Include="COpenCVDraw.cpp" />
     <ClCompile Include="CProcessSeveral.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_gridialog.cpp" />
     <ClCompile Include="image_io.cpp" />
     <ClCompile Include="image_algorithms.cpp" />
     <ClCompile Include="image_helper.cpp" />
+    <ClCompile Include="image_several.cpp" />
     <ClCompile Include="image_slide.cpp" />
     <ClCompile Include="image_spin.cpp" />
     <ClCompile Include="image_util.cpp" />
@@ -290,6 +292,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframes.h" />
+    <ClInclude Include="COpenCVDraw.h" />
     <ClInclude Include="CProcessSeveral.h" />
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />

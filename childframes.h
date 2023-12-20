@@ -351,4 +351,77 @@ public:
 
 };
 
+
+class CLoadImageSet : public wxDialog
+{
+private:
+
+protected:
+
+    wxPanel* m_panel5;
+    wxPanel* m_panel6;
+
+    wxButton* m_buttonOK;
+    wxButton* m_buttonClear;
+    wxButton* m_buttonLoadImage1;
+    wxButton* m_buttonLoadImage2;
+    wxButton* m_buttonLoadImage3;
+    wxButton* m_buttonLoadImage4;
+    wxButton* m_buttonLoadImage5;
+    wxButton* m_buttonLoadImage6;
+    wxButton* m_buttonLoadImage7;
+    wxButton* m_buttonLoadImage8;
+
+    wxTextCtrl* m_textCtrlImagePath1;
+    wxTextCtrl* m_textCtrlImagePath2;
+    wxTextCtrl* m_textCtrlImagePath3;
+    wxTextCtrl* m_textCtrlImagePath4;
+    wxTextCtrl* m_textCtrlImagePath5;
+    wxTextCtrl* m_textCtrlImagePath6;
+    wxTextCtrl* m_textCtrlImagePath7;
+    wxTextCtrl* m_textCtrlImagePath8;
+
+    void setTextAtBox(wxTextCtrl* txtctrl, wxString text)
+    {
+        txtctrl->SetLabelText(text);
+    }
+
+    wxString getTextFromBox(wxTextCtrl* txtctrl)
+    {
+        return txtctrl->GetLabelText();
+    }
+
+    std::vector< wxTextCtrl* > _paths;
+    std::vector< wxButton* > _actions;
+
+    bool readImagePath( wxWindow* parent, wxTextCtrl* txtctrl);
+
+    std::vector<Mat> _images;
+
+    void setImageArray();
+
+    void setEventButtons();
+
+public:
+
+    CLoadImageSet(  wxWindow* parent, 
+                wxWindowID id = wxID_ANY, 
+                const wxString& title = wxEmptyString, 
+                const wxPoint& pos = wxDefaultPosition, 
+                const wxSize& size = wxSize(482, 408),
+                long style = wxDEFAULT_DIALOG_STYLE);
+
+    ~CLoadImageSet();
+
+    
+    std::vector<Mat> getImages() const
+    {
+        return _images;
+    }
+
+    void doProcess();
+
+    bool IsoK = false;
+};
+
 #endif

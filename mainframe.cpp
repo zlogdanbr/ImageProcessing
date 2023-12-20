@@ -1,6 +1,5 @@
 
 #include "mainframe.h"
-#include "CProcessSeveral.h"
 
 
 MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
@@ -58,17 +57,20 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
     Centre();
 }
 
+void MyFrame::onImageDraw(wxCommandEvent& event)
+{
+    // Not working
+    outxt.writeTo("Not implemented yet.\n");
+}
+
 void MyFrame::onMakeSameSize(wxCommandEvent& event)
 {
-
-    CProcessSeveral several;
-    if (several.readImagesToInternal(this) == false)
+    CLoadImageSet ImgSet(this, -1, "Select Images");
+    ImgSet.ShowModal();
+    if (ImgSet.IsoK)
     {
-        outxt.writeTo("Error reading images.\n");
-        return;
+        ImgSet.doProcess();
     }
-
-    several.doProcess();
 }
 
 void MyFrame::onSelectRoi(wxCommandEvent& event)

@@ -58,6 +58,7 @@ private:
     void onSelectRoi(wxCommandEvent& event);
     void onCompare(wxCommandEvent& event);
     void onMakeSameSize(wxCommandEvent& event);
+    void onImageDraw(wxCommandEvent& event);
 
     enum  Opt 
     {
@@ -70,7 +71,8 @@ private:
         REVETR_IMG_ID,
         SELECT_ROI,
         COMPARE_IMG,
-        MAKE_SAME_SIZE
+        MAKE_SAME_SIZE,
+        DRAW_ON_IMAGE
     };
 
     void BinAllEvents()
@@ -86,7 +88,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onSelectRoi, this, SELECT_ROI);
         Bind(wxEVT_MENU, &MyFrame::onCompare, this, COMPARE_IMG);
         Bind(wxEVT_MENU, &MyFrame::onMakeSameSize, this, MAKE_SAME_SIZE);
-
+        Bind(wxEVT_MENU, &MyFrame::onImageDraw, this, DRAW_ON_IMAGE);
         
     }
 
@@ -107,8 +109,11 @@ private:
         auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Show Difference", "Show Difference");
         menuCompare->SetBitmap(wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_MENU));
 
-        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Compare Two Images", "Compare Two Images");
+        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Image Space", "Image Space");
         menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
+
+        auto menuDrawAt = menuAlgo->Append(DRAW_ON_IMAGE, "Draw on image", "Draw on image"); 
+        menuDrawAt->SetBitmap(wxArtProvider::GetBitmap(wxART_TIP, wxART_MENU));
     }
 
 

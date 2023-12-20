@@ -36,3 +36,4 @@ bool MyApp::OnInit()
     frame->Show(true);
     return true;
 }
+

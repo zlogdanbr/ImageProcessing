@@ -11,7 +11,14 @@ void thresh_callback(int, void*)
 
 void applyMultiple(std::vector<Mat>& images)
 {
-    Mat Standard = images[0];
+    Mat& Standard = images[0];
+    for (const auto& i : images)
+    {
+        if (i.size().width > Standard.size().width && i.size().height > Standard.size().height)
+        {
+            Standard = i;
+        }
+    }
 
     int standard_size_width = Standard.size().width;
     int standard_size_height = Standard.size().height;
@@ -20,16 +27,12 @@ void applyMultiple(std::vector<Mat>& images)
     {
         if (i != 0)
         {
-            resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_LINEAR);
+            resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
         }
 
         images[i] = convertograyScale(images[i]);
-        //images[i] = getBinaryImage(images[i]);
         //images[i] = InvertImage(images[i]);
-
-        std::vector<std::vector<Point> > contours;
-        findContours(images[i], contours, RETR_LIST, CHAIN_APPROX_NONE);
-        drawContours(images[i], contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+        images[i] = getBinaryImage(images[i]);
     }
 
     int cnt = 0;
