@@ -552,7 +552,7 @@ void CInputDialog::DoFunction()
             else
             {
                 inf.default_value = 50;
-                inf.max = 100;
+                inf.max = 1000;
                 inf.min = 1;
                 inf.title = "Gamma Correction %";
                 inf.default_value_string = "50";
