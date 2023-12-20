@@ -118,6 +118,14 @@ OpenCV:
 
 https://opencv.org
 
+###
+
+- I use Visual Studio 2022
+- c++17
+- OpenCV 4.8
+- wxWdigets 3.2.1
+- wxFormBuilder. Get it at  https://github.com/wxFormBuilder/wxFormBuilder
+
 
 
 Python soon will be required.

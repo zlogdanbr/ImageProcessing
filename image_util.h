@@ -29,7 +29,6 @@ using namespace dnn;
 namespace image_util
 {
 	using UBYTE = unsigned char;
-	using AbstractRegion = std::vector<std::pair<int, int>>;
 	using TargetPoints = std::pair<std::vector<int>, std::vector<int>>;
 	using TargetPointsDouble = std::pair<std::vector<double>, std::vector<double>>;
 	using RoiAretype = std::vector< std::vector<Point> >;
@@ -57,17 +56,6 @@ namespace image_util
 	using CPointCst = std::pair<int, int>;
 	using CDataValue = std::vector<CPointCst>;
 	using RGB_CST = unsigned char[3];
-
-	AbstractRegion convertKeyPointsToAbstract(std::vector<Point>& keypoints);
-
-	void highlightFeature(Mat& img,
-		AbstractRegion& abstract_region,
-		UBYTE,
-		UBYTE,
-		UBYTE,
-		bool blank_bgr = false);
-
-	TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints);
 
 	Mat convertRectoImg(Rect& r, Mat& img);
 

@@ -18,10 +18,18 @@ void applyMultiple(std::vector<Mat>& images)
 
     for (int i = 0; i < images.size(); i++)
     {
-        resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_LINEAR);
+        if (i != 0)
+        {
+            resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_LINEAR);
+        }
+
         images[i] = convertograyScale(images[i]);
-        images[i] = getBinaryImage(images[i]);
-        images[i] = InvertImage(images[i]);
+        //images[i] = getBinaryImage(images[i]);
+        //images[i] = InvertImage(images[i]);
+
+        std::vector<std::vector<Point> > contours;
+        findContours(images[i], contours, RETR_LIST, CHAIN_APPROX_NONE);
+        drawContours(images[i], contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
     }
 
     int cnt = 0;

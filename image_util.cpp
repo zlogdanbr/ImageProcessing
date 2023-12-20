@@ -27,68 +27,6 @@ namespace image_util
             0);
     }
 
-    TargetPoints getXYFromAbstractRegion(AbstractRegion& AbstractPoints)
-    {
-        TargetPoints out;
-        std::vector<int> x;
-        std::vector<int> y;
-
-        for (const auto& point : AbstractPoints)
-        {
-            x.push_back(point.first);
-            y.push_back(point.second);
-        }
-
-        out = make_pair(x, y);
-
-        return out;
-
-    }
-
-    AbstractRegion convertKeyPointsToAbstract(std::vector<Point>& keypoints)
-    {
-        AbstractRegion  AbstractPoints;
-        for (const auto& p : keypoints)
-        {
-            int ix = static_cast<int>(p.x);
-            int iy = static_cast<int>(p.y);
-            std::pair<int, int> pr{ ix,iy };
-            AbstractPoints.push_back(pr);
-        }
-        return AbstractPoints;
-    }
-
-    void highlightFeature(Mat& img, AbstractRegion& abstract_region, UBYTE r, UBYTE g, UBYTE b, bool blank_bgr)
-    {
-        for (int y = 0; y < img.rows; y++)
-        {
-            for (int x = 0; x < img.cols; x++)
-            {
-                Vec3b color = img.at<Vec3b>(Point(x, y));
-
-                std::pair<int, int> p{ x,y };
-                auto it = std::find(abstract_region.cbegin(), abstract_region.cend(), p);
-
-                if (it != abstract_region.end())
-                {
-                    color[0] = r;
-                    color[1] = g;
-                    color[2] = b;
-                }
-                else
-                {
-                    if (blank_bgr)
-                    {
-                        color[0] = 0xFF;
-                        color[1] = 0xFF;
-                        color[2] = 0xFF;
-                    }
-                }
-                img.at<Vec3b>(Point(x, y)) = color;
-            }
-        }
-    }
-
     //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html
     std::vector<Mat> splitChannel(Mat& img)
     {
