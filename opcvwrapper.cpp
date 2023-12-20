@@ -5,6 +5,10 @@
 #include <wx/gdicmn.h> 
 
 
+void thresh_callback(int, void*)
+{
+}
+
 void applyMultiple(std::vector<Mat>& images)
 {
     Mat Standard = images[0];
@@ -143,6 +147,11 @@ void showImage(const Mat& img, const std::string& title)
     cv::namedWindow(title, cv::WINDOW_NORMAL);
     clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
     imshow(title, clone);
+
+    //const int max_thresh = 255;
+    //int thresh = 100;
+    //createTrackbar("Canny thresh:", title, &thresh, max_thresh, thresh_callback);
+    //thresh_callback(0, 0);
     
 }
 

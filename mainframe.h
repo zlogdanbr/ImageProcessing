@@ -30,8 +30,6 @@ private:
     //--------------------------------------------------------------
     // components---------------------------------------------------
     //--------------------------------------------------------------
-
-    wxPanel* main_panel = nullptr;
     wxStaticBitmap* staticBitmap1 = nullptr;
     CImageHelper ImageHelper{};
     wxTextCtrl* textCtrl{ new wxTextCtrl(

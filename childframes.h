@@ -14,6 +14,7 @@
 #include <wx/aboutdlg.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
+#include <wx/spinctrl.h>
 #include <functional>
 #include <thread>
 #include "image_helper.h"
@@ -317,6 +318,36 @@ public:
                     long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CInputDialog();
+
+};
+
+
+class CNumentryDouble : public wxDialog
+{
+private:
+
+protected:
+    wxButton* m_button2;
+    wxSpinCtrlDouble* m_spinCtrlDouble1;
+
+public:
+
+    wxSpinCtrlDouble* getComponentValue()
+    {
+        return m_spinCtrlDouble1;
+    };
+
+    CNumentryDouble(  wxWindow* parent, 
+                double max,
+                double min,
+                double increment,
+                wxWindowID id = wxID_ANY, 
+                const wxString& title = wxEmptyString, 
+                const wxPoint& pos = wxDefaultPosition, 
+                const wxSize& size = wxSize(191, 79), 
+                long style = wxDEFAULT_DIALOG_STYLE);
+
+    ~CNumentryDouble();
 
 };
 

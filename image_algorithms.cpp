@@ -447,12 +447,23 @@ void CInputDialog::DoFunction()
 
     if (function4P != nullptr)
     {
-        wxNumberEntryDialog dialog(this, "Sigma factor", "Sigma Factor", "Divided by 100", 2, 1, 1000);
-        if (dialog.ShowModal() == wxID_OK)
+        double sigma = INVALID_VALUE_DOUBLE;
+        CNumentryDouble dialog(this, 2000, 0, 1, wxID_ANY, "Sigma Value");
+        dialog.ShowModal();
+        sigma = dialog.getComponentValue()->GetValue();
+
+        if (sigma != INVALID_VALUE_DOUBLE)
         {
-            double sigma = 0.01 * static_cast<double>(dialog.GetValue());
-            ApplyAlgorithm(function4P, true, 3, sigma, sigma);
+            CNumentryDouble dialog2(this, 1000, 0, 100, wxID_ANY, "Division factor");
+            dialog2.ShowModal();
+            double factor = dialog2.getComponentValue()->GetValue();
+            if (factor == 0.0)
+            {
+                factor = 1.0;
+            }
+            ApplyAlgorithm(function4P, true, 3, sigma/factor, sigma/factor);
         }
+ 
         return;
     }
 
