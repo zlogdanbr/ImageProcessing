@@ -293,6 +293,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="childframes.h" />
+    <ClInclude Include="constants.h" />
     <ClInclude Include="COpenCVDraw.h" />
     <ClInclude Include="CProcessSeveral.h" />
     <ClInclude Include="filesys.h" />

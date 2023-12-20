@@ -1,4 +1,5 @@
 #include "childframes.h"
+#include "constants.h"
 #include "pca.h"
 #include <chrono>
 #include <ctime>
@@ -258,7 +259,7 @@ void CInputDialog::fillComboInfo()
     setOtherMaps();
     // Now fill the combox box options with the algorithms
 
-    for (const auto& name : algo_names)
+    for (const auto& name : image_constants::_algorithms_)
     {
         comboBox1->Append(name);
     }
