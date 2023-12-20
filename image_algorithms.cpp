@@ -1,4 +1,5 @@
 #include "childframes.h"
+#include "pca.h"
 #include <chrono>
 #include <ctime>
 #include <wx/textdlg.h>
@@ -227,6 +228,8 @@ void CInputDialog::setSimpleMaps()
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fsimple["Segmentation Erode"] = segmentErode;
+    fsimple["PCA"] = ApplyPCA;
+    fsimple["Find Contourns"] = ApplyFindContourns;
 }
 
 void CInputDialog::setOtherMaps()

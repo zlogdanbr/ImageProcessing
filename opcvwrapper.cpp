@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <wx/gdicmn.h> 
-
+#include "pca.h"
 
 void thresh_callback(int, void*)
 {
@@ -30,9 +30,7 @@ void applyMultiple(std::vector<Mat>& images)
             resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
         }
 
-        images[i] = convertograyScale(images[i]);
-        //images[i] = InvertImage(images[i]);
-        images[i] = getBinaryImage(images[i]);
+        images[i] = ApplyPCA(images[i]);
     }
 
     int cnt = 0;

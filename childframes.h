@@ -303,7 +303,9 @@ protected:
                                 "Sobel",
                                 "Canny Extended",
                                 "Hough Transform Custom",
-                                "Harris Algorithm"
+                                "Harris Algorithm",
+                                "Find Contourns",
+                                "PCA"
                             };
 
 public:
