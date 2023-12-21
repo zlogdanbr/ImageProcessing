@@ -63,7 +63,7 @@ void CImageHelper::SetOriginalNew()
     addtoCache(savefinal);
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
-    showImage(savefinal, "Final");
+    cv::imshow( "Final", savefinal);
 
 }
 

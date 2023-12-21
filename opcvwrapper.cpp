@@ -186,7 +186,14 @@ Mat getBinaryImage(const Mat& img)
 
     if (!isGrayScaleImage(img))
     {
-        cvtColor(img, bw, COLOR_BGR2GRAY);
+        try
+        {
+            cvtColor(img, bw, COLOR_BGR2GRAY);
+        }
+        catch (...)
+        {
+            bw = img.clone();
+        }        
     }
     else
     {
