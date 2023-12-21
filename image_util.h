@@ -98,4 +98,6 @@ namespace image_util
 		return t2;
 	}
 
+	void showManyImagesOnScreen(std::vector<Mat>& images);
+
 }

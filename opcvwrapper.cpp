@@ -11,17 +11,18 @@ void thresh_callback(int, void*)
 
 void ApplyAndCompare(std::vector<Mat>& images)
 {
-    Mat& Standard = images[0];
+
+    Size Standard = images[0].size();
     for (const auto& i : images)
     {
-        if (i.size().width > Standard.size().width && i.size().height > Standard.size().height)
+        if (i.size().width > Standard.width && i.size().height > Standard.height)
         {
-            Standard = i;
+            Standard = i.size();
         }
     }
 
-    int standard_size_width = Standard.size().width;
-    int standard_size_height = Standard.size().height;
+    int standard_size_width = Standard.width;
+    int standard_size_height = Standard.height;
 
     for (int i = 0; i < images.size(); i++)
     {
@@ -33,12 +34,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
         images[i] = ApplyPCA(images[i]);
     }
 
-    int cnt = 0;
-    for (const auto& i : images)
-    {
-        showImage(i, std::to_string(cnt));
-        cnt++;
-    }
+    image_util::showManyImagesOnScreen(images);
 
 
 }
@@ -132,11 +128,6 @@ void showImage(const Mat& img, const std::string& title)
     cv::namedWindow(title, cv::WINDOW_NORMAL);
     clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
     imshow(title, clone);
-
-    //const int max_thresh = 255;
-    //int thresh = 100;
-    //createTrackbar("Canny thresh:", title, &thresh, max_thresh, thresh_callback);
-    //thresh_callback(0, 0);
     
 }
 

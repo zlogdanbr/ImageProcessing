@@ -112,15 +112,54 @@ namespace image_util
         if ( ( wscreen < img.size().width && hscreen > img.size().height) ||
              (wscreen < img.size().width && hscreen < img.size().height)  ||
              (wscreen > img.size().width && hscreen < img.size().height))
-        {         
-            float ratio = 0.5;
-            float up_width = static_cast<float>(wscreen * ratio);
-            float up_height = static_cast<float>(hscreen * ratio);
-            resize(img, out, Size(up_width, up_height), INTER_LINEAR);
+        {        
+            double area_screen = wscreen * hscreen;
+            double area_img = h*w;
+
+            float ratio = area_screen / area_img;
+
+            if (ratio < 1)
+            {
+                Size s(w / 2, h / 2);
+                resize(img, out, s);
+            }
+
             return out;
         }
         out = img.clone();
         return out;
+    }
+
+    void showManyImagesOnScreen(std::vector<Mat>& images)
+    {
+        int number_of_images = images.size();
+        wxRect sizeScreen = wxGetClientDisplayRect();
+        double area_screen = sizeScreen.width * sizeScreen.height;
+        double area_img = images[0].size().width * images[0].size().height;
+
+        double ratio = area_screen / area_img;
+
+        if (ratio < 1)
+        {
+            for (auto& i : images)
+            {
+                Size s(i.size().width / 2, i.size().height / 2);
+                resize(i, i, s);
+            }
+        }
+
+        area_img = images[0].size().width * images[0].size().height;
+
+        ratio = area_screen / area_img;
+
+        int cnt = 1;
+        for (const auto& i : images)
+        {
+            imshow(std::to_string(cnt), i);
+            cnt++;
+        }
+        // moveWindow()
+
     }
 
 }
