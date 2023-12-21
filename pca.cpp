@@ -58,7 +58,7 @@ double getOrientation(const std::vector<Point>& pts, Mat& img)
     return angle;
 }
 
-Mat ApplyPCA(const Mat& img)
+Mat ApplyBasicSegmentation(const Mat& img, int opt)
 {
     Mat src = img.clone();
     // Convert image to grayscale
@@ -76,37 +76,30 @@ Mat ApplyPCA(const Mat& img)
         double area = contourArea(contours[i]);
         // Ignore contours that are too small or too large
         if (area < 1e2 || 1e5 < area) continue;
-        // Draw each contour only for visualisation purposes
-        drawContours(src, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+        // Draw each contour only for visualisation purposes  
+        
+        if (opt == 0)
+        {
+            drawContours(src, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+        }
+
         // Find the orientation of each shape
-        getOrientation(contours[i], src);
+        if (opt != 0)
+        {
+            getOrientation(contours[i], src);
+        }
+        
     }
 
     return src;
+}
 
+Mat ApplyPCA(const Mat& img)
+{
+    return ApplyBasicSegmentation(img,1);
 }
 
 Mat ApplyFindContourns(const Mat& img)
 {
-    Mat src = img.clone();
-    // Convert image to grayscale
-    Mat gray;
-    cvtColor(src, gray, COLOR_BGR2GRAY);
-    // Convert image to binary
-    Mat bw;
-    threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
-    // Find all the contours in the thresholded image
-    std::vector<std::vector<Point> > contours;
-    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
-    for (size_t i = 0; i < contours.size(); i++)
-    {
-        // Calculate the area of each contour
-        double area = contourArea(contours[i]);
-        // Ignore contours that are too small or too large
-        if (area < 1e2 || 1e5 < area) continue;
-        // Draw each contour only for visualisation purposes
-        drawContours(src, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
-    }
-
-    return src;
+    return ApplyBasicSegmentation(img);
 }

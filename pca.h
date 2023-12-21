@@ -6,5 +6,6 @@
 
 void drawAxis(Mat&, Point, Point, Scalar, const float);
 double getOrientation(const std::vector<Point>&, Mat&);
+Mat ApplyBasicSegmentation(const Mat& img, int opt = 0);
 Mat ApplyPCA(const Mat& img);
 Mat ApplyFindContourns(const Mat& img);
