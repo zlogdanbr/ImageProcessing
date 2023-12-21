@@ -447,7 +447,7 @@ Mat ApplySobelExtended( const Mat& img,
 }
 
 // https://docs.opencv.org/3.4/d9/db0/tutorial_hough_lines.html
-Mat ApplyHoughTransformCustom(const Mat& img)
+Mat ApplyHoughTransformLines(const Mat& img)
 {
     Mat dst;
     Mat cdst;
@@ -479,6 +479,47 @@ Mat ApplyHoughTransformCustom(const Mat& img)
 
     return cdst;
 }
+
+
+Mat ApplyHoughTransformCircles(const Mat& img)
+{
+    Mat dst;
+    Mat cdst;
+
+    // Apply Canny algorithm
+    cv::Mat contours;
+    Canny(img, dst, 50, 200, 3);
+
+    // Copy edges to the images that will display the results in BGR
+    cvtColor(dst, cdst, COLOR_GRAY2BGR);
+
+    // Standard Hough circles Transform
+    std::vector<cv::Vec3f> circles;
+    cv::HoughCircles(   dst, 
+                        circles, 
+                        cv::HOUGH_GRADIENT,
+                        2, //accumulator resolution (size of the image/2)
+                        50, // minimum distance between two circles
+                        200, // Canny high threshold
+                        100, // minimum number of votes
+                        25,
+                        100); // min and max radius
+
+
+    auto itc = circles.begin();
+    while ( itc != circles.end()) 
+    {
+        cv::circle( cdst,
+                    cv::Point((*itc)[0], (*itc)[1]), // circle centre
+                    (*itc)[2], // circle radius
+                    cv::Scalar(255), // color
+                    2); // thickness
+        ++itc;
+    }
+    return cdst;
+
+}
+
 
 Mat Sharpening(const Mat& img)
 {

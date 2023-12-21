@@ -220,7 +220,8 @@ void CInputDialog::setSimpleMaps()
     fsimple["Difference of Gaussians"] = ApplyDoG;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
-    fsimple["Hough Transform Custom"] = ApplyHoughTransformCustom;
+    fsimple["Hough Transform Lines"] = ApplyHoughTransformLines;
+    fsimple["Hough Transform Circles"] = ApplyHoughTransformCircles;
     fsimple["Convert to Binary"] = getBinaryImage;
     fsimple["Erode"] = ApplyErode;
     fsimple["Dilate"] = ApplyDilate;

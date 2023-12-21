@@ -57,7 +57,8 @@ Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
 /*
 * Hough Transform
 */
-Mat ApplyHoughTransformCustom(const Mat& img);
+Mat ApplyHoughTransformLines(const Mat& img);
+Mat ApplyHoughTransformCircles(const Mat& img);
 
 /* 
 * Edge detectors Laplacian

@@ -41,7 +41,8 @@ namespace image_constants
 		"Laplacian Extended",
 		"Sobel",
 		"Canny Extended",
-		"Hough Transform Custom",
+		"Hough Transform Lines",
+		"Hough Transform Circles",
 		"Harris Algorithm",
 		"Find Contourns",
 		"PCA"
