@@ -9,7 +9,7 @@ void thresh_callback(int, void*)
 {
 }
 
-void applyMultiple(std::vector<Mat>& images)
+void ApplyAndCompare(std::vector<Mat>& images)
 {
     Mat& Standard = images[0];
     for (const auto& i : images)
@@ -58,31 +58,7 @@ Mat ApplyCustomAlgo(const Mat& image)
 
 }
 
-Mat segmentationDVG(Mat& image)
-{
-    Mat img1 = ApplyTopHatAlgo(image);
-    img1 = convertograyScale(img1);
-    img1 = GaussianImageSmoothExtended(img1, 3, 0.1, 0.1);
-    img1 = getBinaryImage(img1);
-
-
-    cv::floodFill(img1, // input/ouput image
-        cv::Point(1, 1), // seed point
-        cv::Scalar(45, 134, 200), // repainted color
-        (cv::Rect*)0, // bounding rect of the repainted set
-        cv::Scalar(35, 35, 35), // low/high difference threshold
-        cv::Scalar(35, 35, 35), // identical most of the time
-        cv::FLOODFILL_FIXED_RANGE);// pixels compared to seed
-
-
-    img1 = InvertImage(img1);
-
-    Mat final = convertograyScale(image) + img1;
-
-    return final;
-}
-
-Mat ApplyDoG(const Mat& im)
+Mat ApplyDIfferenceOfGaussian(const Mat& im)
 {
     Mat img1 = GaussianImageSmoothExtended(im, 3, 0.1, 0.1);
     Mat img2 = GaussianImageSmoothExtended(im, 3, 1, 1);
@@ -446,12 +422,13 @@ Mat ApplySobelExtended( const Mat& img,
     return sobel;
 }
 
-
 /* -------------------------------------------------------------------------------------------
 OpenCV 3 Computer Vision
 Application Programming
 Cookbook
 Third Edition
+My note: for further processing the std::vector<Vec4i> linesP is what we will use in later
+processing
 ----------------------------------------------------------------------------------------------*/
 Mat ApplyHoughTransformLines(const Mat& img)
 {
@@ -469,7 +446,7 @@ Mat ApplyHoughTransformLines(const Mat& img)
     std::vector<Vec4i> linesP; // will hold the results of the detection
     HoughLinesP(    dst, 
                     linesP, 
-                    1, 
+                    1,              
                     CV_PI / 180, 
                     50, 
                     50, 
@@ -490,6 +467,8 @@ OpenCV 3 Computer Vision
 Application Programming
 Cookbook
 Third Edition
+My note: for further processing the std::vector<cv::Vec3f> circles is what we will use in later
+processing
 ----------------------------------------------------------------------------------------------*/
 Mat ApplyHoughTransformCircles(const Mat& img)
 {
@@ -514,7 +493,6 @@ Mat ApplyHoughTransformCircles(const Mat& img)
                         100, // minimum number of votes
                         25,
                         100); // min and max radius
-
 
     auto itc = circles.begin();
     while ( itc != circles.end()) 
@@ -670,12 +648,119 @@ Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)
     return contours;
 }
 
+std::vector<Vec4i> GetLinesHoughTransform(  const Mat& img,
+                                            double rho,
+                                            double theta,
+                                            double minLineLength,
+                                            double maxLineGap)
+{
+    Mat dst;
+
+    // Apply Canny algorithm
+    cv::Mat contours;
+    Canny(img, dst, 50, 200, 3);
+
+    // Probabilistic Line Transform
+    std::vector<Vec4i> linesP; // will hold the results of the detection
+
+    /*----------------------------------------------------------------------------------------------------------------
+        image	        8-bit, single-channel binary source image. The image may be modified by the function.
+        lines	        Output vector of lines. Each line is represented by a 4-element vector (x1,y1,x2,y2) ,
+                        where (x1,y1) and (x2,y2) are the ending points of each detected line segment.
+        rho	            Distance resolution of the accumulator in pixels.
+        theta	        Angle resolution of the accumulator in radians.
+        threshold	    Accumulator threshold parameter. Only those lines are returned that get enough votes ( >threshold ).
+        minLineLength	Minimum line length. Line segments shorter than that are rejected.
+        maxLineGap	    Maximum allowed gap between points on the same line to link them.
+
+    ----------------------------------------------------------------------------------------------------------------*/
+    HoughLinesP(dst,
+        linesP,
+        rho,
+        theta,
+        50,
+        minLineLength,
+        maxLineGap);
+
+    return linesP;
+}
+
+std::vector<cv::Vec3f> GetCirclesHoughTransform(const Mat& img,
+                                                int method,
+                                                double dp,
+                                                double minDist,
+                                                double param1,
+                                                double param2,
+                                                int  minRadius,
+                                                int  maxRadius)
+{
+    Mat dst;
+    Mat cdst;
+
+    // Apply Canny algorithm
+    cv::Mat contours;
+    Canny(img, dst, 50, 200, 3);
+
+    // Copy edges to the images that will display the results in BGR
+    cvtColor(dst, cdst, COLOR_GRAY2BGR);
+
+    // Standard Hough circles Transform
+    std::vector<cv::Vec3f> circles;
+
+    /*------------------------------------------------------------------------------------------------
+        image	    8-bit, single-channel, grayscale input image.
+        circles	    Output vector of found circles. Each vector is encoded as 3 or 4
+                    element floating-point vector (x,y,radius) or (x,y,radius,votes) .
+        method	    Detection method, see HoughModes.
+                    The available methods are HOUGH_GRADIENT and HOUGH_GRADIENT_ALT.
+        dp	        Inverse ratio of the accumulator resolution to the image resolution.
+                    For example, if dp=1 , the accumulator has the same resolution as the input image.
+                    If dp=2 , the accumulator has half as big width and height.
+                    For HOUGH_GRADIENT_ALT the recommended value is dp=1.5, unless some
+                    small very circles need to be detected.
+        minDist	    Minimum distance between the centers of the detected circles.
+                    If the parameter is too small, multiple neighbor circles may be falsely detected
+                    in addition to a true one. If it is too large, some circles may be missed.
+        param1	    First method-specific parameter. In case of HOUGH_GRADIENT and HOUGH_GRADIENT_ALT,
+                    it is the higher threshold of the two passed to the Canny edge detector (the lower one is twice smaller).
+                    Note that HOUGH_GRADIENT_ALT uses Scharr algorithm to compute image derivatives,
+                    so the threshold value shough normally be higher, such as 300 or normally exposed and contrasty images.
+        param2	    Second method-specific parameter. In case of HOUGH_GRADIENT, it is the
+                    accumulator threshold for the circle centers at the detection stage.
+                    The smaller it is, the more false circles may be detected. Circles,
+                    corresponding to the larger accumulator values, will be returned first.
+                    In the case of HOUGH_GRADIENT_ALT algorithm, this is the circle "perfectness" measure.
+                    The closer it to 1, the better shaped circles algorithm selects.
+                    In most cases 0.9 should be fine. If you want get better detection of small circles,
+                    you may decrease it to 0.85, 0.8 or even less. But then also try to limit the search range
+                    [minRadius, maxRadius] to avoid many false circles.
+        minRadius	Minimum circle radius.
+        maxRadius	Maximum circle radius. If <= 0, uses the maximum image dimension.
+                    If < 0, HOUGH_GRADIENT returns centers without finding the radius.
+                    HOUGH_GRADIENT_ALT always computes circle radiuses.
+    ----------------------------------------------------------------------------------------------------*/
+    cv::HoughCircles(dst,
+        circles,
+        cv::HOUGH_GRADIENT,
+        dp, //accumulator resolution (size of the image/2)
+        minDist, // minimum distance between two circles
+        param1, // 
+        param2, // 
+        minRadius,
+        maxRadius); // min and max radius
+
+    return circles;
+
+}
+
 /*
 I have just copied and pasted and edited here so I could see this working
 it is not active at all unless you run this code using the function
 ApplyCustomAlgo, replacing the body function with
 
 MM(img);
+
+// https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/
 
 */
 Mat NN(const Mat& img)

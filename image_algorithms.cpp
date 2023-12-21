@@ -217,7 +217,7 @@ void CInputDialog::setSimpleMaps()
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
-    fsimple["Difference of Gaussians"] = ApplyDoG;
+    fsimple["Difference of Gaussians"] = ApplyDIfferenceOfGaussian;
     fsimple["Sharpening"] = Sharpening;
     fsimple["Unsharp"] = Unsharp;
     fsimple["Hough Transform Lines"] = ApplyHoughTransformLines;

@@ -109,13 +109,10 @@ private:
         auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Show Difference", "Show Difference");
         menuCompare->SetBitmap(wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_MENU));
 
-        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Image Space", "Image Space");
+        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Compare", "Image Space");
         menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
-        auto menuDrawAt = menuAlgo->Append(DRAW_ON_IMAGE, "Draw on image", "Draw on image"); 
-        menuDrawAt->SetBitmap(wxArtProvider::GetBitmap(wxART_TIP, wxART_MENU));
     }
-
 
 
 };

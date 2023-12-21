@@ -68,7 +68,16 @@ Mat ApplyBasicSegmentation(const Mat& img, int opt)
     Mat src = img.clone();
     // Convert image to grayscale
     Mat gray;
-    cvtColor(src, gray, COLOR_BGR2GRAY);
+
+    if (isGrayScaleImage(src) == false)
+    {
+        cvtColor(src, gray, COLOR_BGR2GRAY);
+    }
+    else
+    {   
+        gray = src.clone();
+    }
+
     // Convert image to binary
     Mat bw;
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);

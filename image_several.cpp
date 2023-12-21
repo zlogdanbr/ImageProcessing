@@ -228,7 +228,7 @@ void CLoadImageSet::doProcess()
 		return;
 	}
 
-	applyMultiple(_images);
+	ApplyAndCompare(_images);
 
 }
 

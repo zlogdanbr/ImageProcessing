@@ -60,6 +60,7 @@ Mat ApplyCustomKernel(const Mat& img, Mat& kernel);
 Mat ApplyHoughTransformLines(const Mat& img);
 Mat ApplyHoughTransformCircles(const Mat& img);
 
+
 /* 
 * Edge detectors Laplacian
 */
@@ -115,7 +116,7 @@ Mat ApplyTopHatAlgo(const Mat& img);
 Mat segmentErode(const Mat& img);
 
 /*
-*  Advanced Algorithms and detectors
+*  Advanced Algorithms
 */
 Mat detectCornersHarrisAlgoFull(const Mat& image,
                                 int neighborhood_size,
@@ -127,14 +128,34 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 
 Mat ApplyCustomAlgo(const Mat& image);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
-Mat ApplyDoG(const Mat& im);
+Mat ApplyDIfferenceOfGaussian(const Mat& im);
 
-// https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/
+
+
+void ApplyAndCompare(std::vector<Mat>& images);
+
+/*
+*   Actual detectors
+*/
+std::vector<Vec4i> GetLinesHoughTransform(
+    const Mat& img,
+    double rho,
+    double theta,
+    double minLineLength,
+    double maxLineGap);
+
+std::vector<cv::Vec3f> GetCirclesHoughTransform(
+    const Mat& img,
+    int method,
+    double dp,
+    double minDist,
+    double param1,
+    double param2,
+    int  minRadius,
+    int  maxRadius);
+
+
 Mat NN(const Mat& img);
-
-Mat segmentationDVG(Mat& image);
-
-void applyMultiple(std::vector<Mat>& images);
 
 #endif
 
