@@ -38,6 +38,11 @@ double getOrientation(const std::vector<Point>& pts, Mat& img)
                             static_cast<int>(pca_analysis.mean.at<double>(0, 1)));
 
     //Store the eigenvalues and eigenvectors
+
+    // NOTE: For practical purposes this is the information we need:
+    // the eigen vectors and eingen values
+    // these describe the region of the countours previously found
+
     std::vector<Point2d> eigen_vecs(2);
     std::vector<double> eigen_val(2);
     for (int i = 0; i < 2; i++)
@@ -102,4 +107,59 @@ Mat ApplyPCA(const Mat& img)
 Mat ApplyFindContourns(const Mat& img)
 {
     return ApplyBasicSegmentation(img);
+}
+
+
+/**-----------------------------------------------------------------------------
+*       Given a set of counters it returns the eigenspace of them
+*       which is the set of all
+*       eigenvectors
+*       eigenvalues
+*       centers
+* 
+*       INPUT  param: countours of a image img
+*       OUTPUT param: centers of all pair of eigenvector and eigenvalues
+*       OUTPUT einSpace representing all eigenvectors/eigenvalues
+*--------------------------------------------------------------------------------
+*/
+eigenSpace getEingenSpace(const contourns& contours, centers& c)
+{
+    eigenSpace espace;
+    eigenvectors evctors;
+    eigenvalues evalues;
+
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        std::vector<Point> pts = contours[i];
+        //Construct a buffer used by the pca analysis
+        int sz = static_cast<int>(pts.size());
+        Mat data_pts = Mat(sz, _dim2D, CV_64F);
+        for (int i = 0; i < data_pts.rows; i++)
+        {
+            data_pts.at<double>(i, 0) = pts[i].x;
+            data_pts.at<double>(i, 1) = pts[i].y;
+        }
+
+        //Perform PCA analysis
+        PCA pca_analysis(data_pts, Mat(), PCA::DATA_AS_ROW);
+
+        eigenvector eigen_vecs(_dim2D);
+        eigenvalue eigen_val(_dim2D);
+        for (int i = 0; i < _dim2D; i++)
+        {
+            eigen_vecs[i] = Point2d(pca_analysis.eigenvectors.at<double>(i, 0),
+                                    pca_analysis.eigenvectors.at<double>(i, 1));
+            eigen_val[i] = pca_analysis.eigenvalues.at<double>(i);
+        }
+
+        center _c(static_cast<int>(pca_analysis.mean.at<double>(0, 0)), static_cast<int>(pca_analysis.mean.at<double>(0, 1)));
+        c.push_back(_c);
+        evctors.push_back(eigen_vecs);
+        evalues.push_back(eigen_val);
+    }
+
+    espace.first = evctors;
+    espace.second = evalues;
+
+    return espace;
 }
