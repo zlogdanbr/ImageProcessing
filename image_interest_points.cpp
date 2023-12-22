@@ -73,7 +73,7 @@ std::stringstream getImageInfoMoments(const Mat& img)
         std::pair<int, int> Centroid = getCentroid(momInertia);
         double area = contourArea(object.region);
 
-        if (invalid(Centroid, area) == false)
+        if (invalid(Centroid, area, 10,2000) == false)
         {
             os << "--------------------------------------------------------" << std::endl;
             os << "Region " << cnt << std::endl;
@@ -92,9 +92,12 @@ std::stringstream getImageInfoMoments(const Mat& img)
 
 }
 
-bool invalid(std::pair<int, int>& centroid, double& area)
+bool invalid(   std::pair<int, int>& centroid, 
+                double& area, 
+                double area_threshold_min, 
+                double area_threshold_max)
 {
-    if (area <= 0)
+    if (area <= area_threshold_min || area >= area_threshold_max)
     {
         return true;
     }
@@ -108,6 +111,7 @@ bool invalid(std::pair<int, int>& centroid, double& area)
     {
         return true;
     }
+
 
     return false;
 

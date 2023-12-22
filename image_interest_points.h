@@ -1,6 +1,9 @@
 #pragma once
 
-#include "pca.h"
+#include "opcvwrapper.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 #include <limits.h>
 
 constexpr int RECTANGLE_APROX = 1;
@@ -24,5 +27,5 @@ std::vector<cv::Point> getMomentOfRegionCollection(InfoRegions& inf);
 std::stringstream getImageInfoMoments(const Mat& img);
 std::pair<int, int> getCentroid(cv::Moments& momInertia);
 
-bool invalid(std::pair<int, int>& centroid, double& area);
+bool invalid(std::pair<int, int>& centroid, double& area, double area_threshold_min = 0, double area_threshold_max = 2000);
 

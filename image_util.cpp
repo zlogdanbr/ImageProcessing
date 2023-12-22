@@ -107,26 +107,23 @@ namespace image_util
     {
         Mat out;
         int h = img.size().height;
-        int w = img.size().width;
+        int w = img.size().width;       
+        double area_screen = wscreen * hscreen;
+        double area_img = h*w;
+        float ratio = area_screen / area_img;
 
-        if ( ( wscreen < img.size().width && hscreen > img.size().height) ||
-             (wscreen < img.size().width && hscreen < img.size().height)  ||
-             (wscreen > img.size().width && hscreen < img.size().height))
-        {        
-            double area_screen = wscreen * hscreen;
-            double area_img = h*w;
-
-            float ratio = area_screen / area_img;
-
-            if (ratio < 1)
-            {
-                Size s(w / 2, h / 2);
-                resize(img, out, s);
-            }
-
-            return out;
+        if (ratio < 1)
+        {
+            int w1 = w / 2;
+            int h1 = (area_screen + area_img) / w;                
+            Size s(w1, h1);
+            resize(img, out, s);
         }
-        out = img.clone();
+        else
+        {
+            out = img.clone();
+        }
+        
         return out;
     }
 

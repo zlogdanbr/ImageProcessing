@@ -84,7 +84,7 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         int hs = sizeScreen.height;
         int ws = sizeScreen.width;
 
-        clone = fitImageOnScreen(clone, ws, hs);
+        cv::namedWindow("Final", cv::WINDOW_NORMAL);
         Rect rect = selectROI("Final", clone, false);
         clone = Mat(clone, rect);
         clone = fitImageOnScreen(clone,ws, hs);

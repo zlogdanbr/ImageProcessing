@@ -1,5 +1,5 @@
 #include "pca.h"
-
+#include "image_interest_points.h"
 
 void drawAxis(Mat& img, Point p, Point q, Scalar colour, const float scale = 0.2)
 {
