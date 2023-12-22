@@ -378,6 +378,17 @@ void CInputDialog::DoFunction()
         return;
     }
 
+    //"Get PCA Info"
+    if (_algorithm == "Get PCA Info")
+    {
+        if (imghelper->getOriginalImageInitiated() == true)
+        {
+            std::stringstream info = getEingenSpaceInfo(imghelper->getOrginalImageOpenCV());
+            outxt->writeInfo(info);
+        }
+        return;
+    }
+
     Function1Parameter  function1P  = getAlgoFunctionOnePar(_algorithm);
 
     if (function1P != nullptr)

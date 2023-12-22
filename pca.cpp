@@ -1,5 +1,6 @@
 #include "pca.h"
 
+
 void drawAxis(Mat& img, Point p, Point q, Scalar colour, const float scale = 0.2)
 {
     double angle = atan2((double)p.y - q.y, (double)p.x - q.x); // angle in radians
@@ -118,57 +119,150 @@ Mat ApplyFindContourns(const Mat& img)
     return ApplyBasicSegmentation(img);
 }
 
+std::pair<
+    std::vector<Point2d>,
+    std::vector<double>
+         >
+getdata(const std::vector<Point>& pts, Mat& img, center& c)
+{
+    //Construct a buffer used by the pca analysis
+    int sz = static_cast<int>(pts.size());
+    Mat data_pts = Mat(sz, 2, CV_64F);
+    for (int i = 0; i < data_pts.rows; i++)
+    {
+        data_pts.at<double>(i, 0) = pts[i].x;
+        data_pts.at<double>(i, 1) = pts[i].y;
+    }
 
-/**-----------------------------------------------------------------------------
-*       Given a set of counters it returns the eigenspace of them
-*       which is the set of all
-*       eigenvectors
-*       eigenvalues
-*       centers
-* 
-*       INPUT  param: countours of a image img
-*       OUTPUT param: centers of all pair of eigenvector and eigenvalues
-*       OUTPUT einSpace representing all eigenvectors/eigenvalues
-*--------------------------------------------------------------------------------
-*/
-eigenSpace getEingenSpace(const contourns& contours, centers& c)
+    //Perform PCA analysis
+    PCA pca_analysis(data_pts, Mat(), PCA::DATA_AS_ROW);
+
+    //Store the center of the object
+    Point cntr = Point(     static_cast<int>(pca_analysis.mean.at<double>(0, 0)),
+                            static_cast<int>(pca_analysis.mean.at<double>(0, 1)));
+
+    c.first = cntr.x;
+    c.second = cntr.y;
+
+    // NOTE: For practical purposes this is the information we need:
+    // the eigen vectors and eingen values
+    // these describe the region of the countours previously found
+
+    std::vector<Point2d> eigen_vecs(2);
+    std::vector<double> eigen_val(2);
+
+    for (int i = 0; i < 2; i++)
+    {
+        eigen_vecs[i] = Point2d(    pca_analysis.eigenvectors.at<double>(i, 0),
+                                    pca_analysis.eigenvectors.at<double>(i, 1));
+
+        eigen_val[i] = pca_analysis.eigenvalues.at<double>(i);
+    }
+
+    std::pair< std::vector<Point2d>, std::vector<double>> p;
+
+    p.first = eigen_vecs;
+    p.second = eigen_val;
+
+    return p;
+
+}
+
+eigenSpace getEingenSpace(const contourns& contours, Mat& src, centers& _centers)
 {
     eigenSpace espace;
     eigenvectors evctors;
     eigenvalues evalues;
+    ;
 
     for (size_t i = 0; i < contours.size(); i++)
     {
-        std::vector<Point> pts = contours[i];
-        //Construct a buffer used by the pca analysis
-        int sz = static_cast<int>(pts.size());
-        Mat data_pts = Mat(sz, _dim2D, CV_64F);
-        for (int i = 0; i < data_pts.rows; i++)
-        {
-            data_pts.at<double>(i, 0) = pts[i].x;
-            data_pts.at<double>(i, 1) = pts[i].y;
-        }
+        // Calculate the area of each contour
+        double area = contourArea(contours[i]);
+        // Ignore contours that are too small or too large
+        if (area < 1e2 || 1e5 < area) continue;
 
-        //Perform PCA analysis
-        PCA pca_analysis(data_pts, Mat(), PCA::DATA_AS_ROW);
-
-        eigenvector eigen_vecs(_dim2D);
-        eigenvalue eigen_val(_dim2D);
-        for (int i = 0; i < _dim2D; i++)
-        {
-            eigen_vecs[i] = Point2d(pca_analysis.eigenvectors.at<double>(i, 0),
-                                    pca_analysis.eigenvectors.at<double>(i, 1));
-            eigen_val[i] = pca_analysis.eigenvalues.at<double>(i);
-        }
-
-        center _c(static_cast<int>(pca_analysis.mean.at<double>(0, 0)), static_cast<int>(pca_analysis.mean.at<double>(0, 1)));
-        c.push_back(_c);
-        evctors.push_back(eigen_vecs);
-        evalues.push_back(eigen_val);
+        center c;
+        std::pair< std::vector<Point2d>, std::vector<double>> p = getdata(contours[i], src,c);
+        evctors.push_back(p.first);
+        evalues.push_back(p.second);
+        _centers.push_back(c);
     }
 
     espace.first = evctors;
     espace.second = evalues;
-
     return espace;
+}
+
+std::vector<std::vector<Point> > getCont(const Mat& img)
+{
+    Mat src = img.clone();
+    // Convert image to grayscale
+    Mat gray;
+
+    if (isGrayScaleImage(src) == false)
+    {
+        cvtColor(src, gray, COLOR_BGR2GRAY);
+    }
+    else
+    {
+        gray = src.clone();
+    }
+
+    // Convert image to binary
+    Mat bw;
+    threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
+    // Find all the contours in the thresholded image
+    std::vector<std::vector<Point> > contours;
+    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
+
+    return contours;
+}
+
+std::stringstream  getEingenSpaceInfo(const Mat& img)
+{
+    std::stringstream outinfo;
+    //------------------------------------------------------------------------
+    //   Step 1 : Find contourns
+    //------------------------------------------------------------------------
+
+    std::vector<std::vector<Point> > contours = getCont(img);
+
+    //------------------------------------------------------------------------
+    //  Step 2 : Find centers, Eigenvectors and Eigenvalues
+    //------------------------------------------------------------------------
+    centers _centers;
+    Mat clone = img.clone();
+    eigenSpace _espace = getEingenSpace(contours, clone, _centers);
+
+    //------------------------------------------------------------------------
+    //  Step 3 : Print values to a stringstream
+    //------------------------------------------------------------------------
+    outinfo << "---------------------------------------------------------------------" << std::endl;
+    outinfo << "Image Components Information" << std::endl;
+    eigenvectors evectors = _espace.first;
+    eigenvalues  evalues = _espace.second;
+
+    for (int i = 0; i < evectors.size(); i++)
+    {
+        outinfo << "---------------------------------------------------------------------" << std::endl;
+        outinfo << "Eigenvectors of region " << i << std::endl;
+        for (const auto evcts : evectors[i])
+        {
+            outinfo << "[ " << evcts.x << " , " << evcts.y << " ] ";
+        }
+        outinfo << std::endl;
+
+        outinfo << "Eigenvalues of region " << i << std::endl;
+        for (const auto evalue : evalues[i])
+        {
+            outinfo << "[ " << evalue << " ] ";
+        }
+        outinfo << std::endl;
+
+        outinfo << "Center of region " << i << std::endl;
+        outinfo << "[ " << _centers[i].first << " , " << _centers[i].second << " ]" << std::endl;
+    }
+
+    return outinfo;
 }

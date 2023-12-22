@@ -1,5 +1,8 @@
 #pragma once
 #include "opcvwrapper.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 
 // Source
 // https://docs.opencv.org/4.x/d1/dee/tutorial_introduction_to_pca.html
@@ -22,6 +25,15 @@ Mat ApplyPCA(const Mat& img);
 Mat ApplyFindContourns(const Mat& img);
 
 
-eigenSpace getEingenSpace(const contourns& contours, centers& c);
+eigenSpace getEingenSpace(const contourns& contours, Mat& src, centers& _centers);
+std::vector<std::vector<Point> > getCont(const Mat& img);
+
+std::pair< 
+				std::vector<Point2d>, 
+				std::vector<double>
+		>
+getdata(const std::vector<Point>& pts, Mat& img, center& c);
+
+std::stringstream getEingenSpaceInfo(const Mat& img);
 
 
