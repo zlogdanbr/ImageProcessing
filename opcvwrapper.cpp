@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <wx/gdicmn.h> 
+#include <wx/textdlg.h>
 #include "pca.h"
 
 void thresh_callback(int, void*)
@@ -24,6 +25,68 @@ void ApplyAndCompare(std::vector<Mat>& images)
     int standard_size_width = Standard.width;
     int standard_size_height = Standard.height;
 
+    std::vector<wxString> choices = {   
+                                        "PCA",
+                                        "Hough Lines",
+                                        "Hough Circles",
+                                        "Find Contourns",
+                                        "Morphological Gradient",
+                                        "Morphological Top Hat",
+                                        "Difference of Gaussians",
+                                        "Morphological Segmentation"                                                                                  
+                                    };
+    wxSingleChoiceDialog dialog(
+        NULL,
+        "Choose Basic Element",
+        "Choose Basic Element",
+        static_cast<int>(choices.size()), choices.data());
+
+    dialog.ShowModal();
+
+    image_util::Function1Parameter option = ApplyPCA;
+
+    wxString algo = dialog.GetStringSelection();
+    if (algo == "PCA")
+    {
+        option = ApplyPCA;
+    }
+    else
+    if (algo == "Hough Lines")
+    {
+        option = ApplyHoughTransformLines;
+    }
+    else
+    if (algo == "Hough Circles")
+    {
+        option = ApplyHoughTransformCircles;
+    }
+    else
+    if (algo == "Find Contourns")
+    {
+        option = ApplyFindContourns;
+    }
+    else
+    if (algo == "Morphological Gradient")
+    {
+        option = ApplyMorphGradient;
+    }
+    else
+    if (algo == "Morphological Top Hat")
+    {
+        option = ApplyTopHatAlgo;
+    }
+    else
+    if (algo == "Difference of Gaussians")
+    {
+        option = ApplyDIfferenceOfGaussian;
+    }
+    else
+    if (algo == "Morphological Segmentation")
+    {
+        option = segmentErode;
+    }
+
+
     for (int i = 0; i < images.size(); i++)
     {
         if (i != 0)
@@ -31,7 +94,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
             resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
         }
 
-        images[i] = ApplyPCA(images[i]);
+        images[i] = option(images[i]);
     }
 
     image_util::showManyImagesOnScreen(images);
