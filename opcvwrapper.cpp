@@ -86,6 +86,17 @@ bool loadImage(const std::string& image_path, Mat& img)
 
 bool isGrayScaleImage(const Mat& img)
 {
+    if (img.type() == CV_8UC1)
+    { 
+        // gray-level image
+        // single-channel 8-bit image
+        return true;
+    }
+    else if (img.type() == CV_8UC3) 
+    { 
+        // color image
+        return false;
+    }
     return  (img.channels() == 1) ? true : false;
 }
 
