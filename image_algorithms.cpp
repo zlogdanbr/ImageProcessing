@@ -4,6 +4,7 @@
 #include <chrono>
 #include <ctime>
 #include <wx/textdlg.h>
+#include "image_interest_points.h"
 
 using namespace std::chrono;
 using   tp = high_resolution_clock::time_point;
@@ -384,6 +385,16 @@ void CInputDialog::DoFunction()
         if (imghelper->getOriginalImageInitiated() == true)
         {
             std::stringstream info = getEingenSpaceInfo(imghelper->getOrginalImageOpenCV());
+            outxt->writeInfo(info);
+        }
+        return;
+    }
+
+    if (_algorithm == "Get Contourns Info")
+    {
+        if (imghelper->getOriginalImageInitiated() == true)
+        {
+            std::stringstream info = getImageInfoMoments(imghelper->getOrginalImageOpenCV());
             outxt->writeInfo(info);
         }
         return;

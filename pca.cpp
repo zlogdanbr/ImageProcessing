@@ -84,7 +84,28 @@ Mat ApplyBasicSegmentation(const Mat& img, int opt)
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
     // Find all the contours in the thresholded image
     std::vector<std::vector<Point> > contours;
-    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
+
+    /*
+            retrieves only the extreme outer contours. It sets `hierarchy[i][2]=hierarchy[i][3]=-1` for
+            all the contours. 
+            RETR_EXTERNAL = 0
+
+            retrieves all of the contours without establishing any hierarchical relationships. 
+            RETR_LIST = 1
+
+            retrieves all of the contours and organizes them into a two-level hierarchy. At the top
+            level, there are external boundaries of the components. At the second level, there are
+            boundaries of the holes. If there is another contour inside a hole of a connected component, it
+            is still put at the top level. 
+            RETR_CCOMP = 2
+
+            retrieves all of the contours and reconstructs a full hierarchy of nested contours.
+            RETR_TREE = 3,
+            RETR_FLOODFILL = 4 
+
+    */
+    findContours(bw, contours, RETR_CCOMP, CHAIN_APPROX_TC89_KCOS);
+
     for (size_t i = 0; i < contours.size(); i++)
     {
         // Calculate the area of each contour
@@ -93,13 +114,13 @@ Mat ApplyBasicSegmentation(const Mat& img, int opt)
         if (area < 1e2 || 1e5 < area) continue;
         // Draw each contour only for visualisation purposes  
         
-        if (opt == 0)
+        if (opt == 0 || opt == 3)
         {
             drawContours(src, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
         }
 
         // Find the orientation of each shape
-        if (opt != 0)
+        if (opt == 3)
         {
             getOrientation(contours[i], src);
         }
@@ -111,7 +132,7 @@ Mat ApplyBasicSegmentation(const Mat& img, int opt)
 
 Mat ApplyPCA(const Mat& img)
 {
-    return ApplyBasicSegmentation(img,1);
+    return ApplyBasicSegmentation(img,3);
 }
 
 Mat ApplyFindContourns(const Mat& img)
@@ -143,11 +164,6 @@ getdata(const std::vector<Point>& pts, Mat& img, center& c)
 
     c.first = cntr.x;
     c.second = cntr.y;
-
-    // NOTE: For practical purposes this is the information we need:
-    // the eigen vectors and eingen values
-    // these describe the region of the countours previously found
-
     std::vector<Point2d> eigen_vecs(2);
     std::vector<double> eigen_val(2);
 
@@ -173,7 +189,6 @@ eigenSpace getEingenSpace(const contourns& contours, Mat& src, centers& _centers
     eigenSpace espace;
     eigenvectors evctors;
     eigenvalues evalues;
-    ;
 
     for (size_t i = 0; i < contours.size(); i++)
     {
@@ -214,7 +229,7 @@ std::vector<std::vector<Point> > getCont(const Mat& img)
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
     // Find all the contours in the thresholded image
     std::vector<std::vector<Point> > contours;
-    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
+    findContours(bw, contours, RETR_CCOMP, CHAIN_APPROX_TC89_KCOS);
 
     return contours;
 }

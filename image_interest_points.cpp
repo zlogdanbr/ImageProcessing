@@ -44,12 +44,71 @@ ObjectsCollection getObjectsInfo(std::vector<std::vector<Point> >& raw_contourns
     return Objects;
 }
 
-cv::Moments getMomentOfObjectsCollection(InfoRegions& inf)
-{
-    return inf.momInertia;
-}
 
 std::vector<cv::Point> getMomentOfRegionCollection(InfoRegions& inf)
 {
     return inf.region;
+}
+
+std::pair<int, int> getCentroid(cv::Moments& momInertia)
+{
+    int cx = momInertia.m10 / momInertia.m00;
+    int cy = momInertia.m01 / momInertia.m00;
+    std::pair<int, int> p(cx, cy);
+    return p;
+}
+
+std::stringstream getImageInfoMoments(const Mat& img)
+{
+
+    std::vector<std::vector<Point> > contours = detectRegions(img);
+    ObjectsCollection Objects = getObjectsInfo(contours);
+    std::stringstream os;
+
+    int cnt = 0;
+    for (const auto& object : Objects)
+    {
+        std::vector<cv::Point> reg = object.region;
+        cv::Moments momInertia = object.momInertia;
+        std::pair<int, int> Centroid = getCentroid(momInertia);
+        double area = contourArea(object.region);
+
+        if (invalid(Centroid, area) == false)
+        {
+            os << "--------------------------------------------------------" << std::endl;
+            os << "Region " << cnt << std::endl;
+            os << "--------------------------------------------------------" << std::endl;
+            os << "Centroid: (" << Centroid.first << "," << Centroid.second << ")" << std::endl;
+            os << "Area: " << area << std::endl;
+            cnt++;
+        }
+        else
+        {
+            continue;
+        }
+    }
+
+    return os;
+
+}
+
+bool invalid(std::pair<int, int>& centroid, double& area)
+{
+    if (area <= 0)
+    {
+        return true;
+    }
+
+    if (centroid.first >= INT_MAX || centroid.first <= INT_MIN)
+    {
+        return true;
+    }
+
+    if (centroid.second >= INT_MAX || centroid.second <= INT_MIN)
+    {
+        return true;
+    }
+
+    return false;
+
 }

@@ -45,6 +45,7 @@ namespace image_constants
 		"Hough Transform Circles",
 		"Harris Algorithm",
 		"Find Contourns",
+		"Get Contourns Info",
 		"PCA",
 		"Get PCA Info"
 	};
