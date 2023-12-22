@@ -31,9 +31,13 @@ ObjectsCollection getObjectsInfo(std::vector<std::vector<Point> >& raw_contourns
     ObjectsCollection Objects;
     for (const auto& c : raw_contourns)
     {
+        std::vector<Point> _c = c;
+        double epsilon = 0.1 * arcLength(c, true);
+        approxPolyDP(c, _c, epsilon, true);
+
         std::vector<cv::Point> hull;
-        cv::convexHull(c, hull);
-        cv::Moments mom = cv::moments(cv::Mat(c));
+        cv::convexHull(_c, hull);
+        cv::Moments mom = cv::moments(cv::Mat(_c));
 
         InfoRegions inf;
         inf.region = hull;

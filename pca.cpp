@@ -22,6 +22,12 @@ void drawAxis(Mat& img, Point p, Point q, Scalar colour, const float scale = 0.2
 
 double getOrientation(const std::vector<Point>& pts, Mat& img)
 {
+
+    double epsilon = 0.1*arcLength(pts, true);
+    std::vector<std::vector<Point> > p;
+    approxPolyDP(pts, pts, epsilon, true);
+
+
     //Construct a buffer used by the pca analysis
     int sz = static_cast<int>(pts.size());
     Mat data_pts = Mat(sz, 2, CV_64F);
