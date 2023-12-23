@@ -197,6 +197,11 @@ std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img)
         objectsIndex++;
     }
 
+    if (base != nullptr)
+    {
+        delete base;
+    }
+
     return os;
 }
 
