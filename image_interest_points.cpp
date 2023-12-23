@@ -1,7 +1,7 @@
 #include "image_interest_points.h"
 
 
-void CImageComponentsDescriptor::detectRegions()
+void CImageComponentsDescriptorBase::detectRegions()
 {
     Mat src = original_image.clone();
     // Convert image to grayscale
@@ -23,40 +23,7 @@ void CImageComponentsDescriptor::detectRegions()
     findContours(bw, raw_contourns, RETR_LIST, CHAIN_APPROX_NONE);
 }
 
-void CImageComponentsDescriptor::getObjectsInfo()
-{    
-    for (const auto& c : raw_contourns)
-    {
-        // declare the region
-        std::vector<Point> original = c;
-        std::vector<Point> hull;
-        std::vector<Point> Aprox;
-
-        double epsilon = 0.1 * arcLength(c, true);
-        approxPolyDP(original, Aprox, epsilon, true);
-        cv::convexHull(original, hull);
-
-        cv::Moments momInertiaHull = cv::moments(cv::Mat(hull));
-        cv::Moments momInertia = cv::moments(cv::Mat(original));
-        cv::Moments momInertiaAprox = cv::moments(cv::Mat(Aprox));
-
-        ImageComponentsDescriptor.region = original;
-        ImageComponentsDescriptor.regionHull = hull;
-        ImageComponentsDescriptor.regionAprox = Aprox;
-
-        ImageComponentsDescriptor.momInertia = momInertia;
-        ImageComponentsDescriptor.momInertiaHull = momInertiaHull;
-        ImageComponentsDescriptor.momInertiaAprox = momInertiaAprox;
-    
-        ImageComponentsDescriptor.convex = isContourConvex(original);
-        ImageComponentsDescriptor.convexHull = isContourConvex(hull);
-        ImageComponentsDescriptor.convexAprox = isContourConvex(Aprox);
-
-        Objects.push_back(ImageComponentsDescriptor);
-    }
-}
-
-std::pair<int, int> CImageComponentsDescriptor::getCentroid(cv::Moments& momInertia) const
+std::pair<int, int> CImageComponentsDescriptorBase::getCentroid(cv::Moments& momInertia) const
 {
     int cx = momInertia.m10 / momInertia.m00;
     int cy = momInertia.m01 / momInertia.m00;
@@ -64,12 +31,12 @@ std::pair<int, int> CImageComponentsDescriptor::getCentroid(cv::Moments& momIner
     return p;
 }
 
-double CImageComponentsDescriptor::getArea(std::vector<cv::Point>& region) const
+double CImageComponentsDescriptorBase::getArea(std::vector<cv::Point>& region) const
 {
     return contourArea(region);
 }
 
-bool CImageComponentsDescriptor::invalid(   std::pair<int, int>& centroid,
+bool CImageComponentsDescriptorBase::invalid(   std::pair<int, int>& centroid,
                                             double& area,
                                             double area_threshold_min,
                                             double area_threshold_max) const
@@ -94,43 +61,149 @@ bool CImageComponentsDescriptor::invalid(   std::pair<int, int>& centroid,
 }
 
 
+void CImageComponentsDescriptorNormal::getObjectsInfo()
+{
+    for (const auto& c : raw_contourns)
+    {
+        // declare the region
+        std::vector<Point> original = c;
+        cv::Moments momInertia = cv::moments(cv::Mat(original));
+        ImageComponentsDescriptor.region = original;
+        ImageComponentsDescriptor.momInertia = momInertia;
+        ImageComponentsDescriptor.convex = isContourConvex(original);
+        Objects.push_back(ImageComponentsDescriptor);
+    }
+}
+
+void CImageComponentsDescriptorHull::getObjectsInfo()
+{
+    for (const auto& c : raw_contourns)
+    {
+        // declare the region
+        std::vector<Point> hull;
+        convexHull(c, hull);
+        Moments momInertiaHull = cv::moments(cv::Mat(hull));
+        ImageComponentsDescriptor.region = hull;
+        ImageComponentsDescriptor.momInertia = momInertiaHull;
+        ImageComponentsDescriptor.convex = isContourConvex(hull);
+        Objects.push_back(ImageComponentsDescriptor);
+    }
+}
+
+
+void CImageComponentsDescriptorAprox::getObjectsInfo()
+{
+    for (const auto& c : raw_contourns)
+    {
+        // declare the region
+        std::vector<Point> Aprox;
+        double epsilon = 0.1 * arcLength(c, true);
+        approxPolyDP(c, Aprox, epsilon, true);
+        cv::Moments momInertiaAprox = cv::moments(cv::Mat(Aprox));
+        ImageComponentsDescriptor.region = Aprox;
+        ImageComponentsDescriptor.momInertia = momInertiaAprox;
+        ImageComponentsDescriptor.convex = isContourConvex(Aprox);
+        Objects.push_back(ImageComponentsDescriptor);
+    }
+}
+
+template<typename T>
+void CCompare<T>::calculateDescriptors()
+{
+    std::unique_ptr<T> descriptor1{ new T{img1} };
+    std::unique_ptr<T> descriptor2{ new T{img2} };
+
+    descriptor1->detectRegions();
+    descriptor1->getObjectsInfo();
+    _imag1_descriptions = descriptor1->getImageFullInformation();
+
+    descriptor2->detectRegions();
+    descriptor2->getObjectsInfo();
+    _imag2_descriptions = descriptor2->getImageFullInformation();
+}
+
+
 std::stringstream getImageInfoMoments(const Mat& img)
 {
+
+    Mat clone = img.clone();
+
+    std::vector<wxString> choices = {
+                                        "Normal algorithm",
+                                        "Hull",
+                                        "Aproximation"
+                                    };
+    wxSingleChoiceDialog dialog(
+        NULL,
+        "Algorithm",
+        "Algorithm",
+        static_cast<int>(choices.size()), choices.data());
+
+    dialog.ShowModal();
+
+    CImageComponentsDescriptorBase* base = nullptr;
+
+    wxString algo = dialog.GetStringSelection();
+    if (algo == "Normal algorithm")
+    {
+        base = new CImageComponentsDescriptorNormal(img);
+    }
+    else
+    if (algo == "Hull")
+    {
+        base = new CImageComponentsDescriptorHull(img);
+    }
+    else
+    if ( algo == "Aproximation")
+    {
+        base = new CImageComponentsDescriptorAprox(img);
+    }
+    else
+    {
+        base = new CImageComponentsDescriptorNormal(img);
+    }
+
+    return Apply(base, clone);
+
+}
+
+std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img)
+{
+
     std::stringstream os;
-    CImageComponentsDescriptor Descriptor(img);
-    Descriptor.detectRegions();
-    Descriptor.getObjectsInfo();
-    ObjectsCollection Information = Descriptor.getImageFullInformation();
+
+    base->detectRegions();
+    base->getObjectsInfo();
+    ObjectsCollection Information = base->getImageFullInformation();
     int objectsIndex = 0;
     for (auto& object : Information)
     {
+
+        double Area = base->getArea(object.region);
+        std::pair<int, int> centroid = base->getCentroid(object.momInertia);
+
+        if (base->invalid(centroid, Area, 10, 2000))
+        {
+            continue;
+        }
+
         os << "Region " << objectsIndex << std::endl;
         os << "--------------------------------------------------------------------------------" << std::endl;
-        
-        os << "\tRegular Contorn:" << std::endl;
-        os << "\t\tArea: " << Descriptor.getArea( object.region);
-        std::pair<int, int> centroid = Descriptor.getCentroid(object.momInertia);
-        os << "\t\tCentroid: "  << "[" << centroid.first << "," << centroid.second << "]" << std::endl;
-        std::string convex = object.convex ? "convex" : "not Convex";
-        os << "\t\t" << "The region is " << convex << std::endl;
-
-        os << "\tHull Contorn:" << std::endl;
-        os << "\t\tArea: " << Descriptor.getArea(object.regionHull);
-        std::pair<int, int> centroidHull = Descriptor.getCentroid(object.momInertiaHull);
-        os << "\t\tCentroid: " << "[" << centroidHull.first << "," << centroidHull.second << "]" << std::endl;
-        std::string convexHull = object.convexHull ? "convex" : "not Convex";
+        os << "\t\tArea: " << Area;
+        os << "\t\tCentroid: " << "[" << centroid.first << "," << centroid.second << "]" << std::endl;
+        std::string convexHull = object.convex ? "convex" : "not Convex";
         os << "\t\t" << "The region is " << convexHull << std::endl;
-
-        os << "\tAproximated Contorn:" << std::endl;
-        os << "\t\tArea: " << Descriptor.getArea(object.regionAprox);
-        std::pair<int, int> centroidAprox = Descriptor.getCentroid(object.momInertiaAprox);
-        os << "\t\tCentroid: " << "[" << centroidAprox.first << "," << centroidAprox.second << "]" << std::endl;
-        std::string convexAprox = object.convexAprox ? "convex" : "not Convex";
-        os << "\t\t" << "The region is " << convexAprox << std::endl;
-
         os << "--------------------------------------------------------------------------------" << std::endl;
         objectsIndex++;
     }
 
     return os;
+}
+
+void test()
+{
+    Mat img1;
+    Mat img2;
+    CCompare< CImageComponentsDescriptorNormal > c(img1, img2);
+    c.calculateDescriptors();
 }
