@@ -122,93 +122,89 @@ void CCompare<T>::calculateDescriptors()
     _imag2_descriptions = descriptor2->getImageFullInformation();
 }
 
-
-std::stringstream getImageInfoMoments(const Mat& img)
+namespace image_info
 {
-
-    Mat clone = img.clone();
-
-    std::vector<wxString> choices = {
-                                        "Normal algorithm",
-                                        "Hull",
-                                        "Aproximation"
-                                    };
-    wxSingleChoiceDialog dialog(
-        NULL,
-        "Algorithm",
-        "Algorithm",
-        static_cast<int>(choices.size()), choices.data());
-
-    dialog.ShowModal();
-
-    CImageComponentsDescriptorBase* base = nullptr;
-
-    wxString algo = dialog.GetStringSelection();
-    if (algo == "Normal algorithm")
-    {
-        base = new CImageComponentsDescriptorNormal(img);
-    }
-    else
-    if (algo == "Hull")
-    {
-        base = new CImageComponentsDescriptorHull(img);
-    }
-    else
-    if ( algo == "Aproximation")
-    {
-        base = new CImageComponentsDescriptorAprox(img);
-    }
-    else
-    {
-        base = new CImageComponentsDescriptorNormal(img);
-    }
-
-    return Apply(base, clone);
-
-}
-
-std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img)
-{
-
-    std::stringstream os;
-
-    base->detectRegions();
-    base->getObjectsInfo();
-    ObjectsCollection Information = base->getImageFullInformation();
-    int objectsIndex = 0;
-    for (auto& object : Information)
+    std::stringstream getImageInfoMoments(const Mat& img)
     {
 
-        double Area = base->getArea(object.region);
-        std::pair<int, int> centroid = base->getCentroid(object.momInertia);
+        Mat clone = img.clone();
 
-        if (base->invalid(centroid, Area, 10, 2000))
+        std::vector<wxString> choices = {
+                                            "Normal algorithm",
+                                            "Hull",
+                                            "Aproximation"
+        };
+        wxSingleChoiceDialog dialog(
+            NULL,
+            "Algorithm",
+            "Algorithm",
+            static_cast<int>(choices.size()), choices.data());
+
+        dialog.ShowModal();
+
+        CImageComponentsDescriptorBase* base = nullptr;
+
+        wxString algo = dialog.GetStringSelection();
+        if (algo == "Normal algorithm")
         {
-            continue;
+            base = new CImageComponentsDescriptorNormal(img);
+        }
+        else
+            if (algo == "Hull")
+            {
+                base = new CImageComponentsDescriptorHull(img);
+            }
+            else
+                if (algo == "Aproximation")
+                {
+                    base = new CImageComponentsDescriptorAprox(img);
+                }
+                else
+                {
+                    base = new CImageComponentsDescriptorNormal(img);
+                }
+
+        return Apply(base, clone);
+
+    }
+
+    std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img)
+    {
+
+        std::stringstream os;
+
+        base->detectRegions();
+        base->getObjectsInfo();
+        ObjectsCollection Information = base->getImageFullInformation();
+        int objectsIndex = 0;
+        for (auto& object : Information)
+        {
+
+            double Area = base->getArea(object.region);
+            std::pair<int, int> centroid = base->getCentroid(object.momInertia);
+
+            if (base->invalid(centroid, Area, 10, 2000))
+            {
+                continue;
+            }
+
+            os << "Region " << objectsIndex << std::endl;
+            os << "--------------------------------------------------------------------------------" << std::endl;
+            os << "\t\tArea: " << Area;
+            os << "\t\tCentroid: " << "[" << centroid.first << "," << centroid.second << "]" << std::endl;
+            std::string convexHull = object.convex ? "convex" : "not Convex";
+            os << "\t\t" << "The region is " << convexHull << std::endl;
+            os << "--------------------------------------------------------------------------------" << std::endl;
+            objectsIndex++;
         }
 
-        os << "Region " << objectsIndex << std::endl;
-        os << "--------------------------------------------------------------------------------" << std::endl;
-        os << "\t\tArea: " << Area;
-        os << "\t\tCentroid: " << "[" << centroid.first << "," << centroid.second << "]" << std::endl;
-        std::string convexHull = object.convex ? "convex" : "not Convex";
-        os << "\t\t" << "The region is " << convexHull << std::endl;
-        os << "--------------------------------------------------------------------------------" << std::endl;
-        objectsIndex++;
-    }
+        if (base != nullptr)
+        {
+            delete base;
+        }
 
-    if (base != nullptr)
-    {
-        delete base;
+        return os;
     }
-
-    return os;
 }
 
-void test()
-{
-    Mat img1;
-    Mat img2;
-    CCompare< CImageComponentsDescriptorNormal > c(img1, img2);
-    c.calculateDescriptors();
-}
+

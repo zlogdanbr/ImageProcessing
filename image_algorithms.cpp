@@ -394,7 +394,7 @@ void CInputDialog::DoFunction()
     {
         if (imghelper->getOriginalImageInitiated() == true)
         {
-            std::stringstream info = getImageInfoMoments(imghelper->getOrginalImageOpenCV());
+            std::stringstream info = image_info::getImageInfoMoments(imghelper->getOrginalImageOpenCV());
             outxt->writeInfo(info);
         }
         return;

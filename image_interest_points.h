@@ -43,7 +43,7 @@ struct ComponentsDescriptor
 		return *this;
 	}
 
-	ComponentsDescriptor& operator=(ComponentsDescriptor&& rhs)
+	ComponentsDescriptor& operator=(ComponentsDescriptor&& rhs) noexcept
 	{
 		this->region = rhs.region;
 		this->momInertia = rhs.momInertia;
@@ -65,15 +65,19 @@ public:
 
 	CImageComponentsDescriptorBase(const Mat& img) :original_image(img) {};
 	~CImageComponentsDescriptorBase() { original_image.deallocate(); };
+
 	void detectRegions();
-	virtual void getObjectsInfo() = 0;
 	ObjectsCollection getImageFullInformation()const { return Objects; };
+
 	std::pair<int, int> getCentroid(cv::Moments& momInertia) const;
 	double getArea(std::vector<cv::Point>& region) const;
 	bool invalid(			std::pair<int, int>& centroid,
 							double& area,
 							double area_threshold_min = 0,
 							double area_threshold_max = 2000) const;
+
+	// implement for each type of contour you are using
+	virtual void getObjectsInfo() = 0;
 
 protected:
 
@@ -84,8 +88,6 @@ protected:
 	ObjectsCollection Objects;
 	RegionPoints raw_contourns;
 	Mat original_image;
-
-
 
 };
 
@@ -115,16 +117,8 @@ class CCompare
 {
 public:
 
-	CCompare(Mat& img1, Mat& img2) :img1{img1}, img2{img2}
-	{
-
-	};
-
-	~CCompare()
-	{
-	}
-
-
+	CCompare(Mat& img1, Mat& img2) :img1{ img1 }, img2{ img2 } {};
+	~CCompare() {};
 	void calculateDescriptors();
 	
 private:
@@ -138,10 +132,14 @@ private:
 
 };
 
-std::stringstream getImageInfoMoments(const Mat& img);
+namespace image_info
+{
+	std::stringstream getImageInfoMoments(const Mat& img);
+	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
+}
 
-std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
 
-void test();
+
+
 
 
