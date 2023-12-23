@@ -4,16 +4,11 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <limits.h>
 
-constexpr int RECTANGLE_APROX = 1;
-constexpr int CIRCLE_APROX = 2;
-constexpr int POLYGONAL_APROX = 3;
-constexpr int CONVEXHULL_APROX = 4;
 
-
-
-struct ImageComponentsDescriptor
+struct ComponentsDescriptor
 {
 	std::vector<cv::Point> region;
 	std::vector<cv::Point> regionHull;
@@ -28,30 +23,40 @@ struct ImageComponentsDescriptor
 	bool convexAprox = false;
 };
 
-using ObjectsCollection = std::vector< ImageComponentsDescriptor>;
-using RegionPoints		= std::vector<std::vector<Point> >;
+using ObjectsCollection = std::vector< ComponentsDescriptor>;
+using RegionPoints = std::vector<std::vector<Point> >;
 
-RegionPoints 
-	detectRegions(const Mat& img);
+class CImageComponentsDescriptor final
+{
+public:
 
-ObjectsCollection 
-	getObjectsInfo(RegionPoints& raw_contourns);
+	CImageComponentsDescriptor(const Mat& img) :original_image(img) {};
+	~CImageComponentsDescriptor() { original_image.deallocate(); };
+	void detectRegions();
+	void getObjectsInfo();
+	ObjectsCollection getImageFullInformation()const { return Objects; };
+	std::pair<int, int> getCentroid(cv::Moments& momInertia) const;
+	double getArea(std::vector<cv::Point>& region) const;
 
-std::vector<cv::Point> 
-	getMomentOfRegionCollection(ImageComponentsDescriptor& inf);
+private:
 
-std::stringstream  
-	getImageInfoMoments(const Mat& img);
+	CImageComponentsDescriptor(CImageComponentsDescriptor&) = delete;
+	CImageComponentsDescriptor& operator=(CImageComponentsDescriptor&) = delete;
 
-std::pair<int, int> 
-	getCentroid(cv::Moments& momInertia);
+	ComponentsDescriptor ImageComponentsDescriptor;
+	ObjectsCollection Objects;
+	RegionPoints raw_contourns;
+	Mat original_image;
 
-double 
-	getArea(std::vector<cv::Point>& region);
+	
 
-bool 
-	invalid(	std::pair<int, int>& centroid, 
-				double& area, 
-				double area_threshold_min = 0, 
-				double area_threshold_max = 2000);
+	bool invalid(	std::pair<int, int>& centroid,
+					double& area,
+					double area_threshold_min = 0,
+					double area_threshold_max = 2000) const;
+
+};
+
+std::stringstream getImageInfoMoments(const Mat& img);
+
 

@@ -1,9 +1,9 @@
 #include "image_interest_points.h"
 
 
-RegionPoints detectRegions(const Mat& img )
+void CImageComponentsDescriptor::detectRegions()
 {
-    Mat src = img.clone();
+    Mat src = original_image.clone();
     // Convert image to grayscale
     Mat gray;
 
@@ -20,15 +20,11 @@ RegionPoints detectRegions(const Mat& img )
     Mat bw;
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
     // Find all the contours in the thresholded image
-    RegionPoints contours;
-    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
-    return contours;
-
+    findContours(bw, raw_contourns, RETR_LIST, CHAIN_APPROX_NONE);
 }
 
-ObjectsCollection getObjectsInfo(RegionPoints& raw_contourns)
-{
-    ObjectsCollection Objects;
+void CImageComponentsDescriptor::getObjectsInfo()
+{    
     for (const auto& c : raw_contourns)
     {
         // declare the region
@@ -44,34 +40,23 @@ ObjectsCollection getObjectsInfo(RegionPoints& raw_contourns)
         cv::Moments momInertia = cv::moments(cv::Mat(original));
         cv::Moments momInertiaAprox = cv::moments(cv::Mat(Aprox));
 
-        ImageComponentsDescriptor inf;
+        ImageComponentsDescriptor.region = original;
+        ImageComponentsDescriptor.regionHull = hull;
+        ImageComponentsDescriptor.regionAprox = Aprox;
 
-        inf.region = original;
-        inf.regionHull = hull;
-        inf.regionAprox = Aprox;
+        ImageComponentsDescriptor.momInertia = momInertia;
+        ImageComponentsDescriptor.momInertiaHull = momInertiaHull;
+        ImageComponentsDescriptor.momInertiaAprox = momInertiaAprox;
+    
+        ImageComponentsDescriptor.convex = isContourConvex(original);
+        ImageComponentsDescriptor.convexHull = isContourConvex(hull);
+        ImageComponentsDescriptor.convexAprox = isContourConvex(Aprox);
 
-        inf.momInertia = momInertia;
-        inf.momInertiaHull = momInertiaHull;
-        inf.momInertiaAprox = momInertiaAprox;
-
-        inf.convex = isContourConvex(original);
-        inf.convexHull = isContourConvex(hull);
-        inf.convexAprox = isContourConvex(Aprox);
-
-        Objects.push_back(inf);
+        Objects.push_back(ImageComponentsDescriptor);
     }
-
-    return Objects;
 }
 
-
-std::vector<cv::Point> getMomentOfRegionCollection(ImageComponentsDescriptor& inf)
-{
-    return inf.region;
-}
-
-std::pair<int, int> 
-getCentroid(cv::Moments& momInertia)
+std::pair<int, int> CImageComponentsDescriptor::getCentroid(cv::Moments& momInertia) const
 {
     int cx = momInertia.m10 / momInertia.m00;
     int cy = momInertia.m01 / momInertia.m00;
@@ -79,16 +64,15 @@ getCentroid(cv::Moments& momInertia)
     return p;
 }
 
-double
-getArea(std::vector<cv::Point>& region)
+double CImageComponentsDescriptor::getArea(std::vector<cv::Point>& region) const
 {
     return contourArea(region);
 }
 
-bool invalid(   std::pair<int, int>& centroid,
-                double& area,
-                double area_threshold_min,
-                double area_threshold_max)
+bool CImageComponentsDescriptor::invalid(   std::pair<int, int>& centroid,
+                                            double& area,
+                                            double area_threshold_min,
+                                            double area_threshold_max) const
 {
     if (area <= area_threshold_min || area >= area_threshold_max)
     {
@@ -112,37 +96,41 @@ bool invalid(   std::pair<int, int>& centroid,
 
 std::stringstream getImageInfoMoments(const Mat& img)
 {
-
-    RegionPoints contours = detectRegions(img);
-    ObjectsCollection Objects = getObjectsInfo(contours);
     std::stringstream os;
-
-    int cnt = 0;
-    for (const auto& object : Objects)
+    CImageComponentsDescriptor Descriptor(img);
+    Descriptor.detectRegions();
+    Descriptor.getObjectsInfo();
+    ObjectsCollection Information = Descriptor.getImageFullInformation();
+    int objectsIndex = 0;
+    for (auto& object : Information)
     {
-        std::vector<cv::Point> reg = object.region;
-        cv::Moments momInertia = object.momInertia;
-        std::pair<int, int> Centroid = getCentroid(momInertia);
-        double area = contourArea(object.region);
+        os << "Region " << objectsIndex << std::endl;
+        os << "--------------------------------------------------------------------------------" << std::endl;
+        
+        os << "\tRegular Contorn:" << std::endl;
+        os << "\t\tArea: " << Descriptor.getArea( object.region);
+        std::pair<int, int> centroid = Descriptor.getCentroid(object.momInertia);
+        os << "\t\tCentroid: "  << "[" << centroid.first << "," << centroid.second << "]" << std::endl;
+        std::string convex = object.convex ? "convex" : "not Convex";
+        os << "\t\t" << "The region is " << convex << std::endl;
 
-        std::string _convex = object.convex ? "Convex" : "Not Convex";
+        os << "\tHull Contorn:" << std::endl;
+        os << "\t\tArea: " << Descriptor.getArea(object.regionHull);
+        std::pair<int, int> centroidHull = Descriptor.getCentroid(object.momInertiaHull);
+        os << "\t\tCentroid: " << "[" << centroidHull.first << "," << centroidHull.second << "]" << std::endl;
+        std::string convexHull = object.convexHull ? "convex" : "not Convex";
+        os << "\t\t" << "The region is " << convexHull << std::endl;
 
-        if (invalid(Centroid, area, 10,2000) == false)
-        {
-            os << "--------------------------------------------------------" << std::endl;
-            os << "Region " << cnt << std::endl;
-            os << "--------------------------------------------------------" << std::endl;
-            os << "Centroid: (" << Centroid.first << "," << Centroid.second << ")" << std::endl;
-            os << "Area: " << area << std::endl;
-            os << _convex << std::endl;
-            cnt++;
-        }
-        else
-        {
-            continue;
-        }
+        os << "\tAproximated Contorn:" << std::endl;
+        os << "\t\tArea: " << Descriptor.getArea(object.regionAprox);
+        std::pair<int, int> centroidAprox = Descriptor.getCentroid(object.momInertiaAprox);
+        os << "\t\tCentroid: " << "[" << centroidAprox.first << "," << centroidAprox.second << "]" << std::endl;
+        std::string convexAprox = object.convexAprox ? "convex" : "not Convex";
+        os << "\t\t" << "The region is " << convexAprox << std::endl;
+
+        os << "--------------------------------------------------------------------------------" << std::endl;
+        objectsIndex++;
     }
 
     return os;
-
 }
