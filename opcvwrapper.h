@@ -129,10 +129,10 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 Mat ApplyCustomAlgo(const Mat& image);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat ApplyDIfferenceOfGaussian(const Mat& im);
+Mat ApplyFindContourns(const Mat& img);
 
 
-
-void ApplyAndCompare(std::vector<Mat>& images);
+std::vector<std::stringstream> ApplyAndCompare(std::vector<Mat>& images);
 
 /*
 *   Actual detectors

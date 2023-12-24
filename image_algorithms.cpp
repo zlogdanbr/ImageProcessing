@@ -231,8 +231,8 @@ void CInputDialog::setSimpleMaps()
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fsimple["Segmentation Erode"] = segmentErode;
-    fsimple["PCA"] = ApplyPCA;
     fsimple["Find Contourns"] = ApplyFindContourns;
+    fsimple["Test PCA"] = TestPCA;
 }
 
 void CInputDialog::setOtherMaps()
@@ -394,7 +394,7 @@ void CInputDialog::DoFunction()
     {
         if (imghelper->getOriginalImageInitiated() == true)
         {
-            std::stringstream info = image_info::getImageInfoMoments(imghelper->getOrginalImageOpenCV());
+            std::stringstream info = image_info::getImageInfoMoments(imghelper->getOrginalImageOpenCV(),0);
             outxt->writeInfo(info);
         }
         return;

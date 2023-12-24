@@ -66,7 +66,7 @@ public:
 	CImageComponentsDescriptorBase(const Mat& img) :original_image(img) {};
 	~CImageComponentsDescriptorBase() { original_image.deallocate(); };
 
-	void detectRegions();
+	void detectRegions(int mode1 = RETR_CCOMP, int mode2 = CHAIN_APPROX_NONE);
 	ObjectsCollection getImageFullInformation()const { return Objects; };
 
 	std::pair<int, int> getCentroid(cv::Moments& momInertia) const;
@@ -134,7 +134,7 @@ private:
 
 namespace image_info
 {
-	std::stringstream getImageInfoMoments(const Mat& img);
+	std::stringstream getImageInfoMoments(const Mat& img, int opt);
 	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
 }
 

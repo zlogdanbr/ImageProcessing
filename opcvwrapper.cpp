@@ -5,14 +5,16 @@
 #include <wx/gdicmn.h> 
 #include <wx/textdlg.h>
 #include "pca.h"
+#include "image_interest_points.h"
 
 void thresh_callback(int, void*)
 {
 }
 
-void ApplyAndCompare(std::vector<Mat>& images)
+std::vector<std::stringstream>  ApplyAndCompare(std::vector<Mat>& images)
 {
-
+    std::vector<std::stringstream> allinfo;
+        
     Size Standard = images[0].size();
     for (const auto& i : images)
     {
@@ -26,7 +28,6 @@ void ApplyAndCompare(std::vector<Mat>& images)
     int standard_size_height = Standard.height;
 
     std::vector<wxString> choices = {   
-                                        "PCA",
                                         "Hough Lines",
                                         "Hough Circles",
                                         "Find Contourns",
@@ -37,20 +38,15 @@ void ApplyAndCompare(std::vector<Mat>& images)
                                     };
     wxSingleChoiceDialog dialog(
         NULL,
-        "Choose Basic Element",
-        "Choose Basic Element",
+        "Choose Algorithm",
+        "Choose Algorithm",
         static_cast<int>(choices.size()), choices.data());
 
     dialog.ShowModal();
 
-    image_util::Function1Parameter option = ApplyPCA;
+    image_util::Function1Parameter option = ApplyFindContourns;
 
     wxString algo = dialog.GetStringSelection();
-    if (algo == "PCA")
-    {
-        option = ApplyPCA;
-    }
-    else
     if (algo == "Hough Lines")
     {
         option = ApplyHoughTransformLines;
@@ -86,19 +82,22 @@ void ApplyAndCompare(std::vector<Mat>& images)
         option = segmentErode;
     }
 
-
     for (int i = 0; i < images.size(); i++)
     {
+        std::stringstream os;
         if (i != 0)
         {
             resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
         }
 
         images[i] = option(images[i]);
+        os = image_info::getImageInfoMoments(images[i],1);
+        allinfo.push_back(std::move(os));
     }
 
     image_util::showManyImagesOnScreen(images);
 
+    return allinfo;
 
 }
 /**
@@ -823,6 +822,61 @@ std::vector<cv::Vec3f> GetCirclesHoughTransform(const Mat& img,
 
     return circles;
 
+}
+
+Mat ApplyFindContourns(const Mat& img)
+{
+    Mat src = img.clone();
+    // Convert image to grayscale
+    Mat gray;
+
+    if (isGrayScaleImage(src) == false)
+    {
+        cvtColor(src, gray, COLOR_BGR2GRAY);
+    }
+    else
+    {
+        gray = src.clone();
+    }
+
+    // Convert image to binary
+    Mat bw;
+    threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
+    // Find all the contours in the thresholded image
+    std::vector<std::vector<Point> > contours;
+
+    /*
+            retrieves only the extreme outer contours. It sets `hierarchy[i][2]=hierarchy[i][3]=-1` for
+            all the contours.
+            RETR_EXTERNAL = 0
+
+            retrieves all of the contours without establishing any hierarchical relationships.
+            RETR_LIST = 1
+
+            retrieves all of the contours and organizes them into a two-level hierarchy. At the top
+            level, there are external boundaries of the components. At the second level, there are
+            boundaries of the holes. If there is another contour inside a hole of a connected component, it
+            is still put at the top level.
+            RETR_CCOMP = 2
+
+            retrieves all of the contours and reconstructs a full hierarchy of nested contours.
+            RETR_TREE = 3,
+            RETR_FLOODFILL = 4
+
+    */
+    findContours(bw, contours, RETR_CCOMP, CHAIN_APPROX_NONE);
+
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        // Calculate the area of each contour
+        double area = contourArea(contours[i]);
+        // Ignore contours that are too small or too large
+        if (area < 1e2 || 1e5 < area) continue;
+        // Draw each contour only for visualisation purposes  
+        drawContours(src, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+    }
+
+    return src;
 }
 
 /*

@@ -46,7 +46,7 @@ namespace image_constants
 		"Harris Algorithm",
 		"Find Contourns",
 		"Get Contourns Info",
-		"PCA",
-		"Get PCA Info"
+		"Get PCA Info",
+		"Test PCA"
 	};
 }

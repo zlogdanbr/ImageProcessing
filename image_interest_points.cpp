@@ -1,7 +1,7 @@
 #include "image_interest_points.h"
 
 
-void CImageComponentsDescriptorBase::detectRegions()
+void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
 {
     Mat src = original_image.clone();
     // Convert image to grayscale
@@ -20,7 +20,7 @@ void CImageComponentsDescriptorBase::detectRegions()
     Mat bw;
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
     // Find all the contours in the thresholded image
-    findContours(bw, raw_contourns, RETR_LIST, CHAIN_APPROX_NONE);
+    findContours(bw, raw_contourns, mode2, mode1);
 }
 
 std::pair<int, int> CImageComponentsDescriptorBase::getCentroid(cv::Moments& momInertia) const
@@ -124,47 +124,55 @@ void CCompare<T>::calculateDescriptors()
 
 namespace image_info
 {
-    std::stringstream getImageInfoMoments(const Mat& img)
+    std::stringstream getImageInfoMoments(const Mat& img, int opt)
     {
 
         Mat clone = img.clone();
 
-        std::vector<wxString> choices = {
-                                            "Normal algorithm",
-                                            "Hull",
-                                            "Aproximation"
-        };
-        wxSingleChoiceDialog dialog(
-            NULL,
-            "Algorithm",
-            "Algorithm",
-            static_cast<int>(choices.size()), choices.data());
-
-        dialog.ShowModal();
-
-        CImageComponentsDescriptorBase* base = nullptr;
-
-        wxString algo = dialog.GetStringSelection();
-        if (algo == "Normal algorithm")
+        if (opt == 0)
         {
-            base = new CImageComponentsDescriptorNormal(img);
-        }
-        else
+            std::vector<wxString> choices = {
+                                                "Normal algorithm",
+                                                "Hull",
+                                                "Aproximation"
+            };
+            wxSingleChoiceDialog dialog(
+                NULL,
+                "Algorithm for print info",
+                "Algorithm for print info",
+                static_cast<int>(choices.size()), choices.data());
+
+            dialog.ShowModal();
+
+            CImageComponentsDescriptorBase* base = nullptr;
+
+            wxString algo = dialog.GetStringSelection();
+            if (algo == "Normal algorithm")
+            {
+                base = new CImageComponentsDescriptorNormal(img);
+            }
+            else
             if (algo == "Hull")
             {
                 base = new CImageComponentsDescriptorHull(img);
             }
             else
-                if (algo == "Aproximation")
-                {
-                    base = new CImageComponentsDescriptorAprox(img);
-                }
-                else
-                {
-                    base = new CImageComponentsDescriptorNormal(img);
-                }
+            if (algo == "Aproximation")
+            {
+                base = new CImageComponentsDescriptorAprox(img);
+            }
+            else
+            {
+                base = new CImageComponentsDescriptorNormal(img);
+            }
 
-        return Apply(base, clone);
+            return Apply(base, clone);
+        }
+        else
+        {
+            CImageComponentsDescriptorNormal* desc =  new CImageComponentsDescriptorNormal(img);
+            return Apply(desc, clone);
+        }
 
     }
 
@@ -173,7 +181,7 @@ namespace image_info
 
         std::stringstream os;
 
-        base->detectRegions();
+        base->detectRegions(CHAIN_APPROX_SIMPLE);
         base->getObjectsInfo();
         ObjectsCollection Information = base->getImageFullInformation();
         int objectsIndex = 0;

@@ -1,11 +1,13 @@
 #include "childframes.h"
 
-CLoadImageSet::CLoadImageSet(	wxWindow* parent, 
-						wxWindowID id, 
-						const wxString& title, 
-						const wxPoint& pos, 
-						const wxSize& size, long style) : 
-						wxDialog(parent, id, title, pos, size, style)
+CLoadImageSet::CLoadImageSet(	wxWindow* parent,
+								CWriteLogs* outxt,
+								wxWindowID id,
+								const wxString& title,
+								const wxPoint& pos,
+								const wxSize& size, long style) :
+								outxt{ outxt },
+								wxDialog(parent, id, title, pos, size, style)
 {
 	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
@@ -228,7 +230,12 @@ void CLoadImageSet::doProcess()
 		return;
 	}
 
-	ApplyAndCompare(_images);
+	std::vector<std::stringstream> _out = ApplyAndCompare(_images);
+
+	for (auto& msg : _out)
+	{
+		outxt->writeInfo(msg);
+	}
 
 }
 

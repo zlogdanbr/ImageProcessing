@@ -365,14 +365,17 @@ protected:
 
     void setEventButtons();
 
+    CWriteLogs* outxt = nullptr;
+
 public:
 
     CLoadImageSet(  wxWindow* parent, 
-                wxWindowID id = wxID_ANY, 
-                const wxString& title = wxEmptyString, 
-                const wxPoint& pos = wxDefaultPosition, 
-                const wxSize& size = wxSize(482, 408),
-                long style = wxDEFAULT_DIALOG_STYLE);
+                    CWriteLogs* outxt,
+                    wxWindowID id = wxID_ANY, 
+                    const wxString& title = wxEmptyString, 
+                    const wxPoint& pos = wxDefaultPosition, 
+                    const wxSize& size = wxSize(482, 408),
+                    long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CLoadImageSet();
 
@@ -385,6 +388,8 @@ public:
     void doProcess();
 
     bool IsoK = false;
+
+    
 };
 
 #endif
