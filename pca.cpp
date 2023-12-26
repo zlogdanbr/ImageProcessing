@@ -1,4 +1,3 @@
-#include "pca.h"
 #include "image_interest_points.h"
 
 

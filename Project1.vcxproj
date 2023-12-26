@@ -288,7 +288,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />
     <ClCompile Include="opcvwrapper.cpp" />
-    <ClCompile Include="pca.cpp" />
     <ClCompile Include="savekernel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -302,7 +301,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />
     <ClInclude Include="opcvwrapper.h" />
-    <ClInclude Include="pca.h" />
     <ClInclude Include="savekernel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,6 +1,5 @@
 #include "childframes.h"
 #include "constants.h"
-#include "pca.h"
 #include <chrono>
 #include <ctime>
 #include <wx/textdlg.h>
@@ -375,17 +374,6 @@ void CInputDialog::DoFunction()
             {
                 outxt->writeTo("Error, final image not loaded\n");
             }
-        }
-        return;
-    }
-
-    //"Get PCA Info"
-    if (_algorithm == "Get PCA Info")
-    {
-        if (imghelper->getOriginalImageInitiated() == true)
-        {
-            std::stringstream info = getEingenSpaceInfo(imghelper->getOrginalImageOpenCV());
-            outxt->writeInfo(info);
         }
         return;
     }

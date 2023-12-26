@@ -4,7 +4,6 @@
 #include <fstream>
 #include <wx/gdicmn.h> 
 #include <wx/textdlg.h>
-#include "pca.h"
 #include "image_interest_points.h"
 
 void thresh_callback(int, void*)
