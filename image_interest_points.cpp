@@ -62,6 +62,11 @@ double CImageComponentsDescriptorBase::getOrientation(cv::Moments& momInertia) c
     double angle =  0.5 * atan(factor);
 
     double degrees = angle * (180.0 / CV_PI);
+
+    if (degrees < 0)
+    {
+        degrees = 180 + degrees;
+    }
     return degrees;
 }
 
