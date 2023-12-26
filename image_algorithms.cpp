@@ -232,7 +232,6 @@ void CInputDialog::setSimpleMaps()
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fsimple["Segmentation Erode"] = segmentErode;
     fsimple["Find Contourns"] = ApplyFindContourns;
-    fsimple["Test PCA"] = TestPCA;
 }
 
 void CInputDialog::setOtherMaps()
@@ -390,7 +389,7 @@ void CInputDialog::DoFunction()
         return;
     }
 
-    if (_algorithm == "Get Contourns Info")
+    if (_algorithm == "Find Contourns descriptors")
     {
         if (imghelper->getOriginalImageInitiated() == true)
         {

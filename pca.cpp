@@ -22,41 +22,6 @@ PCA getPCAAnalysis(const std::vector<Point>& pts)
     return pca_analysis;
 }
 
-static  Mat formatImagesForPCA(const Mat& data)
-{
-    Mat dst(1, data.rows * data.cols, CV_32F);
-
-    Mat image_row = data.clone().reshape(1, 1);
-    Mat row_i = dst;
-    image_row.convertTo(row_i, CV_32F);
-    return image_row;
-}
-
-
-Mat TestPCA(const Mat& img)
-{
-    Mat clone = convertograyScale(img);
-    int rows = clone.rows;
-    int channels = clone.channels();
-
-    Mat pcaset = formatImagesForPCA(clone);
-
-    PCA pca(pcaset,             // pass the data
-        Mat(),              // we do not have a pre-computed mean vector,
-        // so let the PCA engine to compute it
-        PCA::DATA_AS_ROW,   // indicate that the vectors
-        // are stored as matrix rows
-        // (use PCA::DATA_AS_COL if the vectors are
-        // the matrix columns)
-        100000
-    );
-
-    Mat compressed = pca.project(pcaset);
-    Mat reconstruction = pca.backProject(compressed); // re-create the image from the "point"
-    reconstruction = reconstruction.reshape(1, rows);
-    return reconstruction;
-}
-
 double calculateDistance2D(eigenvector& e)
 {
     double _d = pow(e[0].x - e[1].x,2)+ pow(e[0].y - e[1].y, 2);

@@ -24,9 +24,6 @@ PointValue getEingenFromContourn(const std::vector<Point>& pts, Mat& img, center
 std::stringstream getEingenSpaceInfo(const Mat& img);
 PCA getPCAAnalysis(const std::vector<Point>& pts);
 
-Mat Rebuild(PCA& pca, Mat& compressed, int channels, int rows);
-Mat TestPCA(const Mat& img);
-
 double calculateDistance2D(eigenvector& e);
 double Angle2D(eigenvector& e);
 int dotProduct2D(Point2d& v1, Point2d& v2);

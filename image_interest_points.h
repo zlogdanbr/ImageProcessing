@@ -56,8 +56,70 @@ struct ComponentsDescriptor
 	}
 };
 
+struct ImageDescriptors
+{
+	std::pair<int, int> centroid;
+	double Area;
+	double perimeter;
+	double r_factor;
+	double orientation;
+	bool convex;
+
+	friend bool operator==(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
+	{
+		return	(lhs.centroid == rhs.centroid) &&
+			(lhs.Area == rhs.Area) &&
+			(lhs.perimeter == rhs.perimeter) &&
+			(lhs.orientation == rhs.orientation) &&
+			(lhs.convex == rhs.convex);
+	}
+
+	friend bool operator>(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
+	{
+		return
+			(lhs.Area > rhs.Area) &&
+			(lhs.perimeter > rhs.perimeter) &&
+			(lhs.orientation > rhs.orientation) &&
+			(lhs.convex > rhs.convex);
+	}
+
+	friend bool operator<(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
+	{
+		return
+			(lhs.Area < rhs.Area) &&
+			(lhs.perimeter < rhs.perimeter) &&
+			(lhs.orientation < rhs.orientation) &&
+			(lhs.convex < rhs.convex);
+	}
+
+	double Distance( const ImageDescriptors& rhs)
+	{
+		int xlhs = this->centroid.first;
+		int ylhs = this->centroid.second;
+		int xrhs = rhs.centroid.first;
+		int yrhs = rhs.centroid.second;
+
+		return sqrt(pow(xrhs - xlhs, 2) + pow(yrhs - ylhs, 2));
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const ImageDescriptors& d)
+	{
+		os << "--------------------------------------------------------------------------------" << std::endl;
+		os << "\t\tArea: " << d.Area << std::endl;
+		os << "\t\tPerimeter: " << d.perimeter << std::endl;
+		os << "\t\tRoundness: " << d.r_factor << std::endl;
+		os << "\t\tOrientation: " << d.orientation << std::endl;
+		os << "\t\tCentroid: " << "[" << d.centroid.first << "," << d.centroid.second << "]" << std::endl;
+		std::string convexHull = d.convex ? "convex" : "not Convex";
+		os << "\t\t" << "The region is " << convexHull << std::endl;
+		os << "--------------------------------------------------------------------------------" << std::endl;
+		return os;
+	}
+};
+
 using ObjectsCollection = std::vector< ComponentsDescriptor>;
 using RegionPoints = std::vector<std::vector<Point> >;
+using Descriptors = std::deque< ImageDescriptors >;
 
 class CImageComponentsDescriptorBase
 {
@@ -70,7 +132,10 @@ public:
 	ObjectsCollection getImageFullInformation()const { return Objects; };
 
 	std::pair<int, int> getCentroid(cv::Moments& momInertia) const;
+	double getOrientation(cv::Moments& momInertia) const;
 	double getArea(std::vector<cv::Point>& region) const;
+	double getPerimeter(std::vector<cv::Point>& region, bool closed = true) const;
+	double getRoundNess(std::vector<cv::Point>& region);
 	bool invalid(			std::pair<int, int>& centroid,
 							double& area,
 							double area_threshold_min = 0,
@@ -135,6 +200,7 @@ private:
 namespace image_info
 {
 	std::stringstream getImageInfoMoments(const Mat& img, int opt);
+	Descriptors getImageDescriptors(const Mat& img, double _min_area = 2);
 	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
 }
 

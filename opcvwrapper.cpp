@@ -864,7 +864,7 @@ Mat ApplyFindContourns(const Mat& img)
             RETR_FLOODFILL = 4
 
     */
-    findContours(bw, contours, RETR_CCOMP, CHAIN_APPROX_NONE);
+    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
 
     for (size_t i = 0; i < contours.size(); i++)
     {

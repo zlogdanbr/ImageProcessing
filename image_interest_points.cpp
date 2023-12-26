@@ -20,7 +20,7 @@ void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
     Mat bw;
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
     // Find all the contours in the thresholded image
-    findContours(bw, raw_contourns, mode2, mode1);
+    findContours(bw, raw_contourns, mode1, mode2);
 }
 
 std::pair<int, int> CImageComponentsDescriptorBase::getCentroid(cv::Moments& momInertia) const
@@ -35,6 +35,34 @@ double CImageComponentsDescriptorBase::getArea(std::vector<cv::Point>& region) c
 {
     return contourArea(region);
 }
+
+double CImageComponentsDescriptorBase::getPerimeter(std::vector<cv::Point>& region, bool closed) const
+{
+    return arcLength(region, closed);
+}
+
+
+double CImageComponentsDescriptorBase::getRoundNess(std::vector<cv::Point>& region)
+{
+    double Area = getArea(region);
+    double Perimeter = getPerimeter(region);
+
+    return 4 * CV_PI * Area / pow(Perimeter,2);
+}
+
+double CImageComponentsDescriptorBase::getOrientation(cv::Moments& momInertia) const
+{
+    double u11 = momInertia.m11;
+    double u20 = momInertia.m20;
+    double u02 = momInertia.m02;
+
+    double factor = ( 2 * u11 )/ (u20 - u02);
+    double angle =  0.5 * atan(factor);
+
+    double degrees = angle * (180.0 / CV_PI);
+    return degrees;
+}
+
 
 bool CImageComponentsDescriptorBase::invalid(   std::pair<int, int>& centroid,
                                             double& area,
@@ -124,6 +152,47 @@ void CCompare<T>::calculateDescriptors()
 
 namespace image_info
 {
+
+    Descriptors getImageDescriptors(const Mat& img, double _min_area)
+    {
+
+        Descriptors out;
+
+        CImageComponentsDescriptorHull hull(img);
+
+        hull.detectRegions(CHAIN_APPROX_SIMPLE);
+        hull.getObjectsInfo();
+        ObjectsCollection Information = hull.getImageFullInformation();
+        int objectsIndex = 0;
+        for (auto& object : Information)
+        {
+
+            double Area = hull.getArea(object.region);
+            double perimeter = arcLength(object.region, true);
+            double r_factor = hull.getRoundNess(object.region);
+            double orientation = hull.getOrientation(object.momInertia);
+
+            std::pair<int, int> centroid = hull.getCentroid(object.momInertia);
+
+            if (hull.invalid(centroid, Area, _min_area, 2000))
+            {
+                continue;
+            }
+
+            ImageDescriptors d;
+
+            d.Area = Area;
+            d.perimeter = perimeter;
+            d.r_factor = r_factor;
+            d.orientation = orientation;
+            d.convex = object.convex;
+            d.centroid = centroid;
+
+            out.emplace_back(d);
+        }
+        return out;
+    }
+
     std::stringstream getImageInfoMoments(const Mat& img, int opt)
     {
 
@@ -189,6 +258,10 @@ namespace image_info
         {
 
             double Area = base->getArea(object.region);
+            double perimeter = arcLength(object.region, true);
+            double r_factor = base->getRoundNess(object.region);
+            double orientation = base->getOrientation(object.momInertia);
+
             std::pair<int, int> centroid = base->getCentroid(object.momInertia);
 
             if (base->invalid(centroid, Area, 10, 2000))
@@ -196,13 +269,18 @@ namespace image_info
                 continue;
             }
 
+            ImageDescriptors d;
+
+            d.Area = Area;
+            d.perimeter = perimeter;
+            d.r_factor = r_factor;
+            d.orientation = orientation;
+            d.convex = object.convex;
+            d.centroid = centroid;
+
             os << "Region " << objectsIndex << std::endl;
-            os << "--------------------------------------------------------------------------------" << std::endl;
-            os << "\t\tArea: " << Area;
-            os << "\t\tCentroid: " << "[" << centroid.first << "," << centroid.second << "]" << std::endl;
-            std::string convexHull = object.convex ? "convex" : "not Convex";
-            os << "\t\t" << "The region is " << convexHull << std::endl;
-            os << "--------------------------------------------------------------------------------" << std::endl;
+            os << d;
+   
             objectsIndex++;
         }
 
