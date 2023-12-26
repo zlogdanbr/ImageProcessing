@@ -77,7 +77,6 @@ struct ImageDescriptors
 	friend bool operator>(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
 	{
 		return (lhs.Area > rhs.Area);
-
 	}
 
 	friend bool operator<(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
@@ -165,26 +164,6 @@ class CImageComponentsDescriptorAprox : public CImageComponentsDescriptorBase
 public:
 	CImageComponentsDescriptorAprox(const Mat& img) :CImageComponentsDescriptorBase(img) {};
 	virtual void getObjectsInfo() override;
-};
-
-template<typename T>
-class CCompare
-{
-public:
-
-	CCompare(Mat& img1, Mat& img2) :img1{ img1 }, img2{ img2 } {};
-	~CCompare() {};
-	void calculateDescriptors();
-	
-private:
-
-	ObjectsCollection _imag1_descriptions;
-	ObjectsCollection _imag2_descriptions;
-	
-	Mat img1;
-	Mat img2;
-
-
 };
 
 namespace image_info

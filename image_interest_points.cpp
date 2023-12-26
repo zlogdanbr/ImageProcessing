@@ -18,11 +18,11 @@ void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
         gray = src.clone();
     }
 
-    // Convert image to binary
-    Mat bw;
-    threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
+    Mat canny_output;
+    Canny(gray, canny_output, 100, 200);
+
     // Find all the contours in the thresholded image
-    findContours(bw, raw_contourns, mode1, mode2);
+    findContours(canny_output, raw_contourns, mode1, mode2);
 }
 
 std::pair<int, int> CImageComponentsDescriptorBase::getCentroid(cv::Moments& momInertia) const
@@ -42,7 +42,6 @@ double CImageComponentsDescriptorBase::getPerimeter(std::vector<cv::Point>& regi
 {
     return arcLength(region, closed);
 }
-
 
 double CImageComponentsDescriptorBase::getRoundNess(std::vector<cv::Point>& region)
 {
@@ -115,21 +114,6 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
         ImageComponentsDescriptor.convex = isContourConvex(Aprox);
         Objects.push_back(ImageComponentsDescriptor);
     }
-}
-
-template<typename T>
-void CCompare<T>::calculateDescriptors()
-{
-    std::unique_ptr<T> descriptor1{ new T{img1} };
-    std::unique_ptr<T> descriptor2{ new T{img2} };
-
-    descriptor1->detectRegions();
-    descriptor1->getObjectsInfo();
-    _imag1_descriptions = descriptor1->getImageFullInformation();
-
-    descriptor2->detectRegions();
-    descriptor2->getObjectsInfo();
-    _imag2_descriptions = descriptor2->getImageFullInformation();
 }
 
 namespace image_info

@@ -230,7 +230,8 @@ void CInputDialog::setSimpleMaps()
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fsimple["Segmentation Erode"] = segmentErode;
-    fsimple["Find Contourns"] = ApplyFindContourns;
+    fsimple["Find Contourns"] = ApplyFindContournsThreshold;
+    fsimple["Find Contourns2"] = ApplyFindContournsCanny;
 }
 
 void CInputDialog::setOtherMaps()

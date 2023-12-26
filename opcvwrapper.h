@@ -129,7 +129,8 @@ Mat detectCornersHarrisAlgoFull(const Mat& image,
 Mat ApplyCustomAlgo(const Mat& image);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat ApplyDIfferenceOfGaussian(const Mat& im);
-Mat ApplyFindContourns(const Mat& img);
+Mat ApplyFindContournsThreshold(const Mat& img);
+Mat ApplyFindContournsCanny(const Mat& img);
 
 
 void ApplyAndCompare(std::vector<Mat>& images);

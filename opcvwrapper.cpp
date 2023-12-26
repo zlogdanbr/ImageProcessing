@@ -41,7 +41,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
 
     dialog.ShowModal();
 
-    image_util::Function1Parameter option = ApplyFindContourns;
+    image_util::Function1Parameter option = ApplyFindContournsThreshold;
 
     wxString algo = dialog.GetStringSelection();
     if (algo == "Hough Lines")
@@ -56,7 +56,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
     else
     if (algo == "Find Contourns")
     {
-        option = ApplyFindContourns;
+        option = ApplyFindContournsCanny;
     }
     else
     if (algo == "Morphological Gradient")
@@ -822,7 +822,7 @@ std::vector<cv::Vec3f> GetCirclesHoughTransform(const Mat& img,
 
 }
 
-Mat ApplyFindContourns(const Mat& img)
+Mat ApplyFindContournsThreshold(const Mat& img)
 {
     Mat src = img.clone();
     // Convert image to grayscale
@@ -880,6 +880,34 @@ Mat ApplyFindContourns(const Mat& img)
     }
 
     return src;
+}
+
+Mat ApplyFindContournsCanny(const Mat& img)
+{
+    Mat src_gray;
+    int thresh = 100;
+    RNG rng(12345);
+
+    Mat src = img.clone();
+
+    cvtColor(src, src_gray, COLOR_BGR2GRAY);
+    blur(src_gray, src_gray, Size(3, 3));
+
+    Mat canny_output;
+    Canny(src_gray, canny_output, thresh, thresh * 2);
+
+    std::vector<std::vector<Point> > contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(canny_output, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+    
+    Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3);
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+        drawContours(drawing, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+    }
+
+    return drawing;
 }
 
 /*
