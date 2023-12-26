@@ -76,20 +76,13 @@ struct ImageDescriptors
 
 	friend bool operator>(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
 	{
-		return
-			(lhs.Area > rhs.Area) &&
-			(lhs.perimeter > rhs.perimeter) &&
-			(lhs.orientation > rhs.orientation) &&
-			(lhs.convex > rhs.convex);
+		return (lhs.Area > rhs.Area);
+
 	}
 
 	friend bool operator<(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
 	{
-		return
-			(lhs.Area < rhs.Area) &&
-			(lhs.perimeter < rhs.perimeter) &&
-			(lhs.orientation < rhs.orientation) &&
-			(lhs.convex < rhs.convex);
+		return (lhs.Area < rhs.Area);
 	}
 
 	double Distance( const ImageDescriptors& rhs)
@@ -136,13 +129,10 @@ public:
 	double getArea(std::vector<cv::Point>& region) const;
 	double getPerimeter(std::vector<cv::Point>& region, bool closed = true) const;
 	double getRoundNess(std::vector<cv::Point>& region);
-	bool invalid(			std::pair<int, int>& centroid,
-							double& area,
-							double area_threshold_min = 0,
-							double area_threshold_max = 2000) const;
-
 	// implement for each type of contour you are using
 	virtual void getObjectsInfo() = 0;
+
+	RegionPoints getraw_contourns() { return raw_contourns; };
 
 protected:
 
@@ -200,8 +190,9 @@ private:
 namespace image_info
 {
 	std::stringstream getImageInfoMoments(const Mat& img, int opt);
-	Descriptors getImageDescriptors(const Mat& img, double _min_area = 2);
+	Descriptors getImageDescriptors(const Mat& img);
 	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
+	void createCSV(Descriptors& descriptors, std::string fname="tmp.csv");
 }
 
 

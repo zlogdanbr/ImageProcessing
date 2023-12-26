@@ -11,10 +11,54 @@ void thresh_callback(int, void*)
 {
 }
 
-std::vector<std::stringstream>  ApplyAndCompare(std::vector<Mat>& images)
+Mat getHeadFromImg(const Mat& img)
 {
-    std::vector<std::stringstream> allinfo;
-        
+
+    CImageComponentsDescriptorHull hull(img);
+    hull.detectRegions(CHAIN_APPROX_SIMPLE);
+    hull.getObjectsInfo();
+    ObjectsCollection Information = hull.getImageFullInformation();
+    double Area = 0.0;
+    std::vector<cv::Point> head;
+    int index = 0;
+    int i = 0;
+
+    double image_area = img.size().width * img.size().height;
+
+    RegionPoints cnt = hull.getraw_contourns();
+
+    double roundness;
+
+    for (auto& object : Information)
+    {
+        double crt_area = hull.getArea(object.region);
+        roundness = hull.getRoundNess(object.region);
+        bool convex = object.convex;
+
+        if (crt_area < 1e2 || 1e5 < crt_area || crt_area >= 0.9*image_area || roundness < 0.7 )
+        {
+            i++;
+            continue;
+        }
+
+        if (crt_area > Area)
+        {
+            Area = crt_area;
+            index = i;
+        }
+        i++;
+    }
+
+    Mat src = img.clone();
+
+    drawContours(src, cnt, index, Scalar(0, 0, 255), 2);
+    return src;
+}
+
+void ApplyAndCompare(std::vector<Mat>& images)
+{
+    //Descriptors& descriptors
+    std::vector< Descriptors > descriptors_set;
     Size Standard = images[0].size();
     for (const auto& i : images)
     {
@@ -84,20 +128,21 @@ std::vector<std::stringstream>  ApplyAndCompare(std::vector<Mat>& images)
 
     for (int i = 0; i < images.size(); i++)
     {
-        std::stringstream os;
         if (i != 0)
         {
             resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
         }
 
         images[i] = option(images[i]);
-        os = image_info::getImageInfoMoments(images[i],1);
-        allinfo.push_back(std::move(os));
+        Descriptors descriptors = image_info::getImageDescriptors(images[i]);
+
+        std::stringstream os;
+        os << "out\\tmp" << i << ".csv";
+        image_info::createCSV(descriptors, os.str());
     }
 
     image_util::showManyImagesOnScreen(images);
 
-    return allinfo;
 
 }
 /**
@@ -868,6 +913,11 @@ Mat ApplyFindContourns(const Mat& img)
 
     for (size_t i = 0; i < contours.size(); i++)
     {
+
+        if (isContourConvex(contours[i]))
+        {
+            continue;
+        }
         // Calculate the area of each contour
         double area = contourArea(contours[i]);
         // Ignore contours that are too small or too large

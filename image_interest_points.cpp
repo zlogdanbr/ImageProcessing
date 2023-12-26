@@ -1,5 +1,7 @@
 #include "image_interest_points.h"
 
+#include "filesys.h"
+#include <fstream>
 
 void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
 {
@@ -61,31 +63,6 @@ double CImageComponentsDescriptorBase::getOrientation(cv::Moments& momInertia) c
 
     double degrees = angle * (180.0 / CV_PI);
     return degrees;
-}
-
-
-bool CImageComponentsDescriptorBase::invalid(   std::pair<int, int>& centroid,
-                                            double& area,
-                                            double area_threshold_min,
-                                            double area_threshold_max) const
-{
-    if (area <= area_threshold_min || area >= area_threshold_max)
-    {
-        return true;
-    }
-
-    if (centroid.first >= INT_MAX || centroid.first <= INT_MIN)
-    {
-        return true;
-    }
-
-    if (centroid.second >= INT_MAX || centroid.second <= INT_MIN)
-    {
-        return true;
-    }
-
-    return false;
-
 }
 
 
@@ -153,7 +130,7 @@ void CCompare<T>::calculateDescriptors()
 namespace image_info
 {
 
-    Descriptors getImageDescriptors(const Mat& img, double _min_area)
+    Descriptors getImageDescriptors(const Mat& img)
     {
 
         Descriptors out;
@@ -174,10 +151,7 @@ namespace image_info
 
             std::pair<int, int> centroid = hull.getCentroid(object.momInertia);
 
-            if (hull.invalid(centroid, Area, _min_area, 2000))
-            {
-                continue;
-            }
+            if (Area < 1e2 || 1e5 < Area) continue;
 
             ImageDescriptors d;
 
@@ -190,6 +164,8 @@ namespace image_info
 
             out.emplace_back(d);
         }
+
+        createCSV(out);
         return out;
     }
 
@@ -264,10 +240,7 @@ namespace image_info
 
             std::pair<int, int> centroid = base->getCentroid(object.momInertia);
 
-            if (base->invalid(centroid, Area, 10, 2000))
-            {
-                continue;
-            }
+            if (Area < 1e2 || 1e5 < Area) continue;
 
             ImageDescriptors d;
 
@@ -290,6 +263,33 @@ namespace image_info
         }
 
         return os;
+    }
+
+    void createCSV(Descriptors& descriptors, std::string fname)
+    {
+        std::ofstream myfile(fname);
+        int i = 0;
+        if (myfile.is_open())
+        {
+            for (const auto& descriptor : descriptors)
+            {
+                if (i == 0)
+                {
+                    myfile << "Area,Perimeter,roundness,orientation" << std::endl;
+                    i++;
+                    continue;
+                }
+                std::stringstream s;
+                s <<    descriptor.Area << "," << 
+                        descriptor.perimeter  << "," <<
+                        descriptor.r_factor << "," <<
+                        descriptor.orientation << std::endl;
+
+                myfile << s.str();
+
+            }
+            myfile.close();
+        }
     }
 }
 

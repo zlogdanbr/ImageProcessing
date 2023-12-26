@@ -230,12 +230,7 @@ void CLoadImageSet::doProcess()
 		return;
 	}
 
-	std::vector<std::stringstream> _out = ApplyAndCompare(_images);
-
-	for (auto& msg : _out)
-	{
-		outxt->writeInfo(msg);
-	}
+	ApplyAndCompare(_images);
 
 }
 

@@ -132,7 +132,8 @@ Mat ApplyDIfferenceOfGaussian(const Mat& im);
 Mat ApplyFindContourns(const Mat& img);
 
 
-std::vector<std::stringstream> ApplyAndCompare(std::vector<Mat>& images);
+void ApplyAndCompare(std::vector<Mat>& images);
+Mat getHeadFromImg(const Mat& img);
 
 /*
 *   Actual detectors
