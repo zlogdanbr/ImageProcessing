@@ -6,53 +6,7 @@
 #include <wx/textdlg.h>
 #include "image_interest_points.h"
 
-void thresh_callback(int, void*)
-{
-}
 
-Mat getHeadFromImg(const Mat& img)
-{
-
-    CImageComponentsDescriptorHull hull(img);
-    hull.detectRegions(CHAIN_APPROX_SIMPLE);
-    hull.getObjectsInfo();
-    ObjectsCollection Information = hull.getImageFullInformation();
-    double Area = 0.0;
-    std::vector<cv::Point> head;
-    int index = 0;
-    int i = 0;
-
-    double image_area = img.size().width * img.size().height;
-
-    RegionPoints cnt = hull.getraw_contourns();
-
-    double roundness;
-
-    for (auto& object : Information)
-    {
-        double crt_area = hull.getArea(object.region);
-        roundness = hull.getRoundNess(object.region);
-        bool convex = object.convex;
-
-        if (crt_area < 1e2 || 1e5 < crt_area || crt_area >= 0.9*image_area || roundness < 0.7 )
-        {
-            i++;
-            continue;
-        }
-
-        if (crt_area > Area)
-        {
-            Area = crt_area;
-            index = i;
-        }
-        i++;
-    }
-
-    Mat src = img.clone();
-
-    drawContours(src, cnt, index, Scalar(0, 0, 255), 2);
-    return src;
-}
 
 void ApplyAndCompare(std::vector<Mat>& images)
 {

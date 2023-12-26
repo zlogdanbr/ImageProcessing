@@ -46,6 +46,5 @@ namespace image_constants
 		"Harris Algorithm",
 		"Find Contourns",
 		"Find Contourns descriptors",
-		"Find Head"
 	};
 }

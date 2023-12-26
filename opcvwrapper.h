@@ -133,7 +133,6 @@ Mat ApplyFindContourns(const Mat& img);
 
 
 void ApplyAndCompare(std::vector<Mat>& images);
-Mat getHeadFromImg(const Mat& img);
 
 /*
 *   Actual detectors

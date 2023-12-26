@@ -275,7 +275,7 @@ namespace image_info
             {
                 if (i == 0)
                 {
-                    myfile << "Area,Perimeter,roundness,orientation" << std::endl;
+                    myfile << "Area,Perimeter,roundness,orientation,cx,cy" << std::endl;
                     i++;
                     continue;
                 }
@@ -283,6 +283,8 @@ namespace image_info
                 s <<    descriptor.Area << "," << 
                         descriptor.perimeter  << "," <<
                         descriptor.r_factor << "," <<
+                        descriptor.centroid.first << "," <<
+                        descriptor.centroid.second << "," <<
                         descriptor.orientation << std::endl;
 
                 myfile << s.str();

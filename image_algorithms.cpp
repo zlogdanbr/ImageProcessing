@@ -231,7 +231,6 @@ void CInputDialog::setSimpleMaps()
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fsimple["Segmentation Erode"] = segmentErode;
     fsimple["Find Contourns"] = ApplyFindContourns;
-    fsimple["Find Head"] = getHeadFromImg;
 }
 
 void CInputDialog::setOtherMaps()
