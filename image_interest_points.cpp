@@ -19,7 +19,7 @@ void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
     }
 
     Mat canny_output;
-    Canny(gray, canny_output, 100, 200);
+    Canny(gray, canny_output, 50, 255);
 
     // Find all the contours in the thresholded image
     findContours(canny_output, raw_contourns, mode1, mode2);

@@ -824,6 +824,7 @@ std::vector<cv::Vec3f> GetCirclesHoughTransform(const Mat& img,
 
 Mat ApplyFindContournsThreshold(const Mat& img)
 {
+    Mat src_gray;
     Mat src = img.clone();
     // Convert image to grayscale
     Mat gray;
@@ -842,50 +843,23 @@ Mat ApplyFindContournsThreshold(const Mat& img)
     threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
     // Find all the contours in the thresholded image
     std::vector<std::vector<Point> > contours;
-
-    /*
-            retrieves only the extreme outer contours. It sets `hierarchy[i][2]=hierarchy[i][3]=-1` for
-            all the contours.
-            RETR_EXTERNAL = 0
-
-            retrieves all of the contours without establishing any hierarchical relationships.
-            RETR_LIST = 1
-
-            retrieves all of the contours and organizes them into a two-level hierarchy. At the top
-            level, there are external boundaries of the components. At the second level, there are
-            boundaries of the holes. If there is another contour inside a hole of a connected component, it
-            is still put at the top level.
-            RETR_CCOMP = 2
-
-            retrieves all of the contours and reconstructs a full hierarchy of nested contours.
-            RETR_TREE = 3,
-            RETR_FLOODFILL = 4
-
-    */
     findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
 
+    Mat drawing = Mat::zeros(bw.size(), CV_8UC3);
     for (size_t i = 0; i < contours.size(); i++)
     {
-
-        if (isContourConvex(contours[i]))
-        {
-            continue;
-        }
-        // Calculate the area of each contour
-        double area = contourArea(contours[i]);
-        // Ignore contours that are too small or too large
-        if (area < 1e2 || 1e5 < area) continue;
-        // Draw each contour only for visualisation purposes  
-        drawContours(src, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+        drawContours(drawing, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
     }
 
-    return src;
+    imshow("Tmp", drawing);
+
+    return drawing;
 }
 
 Mat ApplyFindContournsCanny(const Mat& img)
 {
     Mat src_gray;
-    int thresh = 100;
+    int thresh = 50;
     RNG rng(12345);
 
     Mat src = img.clone();
@@ -903,7 +877,6 @@ Mat ApplyFindContournsCanny(const Mat& img)
     Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3);
     for (size_t i = 0; i < contours.size(); i++)
     {
-        Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
         drawContours(drawing, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
     }
 
