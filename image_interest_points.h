@@ -84,16 +84,6 @@ struct ImageDescriptors
 		return (lhs.Area < rhs.Area);
 	}
 
-	double Distance( const ImageDescriptors& rhs)
-	{
-		int xlhs = this->centroid.first;
-		int ylhs = this->centroid.second;
-		int xrhs = rhs.centroid.first;
-		int yrhs = rhs.centroid.second;
-
-		return sqrt(pow(xrhs - xlhs, 2) + pow(yrhs - ylhs, 2));
-	}
-
 	friend std::ostream& operator<<(std::ostream& os, const ImageDescriptors& d)
 	{
 		os << "--------------------------------------------------------------------------------" << std::endl;
@@ -108,6 +98,7 @@ struct ImageDescriptors
 		return os;
 	}
 };
+
 
 using ObjectsCollection = std::vector< ComponentsDescriptor>;
 using RegionPoints = std::vector<std::vector<Point> >;
