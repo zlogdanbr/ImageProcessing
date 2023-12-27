@@ -392,11 +392,11 @@ void CInputDialog::DoFunction()
             Descriptors descriptors = image_info::getImageDescriptors(img);
             std::stringstream os;
 
-            if (directory_exists(s) == false)
+            if (directory_exists("out") == false)
             {
                 create_dir("out");
-            }
-            os << "out\\" << getFileName(s2) << ".csv";
+            };
+            os <<"out\\" << getFileName(s2) << ".csv";
             image_info::createCSV(descriptors, os.str());
         }
         return;
