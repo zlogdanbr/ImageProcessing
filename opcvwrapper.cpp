@@ -87,11 +87,6 @@ void ApplyAndCompare(std::vector<Mat>& images)
         }
 
         images[i] = option(images[i]);
-        Descriptors descriptors = image_info::getImageDescriptors(images[i]);
-
-        std::stringstream os;
-        os << "out\\tmp" << i << ".csv";
-        image_info::createCSV(descriptors, os.str());
     }
 
     image_util::showManyImagesOnScreen(images);

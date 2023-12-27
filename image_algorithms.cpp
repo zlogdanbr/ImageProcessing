@@ -4,6 +4,7 @@
 #include <ctime>
 #include <wx/textdlg.h>
 #include "image_interest_points.h"
+#include "filesys.h"
 
 using namespace std::chrono;
 using   tp = high_resolution_clock::time_point;
@@ -382,8 +383,21 @@ void CInputDialog::DoFunction()
     {
         if (imghelper->getOriginalImageInitiated() == true)
         {
-            std::stringstream info = image_info::getImageInfoMoments(imghelper->getOrginalImageOpenCV(),0);
+            Mat img = imghelper->getOrginalImageOpenCV();
+            std::string s = imghelper->getOriginalImage();
+            std::string s2 = getFileName(s);
+            std::stringstream info = image_info::getImageInfoMoments(img,0);
             outxt->writeInfo(info);
+
+            Descriptors descriptors = image_info::getImageDescriptors(img);
+            std::stringstream os;
+
+            if (directory_exists(s) == false)
+            {
+                create_dir("out");
+            }
+            os << "out\\" << getFileName(s2) << ".csv";
+            image_info::createCSV(descriptors, os.str());
         }
         return;
     }
