@@ -118,6 +118,10 @@ OpenCV:
 
 https://opencv.org
 
+The excellent graphics lib:
+
+https://github.com/Profactor/cv-plot
+
 ### Tools used
 
 - I use Visual Studio 2022
@@ -125,7 +129,7 @@ https://opencv.org
 - OpenCV 4.8
 - wxWdigets 3.2.1
 - wxFormBuilder. Get it at  https://github.com/wxFormBuilder/wxFormBuilder
-
+- https://github.com/Profactor/cv-plot
 
 
 Python soon will be required.

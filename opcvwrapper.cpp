@@ -191,9 +191,9 @@ void showImage(const Mat& img, const std::string& title)
     wxRect sizeScreen = wxGetClientDisplayRect();
 
     Mat clone = img.clone();
-    cv::namedWindow(title, cv::WINDOW_NORMAL);
-    clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
-    imshow(title, clone);
+    auto axes = CvPlot::plotImage(clone);
+    cv::Mat mat = axes.render(clone.size().width, clone.size().height);
+    CvPlot::show(title, axes);
     
 }
 
