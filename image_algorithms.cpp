@@ -79,10 +79,7 @@ CInputDialog::CInputDialog(     wxWindow* parent,
             // set values
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();
-            tp t = start_tracking();
             DoFunction();      
-            wxString msg = end_tracking(t).c_str();
-            outxt->writeTo(msg);
         });
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -398,6 +395,7 @@ void CInputDialog::DoFunction()
             };
             os <<"out\\" << getFileName(s2) << ".csv";
             image_info::createCSV(descriptors, os.str());
+
         }
         return;
     }

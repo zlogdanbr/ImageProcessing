@@ -185,13 +185,8 @@ void MyFrame::onCompare(wxCommandEvent& event)
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {   
     CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);
-    outxt.writeTo("Open Data Input dialog.\n");
-    
-    if (InputDialog->ShowModal() == wxID_CANCEL)
-    {
-        outxt.writeTo("Apply Data Input dialog.\n");
-    }
-
+    outxt.writeTo("Open Data Input dialog.\n");    
+    InputDialog->ShowModal();
 }
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
