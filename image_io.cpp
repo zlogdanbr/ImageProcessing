@@ -27,14 +27,14 @@ void COpenImage::OpenFile(wxFrame& frame)
             {
                 imghelper->clean();
                 destroyAllWindows();
-                imghelper->setOrginalImageOpenCV(img);
-                showImage(imghelper->getOrginalImageOpenCV(), "Original");
+                imghelper->setOrginalImageOpenCV(img);                
                 outxt->writeTo(path + "\n");
                 outxt->writeTo("Image loaded correctly\n");
                 imghelper->setOrginalImageOpenCV(img);
                 imghelper->setOriginalImage(spath);
                 imghelper->addtoCache(img);
                 imghelper->setOriginalInfact(img);
+                showImage(img, "Original");
             }
             else
             {
