@@ -171,7 +171,7 @@ namespace image_info
 	std::stringstream getImageInfoMoments(const Mat& img, int opt);
 	Descriptors getImageDescriptors(const Mat& img);
 	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
-	void createCSV(Descriptors& descriptors, std::string fname="tmp.csv");
+	void createCSV(Descriptors& descriptors, std::string fname);
 }
 
 

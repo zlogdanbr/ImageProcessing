@@ -153,8 +153,6 @@ namespace image_info
 
             out.emplace_back(d);
         }
-
-        createCSV(out);
         return out;
     }
 
@@ -256,6 +254,8 @@ namespace image_info
 
     void createCSV(Descriptors& descriptors, std::string fname)
     {
+        std::sort(descriptors.begin(), descriptors.end());
+
         std::ofstream myfile(fname);
         int i = 0;
         if (myfile.is_open())

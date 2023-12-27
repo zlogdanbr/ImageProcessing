@@ -868,7 +868,7 @@ Mat ApplyFindContournsCanny(const Mat& img)
     blur(src_gray, src_gray, Size(3, 3));
 
     Mat canny_output;
-    Canny(src_gray, canny_output, thresh, thresh * 2);
+    Canny(src_gray, canny_output, thresh, 250);
 
     std::vector<std::vector<Point> > contours;
     std::vector<Vec4i> hierarchy;
