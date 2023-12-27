@@ -172,6 +172,7 @@ void MyFrame::onCompare(wxCommandEvent& event)
             cv::namedWindow("Comparison", cv::WINDOW_NORMAL);
             clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
             imshow("Comparison", clone);
+            showImage(clone, "Comparison");
         }
         catch (...)
         {

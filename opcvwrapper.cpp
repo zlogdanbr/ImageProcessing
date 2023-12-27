@@ -846,8 +846,6 @@ Mat ApplyFindContournsThreshold(const Mat& img)
         drawContours(drawing, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
     }
 
-    imshow("Tmp", drawing);
-
     return drawing;
 }
 
