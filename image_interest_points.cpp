@@ -380,7 +380,6 @@ namespace image_info
         std::vector<int> x;
         std::vector<int> y;
 
-        auto axes = CvPlot::makePlotAxes();
         for (const auto& cont : raw_contourns)
         {
             for (const auto& c : cont)
