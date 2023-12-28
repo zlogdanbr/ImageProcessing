@@ -44,8 +44,8 @@ namespace image_constants
 		"Hough Transform Lines",
 		"Hough Transform Circles",
 		"Harris Algorithm",
-		"Find Contourns",
-		"Find Contourns2",
-		"Find Contourns descriptors",
+		"Find Contourns ( Threshold )",
+		"Find Contourns ( Canny )",
+		"Find Contourns Descriptors",
 	};
 }

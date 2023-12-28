@@ -228,8 +228,9 @@ void CInputDialog::setSimpleMaps()
     fsimple["Morpholgical Gradient"] = ApplyMorphGradient;
     fsimple["Morphological Top Hat"] = ApplyTopHatAlgo;
     fsimple["Segmentation Erode"] = segmentErode;
-    fsimple["Find Contourns"] = ApplyFindContournsThreshold;
-    fsimple["Find Contourns2"] = ApplyFindContournsCanny;
+    fsimple["Find Contourns ( Threshold )"] = ApplyFindContournsThreshold;
+    fsimple["Find Contourns ( Canny )"] = ApplyFindContournsCanny;
+
 }
 
 void CInputDialog::setOtherMaps()
@@ -385,7 +386,7 @@ void CInputDialog::DoFunction()
         return;
     }
 
-    if (_algorithm == "Find Contourns descriptors")
+    if (_algorithm == "Find Contourns Descriptors")
     {
         if (imghelper->getOriginalImageInitiated() == true)
         {
