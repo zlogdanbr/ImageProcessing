@@ -137,7 +137,11 @@ Mat ApplyFindContournsCanny(const Mat& img);
 
 
 void ApplyAndCompare(std::vector<Mat>& images);
-bool ApplyAndCompare2(const Mat& img1, const Mat& img2);
+
+std::pair< std::vector<int>, std::vector<int>>
+getImageXY(std::vector<std::vector<Point> >& raw_contourns);
+
+void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns);
 
 /*
 *   Actual detectors

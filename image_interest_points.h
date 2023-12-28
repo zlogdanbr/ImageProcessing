@@ -161,16 +161,8 @@ public:
 
 namespace image_info
 {
-	std::stringstream getImageInfoMoments(const Mat& img, int opt);
 	Descriptors getImageDescriptors(const Mat& img);
-	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
 	void createCSV(Descriptors& descriptors, std::string fname);
-	void drawCountourXY(RegionPoints& raw_contourns);
-	std::pair< std::vector<int>, std::vector<int>>
-		getImageXY(RegionPoints& raw_contourns);
-
-	std::vector<double> getHuhDescriptorsAverage(const Mat& img);
-	bool Compare(const Mat& img1, const Mat& img2);
 }
 
 

@@ -7,10 +7,44 @@
 #include "image_interest_points.h"
 
 
-bool ApplyAndCompare2(const Mat& img1, const Mat& img2)
+std::pair< std::vector<int>, std::vector<int>>
+getImageXY(std::vector<std::vector<Point> >& raw_contourns)
 {
-    return image_info::Compare(img1, img2);
+    std::vector<int> x;
+    std::vector<int> y;
+
+    for (const auto& cont : raw_contourns)
+    {
+        for (const auto& c : cont)
+        {
+            x.push_back(c.x);
+            y.push_back(c.y);
+        }
+    }
+
+    std::pair< std::vector<int>, std::vector<int>> p(x, y);
+    return p;
 }
+
+void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns)
+{
+    std::vector<int> x;
+    std::vector<int> y;
+
+    auto axes = CvPlot::makePlotAxes();
+    for (const auto& cont : raw_contourns)
+    {
+        for (const auto& c : cont)
+        {
+            x.push_back(1 * c.x);
+            y.push_back(-1 * c.y);
+        }
+    }
+
+    axes.create<CvPlot::Series>(x, y, "-g");
+    CvPlot::show("Countours", axes);
+}
+
 
 void ApplyAndCompare(std::vector<Mat>& images)
 {
@@ -28,61 +62,8 @@ void ApplyAndCompare(std::vector<Mat>& images)
     int standard_size_width = Standard.width;
     int standard_size_height = Standard.height;
 
-    std::vector<wxString> choices = {   
-                                        "Hough Lines",
-                                        "Hough Circles",
-                                        "Find Contourns",
-                                        "Morphological Gradient",
-                                        "Morphological Top Hat",
-                                        "Difference of Gaussians",
-                                        "Morphological Segmentation"                                                                                  
-                                    };
-    wxSingleChoiceDialog dialog(
-        NULL,
-        "Choose Algorithm",
-        "Choose Algorithm",
-        static_cast<int>(choices.size()), choices.data());
-
-    dialog.ShowModal();
-
     image_util::Function1Parameter option = ApplyFindContournsThreshold;
-
-    wxString algo = dialog.GetStringSelection();
-    if (algo == "Hough Lines")
-    {
-        option = ApplyHoughTransformLines;
-    }
-    else
-    if (algo == "Hough Circles")
-    {
-        option = ApplyHoughTransformCircles;
-    }
-    else
-    if (algo == "Find Contourns")
-    {
-        option = ApplyFindContournsCanny;
-    }
-    else
-    if (algo == "Morphological Gradient")
-    {
-        option = ApplyMorphGradient;
-    }
-    else
-    if (algo == "Morphological Top Hat")
-    {
-        option = ApplyTopHatAlgo;
-    }
-    else
-    if (algo == "Difference of Gaussians")
-    {
-        option = ApplyDIfferenceOfGaussian;
-    }
-    else
-    if (algo == "Morphological Segmentation")
-    {
-        option = segmentErode;
-    }
-
+    
     for (int i = 0; i < images.size(); i++)
     {
         if (i != 0)
@@ -94,7 +75,6 @@ void ApplyAndCompare(std::vector<Mat>& images)
     }
 
     image_util::showManyImagesOnScreen(images);
-
 
 }
 /**

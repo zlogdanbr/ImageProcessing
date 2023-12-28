@@ -392,8 +392,6 @@ void CInputDialog::DoFunction()
             Mat img = imghelper->getOrginalImageOpenCV();
             std::string s = imghelper->getOriginalImage();
             std::string s2 = getFileName(s);
-            std::stringstream info = image_info::getImageInfoMoments(img,0);
-            outxt->writeInfo(info);
 
             Descriptors descriptors = image_info::getImageDescriptors(img);
             std::stringstream os;
@@ -404,6 +402,8 @@ void CInputDialog::DoFunction()
             };
             os <<"out\\" << getFileName(s2) << ".csv";
             image_info::createCSV(descriptors, os.str());
+            std::string msg = "csv file " + os.str() + " has been created";
+            outxt->writeTo(msg.c_str());
 
         }
         return;

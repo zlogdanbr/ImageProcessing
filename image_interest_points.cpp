@@ -119,68 +119,7 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
 namespace image_info
 {
 
-    std::vector<double> getHuhDescriptorsAverage(const Mat& img)
-    {
-        CImageComponentsDescriptorHull hull(img);
-        hull.detectRegions(CHAIN_APPROX_SIMPLE);
-        hull.getObjectsInfo();
-        ObjectsCollection Information = hull.getImageFullInformation();
-
-
-        double Area = 0;
-        double Huh[7];
-
-        for (auto& object : Information)
-        {
-
-            double a = contourArea(object.region);
-
-            if (a > Area)
-            {                
-                for (auto& h : Huh)
-                {
-                    h = 0;
-                }
-
-                HuMoments(object.momInertia, Huh);
-
-                for (int i = 0; i < 7; i++)
-                {
-                    Huh[i] = -1 * copysign(1.0, Huh[i]) * log10(abs(Huh[i]));
-                }
-                Area = a;
-            }
-
-
-        }
-
-        std::vector<double> Avg;
-        for (int i = 0; i < 7; i++)
-        {
-            Avg.push_back(Huh[i]);
-        }
-
-        return Avg;
-    }
-
-    bool equal_underLimit(double d1, double d2, double threshold)
-    {
-        if (abs(d1 - d2) <= threshold)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    bool Compare(const Mat& img1, const Mat& img2)
-    {
-        std::vector<double> HuhAvg1 = getHuhDescriptorsAverage(img1);
-        std::vector<double> HuhAvg2 = getHuhDescriptorsAverage(img2);
-
-        return (    equal_underLimit(HuhAvg1[0], HuhAvg2[0], 0.05) == true &&
-                    equal_underLimit(HuhAvg1[2], HuhAvg2[2], 0.25) == true);
-
-    }
+ 
 
     Descriptors getImageDescriptors(const Mat& img)
     {
@@ -229,106 +168,10 @@ namespace image_info
 
             out.emplace_back(d);
         }
+
         return out;
     }
 
-    std::stringstream getImageInfoMoments(const Mat& img, int opt)
-    {
-
-        Mat clone = img.clone();
-
-        if (opt == 0)
-        {
-            std::vector<wxString> choices = {
-                                                "Normal algorithm",
-                                                "Hull",
-                                                "Aproximation"
-            };
-            wxSingleChoiceDialog dialog(
-                NULL,
-                "Algorithm for print info",
-                "Algorithm for print info",
-                static_cast<int>(choices.size()), choices.data());
-
-            dialog.ShowModal();
-
-            CImageComponentsDescriptorBase* base = nullptr;
-
-            wxString algo = dialog.GetStringSelection();
-            if (algo == "Normal algorithm")
-            {
-                base = new CImageComponentsDescriptorNormal(img);
-            }
-            else
-            if (algo == "Hull")
-            {
-                base = new CImageComponentsDescriptorHull(img);
-            }
-            else
-            if (algo == "Aproximation")
-            {
-                base = new CImageComponentsDescriptorAprox(img);
-            }
-            else
-            {
-                base = new CImageComponentsDescriptorNormal(img);
-            }
-            return Apply(base, clone);
-        }
-        else
-        {
-            CImageComponentsDescriptorNormal* desc =  new CImageComponentsDescriptorNormal(img);
-            return Apply(desc, clone);
-        }
-
-    }
-
-    std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img)
-    {
-
-        std::stringstream os;
-
-        base->detectRegions(CHAIN_APPROX_SIMPLE);
-        base->getObjectsInfo();
-        ObjectsCollection Information = base->getImageFullInformation();
-        int objectsIndex = 0;
-        for (auto& object : Information)
-        {
-
-            double Area = base->getArea(object.region);
-            double perimeter = arcLength(object.region, true);
-            double r_factor = base->getRoundNess(object.region);
-            double orientation = base->getOrientation(object.momInertia);
-
-            std::pair<int, int> centroid = base->getCentroid(object.momInertia);
-
-            if (Area < 1e2 || 1e5 < Area) continue;
-
-            ImageDescriptors d;
-
-            d.Area = Area;
-            d.perimeter = perimeter;
-            d.r_factor = r_factor;
-            d.orientation = orientation;
-            d.convex = object.convex;
-            d.centroid = centroid;
-
-            os << "Region " << objectsIndex << std::endl;
-            os << d;
-   
-            objectsIndex++;
-        }
-
-        auto c = base->getraw_contourns();
-        drawCountourXY(c);
-
-        if (base != nullptr)
-        {
-            delete base;
-        }
-
-        return os;
-    }
 
     void createCSV(Descriptors& descriptors, std::string fname)
     {
@@ -372,44 +215,6 @@ namespace image_info
             }
             myfile.close();
         }
-    }
-
-    std::pair< std::vector<int>, std::vector<int>>
-        getImageXY(RegionPoints& raw_contourns)
-    {
-        std::vector<int> x;
-        std::vector<int> y;
-
-        for (const auto& cont : raw_contourns)
-        {
-            for (const auto& c : cont)
-            {
-                x.push_back(c.x);
-                y.push_back(c.y);
-            }
-        }
-
-        std::pair< std::vector<int>, std::vector<int>> p(x, y);
-        return p;
-    }
-
-    void drawCountourXY(RegionPoints& raw_contourns)
-    {
-        std::vector<int> x;
-        std::vector<int> y;
-
-        auto axes = CvPlot::makePlotAxes();
-        for (const auto& cont : raw_contourns)
-        {
-            for (const auto& c : cont)
-            {
-                x.push_back(1*c.x);
-                y.push_back(-1*c.y);                
-            }
-        }
-
-        axes.create<CvPlot::Series>(x, y, "-g");
-        CvPlot::show("Countours", axes);
     }
 }
 
