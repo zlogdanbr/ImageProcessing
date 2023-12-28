@@ -124,6 +124,7 @@ public:
 
 	RegionPoints getraw_contourns() { return raw_contourns; };
 
+
 protected:
 
 	CImageComponentsDescriptorBase(CImageComponentsDescriptorBase&) = delete;
@@ -163,6 +164,9 @@ namespace image_info
 	Descriptors getImageDescriptors(const Mat& img);
 	std::stringstream Apply(CImageComponentsDescriptorBase* base, Mat& img);
 	void createCSV(Descriptors& descriptors, std::string fname);
+	void drawCountourXY(RegionPoints& raw_contourns);
+	std::pair< std::vector<int>, std::vector<int>>
+		getImageXY(RegionPoints& raw_contourns);
 }
 
 

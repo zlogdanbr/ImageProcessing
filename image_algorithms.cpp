@@ -405,30 +405,6 @@ void CInputDialog::DoFunction()
             os <<"out\\" << getFileName(s2) << ".csv";
             image_info::createCSV(descriptors, os.str());
 
-            std::vector<int> data;
-            std::vector<double> Perimeters;
-            std::vector<double> r;
-
-            for (int i = 0; i < descriptors.size() - 1; i++)
-            {
-                double d = Distance(descriptors[i], descriptors[i + 1]);
-                data.push_back(d);
-
-            }
-
-            for (const auto& d: descriptors )
-            {
-                Perimeters.push_back(d.perimeter);
-                r.push_back(d.r_factor);
-            }
-           
-            auto axes = CvPlot::makePlotAxes();
-            axes.create<CvPlot::Series>(data, "-g");
-            axes.create<CvPlot::Series>(Perimeters, "-r");
-            axes.create<CvPlot::Series>(r, "-y");
-            CvPlot::show("mywindow", axes);            
-            cv::waitKey();
-
         }
         return;
     }

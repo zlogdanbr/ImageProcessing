@@ -852,7 +852,6 @@ Mat ApplyFindContournsCanny(const Mat& img)
 {
     Mat src_gray;
     int thresh = 50;
-    RNG rng(12345);
 
     Mat src = img.clone();
 

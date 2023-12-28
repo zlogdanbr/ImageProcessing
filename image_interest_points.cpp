@@ -197,7 +197,6 @@ namespace image_info
             {
                 base = new CImageComponentsDescriptorNormal(img);
             }
-
             return Apply(base, clone);
         }
         else
@@ -244,6 +243,9 @@ namespace image_info
             objectsIndex++;
         }
 
+        auto c = base->getraw_contourns();
+        drawCountourXY(c);
+
         if (base != nullptr)
         {
             delete base;
@@ -281,6 +283,45 @@ namespace image_info
             }
             myfile.close();
         }
+    }
+
+    std::pair< std::vector<int>, std::vector<int>>
+        getImageXY(RegionPoints& raw_contourns)
+    {
+        std::vector<int> x;
+        std::vector<int> y;
+
+        auto axes = CvPlot::makePlotAxes();
+        for (const auto& cont : raw_contourns)
+        {
+            for (const auto& c : cont)
+            {
+                x.push_back(c.x);
+                y.push_back(c.y);
+            }
+        }
+
+        std::pair< std::vector<int>, std::vector<int>> p(x, y);
+        return p;
+    }
+
+    void drawCountourXY(RegionPoints& raw_contourns)
+    {
+        std::vector<int> x;
+        std::vector<int> y;
+
+        auto axes = CvPlot::makePlotAxes();
+        for (const auto& cont : raw_contourns)
+        {
+            for (const auto& c : cont)
+            {
+                x.push_back(1*c.x);
+                y.push_back(-1*c.y);                
+            }
+        }
+
+        axes.create<CvPlot::Series>(x, y, "-g");
+        CvPlot::show("Countours", axes);
     }
 }
 
