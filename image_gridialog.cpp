@@ -157,8 +157,7 @@ void CGridInputDialog::getGridData() const
 
                 if (out.empty() == false)
                 {
-                    imghelper->setFinalImageOpenCV(out);
-                    showImage(out, "Final");
+                    imghelper->setFinalImageOpenCV(out);                    
                     imghelper->setFinalGray(true);
                     imghelper->SetOriginalNew();
                 }
