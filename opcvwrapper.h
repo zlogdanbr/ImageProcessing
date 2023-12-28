@@ -137,6 +137,7 @@ Mat ApplyFindContournsCanny(const Mat& img);
 
 
 void ApplyAndCompare(std::vector<Mat>& images);
+bool ApplyAndCompare2(const Mat& img1, const Mat& img2);
 
 /*
 *   Actual detectors

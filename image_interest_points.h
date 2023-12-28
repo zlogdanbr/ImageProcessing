@@ -64,6 +64,7 @@ struct ImageDescriptors
 	double r_factor;
 	double orientation;
 	bool convex;
+	double HuMoments[7];
 
 	friend bool operator==(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
 	{
@@ -167,6 +168,9 @@ namespace image_info
 	void drawCountourXY(RegionPoints& raw_contourns);
 	std::pair< std::vector<int>, std::vector<int>>
 		getImageXY(RegionPoints& raw_contourns);
+
+	std::vector<double> getHuhDescriptorsAverage(const Mat& img);
+	bool Compare(const Mat& img1, const Mat& img2);
 }
 
 

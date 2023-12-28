@@ -7,6 +7,10 @@
 #include "image_interest_points.h"
 
 
+bool ApplyAndCompare2(const Mat& img1, const Mat& img2)
+{
+    return image_info::Compare(img1, img2);
+}
 
 void ApplyAndCompare(std::vector<Mat>& images)
 {

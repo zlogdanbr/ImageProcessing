@@ -48,7 +48,7 @@ double CImageComponentsDescriptorBase::getRoundNess(std::vector<cv::Point>& regi
     double Area = getArea(region);
     double Perimeter = getPerimeter(region);
 
-    return 4 * CV_PI * Area / pow(Perimeter,2);
+    return 4*CV_PI*( Area/pow(Perimeter,2));
 }
 
 double CImageComponentsDescriptorBase::getOrientation(cv::Moments& momInertia) const
@@ -119,6 +119,69 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
 namespace image_info
 {
 
+    std::vector<double> getHuhDescriptorsAverage(const Mat& img)
+    {
+        CImageComponentsDescriptorHull hull(img);
+        hull.detectRegions(CHAIN_APPROX_SIMPLE);
+        hull.getObjectsInfo();
+        ObjectsCollection Information = hull.getImageFullInformation();
+
+
+        double Area = 0;
+        double Huh[7];
+
+        for (auto& object : Information)
+        {
+
+            double a = contourArea(object.region);
+
+            if (a > Area)
+            {                
+                for (auto& h : Huh)
+                {
+                    h = 0;
+                }
+
+                HuMoments(object.momInertia, Huh);
+
+                for (int i = 0; i < 7; i++)
+                {
+                    Huh[i] = -1 * copysign(1.0, Huh[i]) * log10(abs(Huh[i]));
+                }
+                Area = a;
+            }
+
+
+        }
+
+        std::vector<double> Avg;
+        for (int i = 0; i < 7; i++)
+        {
+            Avg.push_back(Huh[i]);
+        }
+
+        return Avg;
+    }
+
+    bool equal_underLimit(double d1, double d2, double threshold)
+    {
+        if (abs(d1 - d2) <= threshold)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool Compare(const Mat& img1, const Mat& img2)
+    {
+        std::vector<double> HuhAvg1 = getHuhDescriptorsAverage(img1);
+        std::vector<double> HuhAvg2 = getHuhDescriptorsAverage(img2);
+
+        return (    equal_underLimit(HuhAvg1[0], HuhAvg2[0], 0.05) == true &&
+                    equal_underLimit(HuhAvg1[2], HuhAvg2[2], 0.25) == true);
+
+    }
+
     Descriptors getImageDescriptors(const Mat& img)
     {
 
@@ -150,6 +213,19 @@ namespace image_info
             d.orientation = orientation;
             d.convex = object.convex;
             d.centroid = centroid;
+
+            double Huh[7];
+            for (auto& h : Huh)
+            {
+                h = 0;
+            }
+
+            HuMoments(object.momInertia, Huh);
+
+            for (int i = 0; i < 7; i++)
+            {
+                d.HuMoments[i] = -1 * copysign(1.0, Huh[i]) * log10(abs(Huh[i]));
+            }
 
             out.emplace_back(d);
         }
@@ -266,17 +342,30 @@ namespace image_info
             {
                 if (i == 0)
                 {
-                    myfile << "Area,Perimeter,roundness,orientation,cx,cy" << std::endl;
+                    myfile << "Area,Perimeter,roundness,orientation,cx,cy,h0,h1,h2,h3,h4,h5,h6" << std::endl;
                     i++;
                     continue;
                 }
                 std::stringstream s;
-                s <<    descriptor.Area << "," << 
-                        descriptor.perimeter  << "," <<
-                        descriptor.r_factor << "," <<
-                        descriptor.centroid.first << "," <<
-                        descriptor.centroid.second << "," <<
-                        descriptor.orientation << std::endl;
+                s << descriptor.Area << "," <<
+                    descriptor.perimeter << "," <<
+                    descriptor.r_factor << "," <<
+                    descriptor.centroid.first << "," <<
+                    descriptor.centroid.second << "," <<
+                    descriptor.orientation << ",";
+
+                for (int i = 0; i < 7; i++)
+                {
+                    if (i == 6)
+                    {
+                        s << descriptor.HuMoments[i] << std::endl;
+                    }
+                    else
+                    {
+                        s << descriptor.HuMoments[i] << ",";
+                    }
+                    
+                }
 
                 myfile << s.str();
 
