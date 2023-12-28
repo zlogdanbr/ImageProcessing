@@ -87,24 +87,25 @@ Now the menu Algorithms->Basic Algorithms Selection contains foo.
 I am working with jpg/tif input images and only jpg only for the output, but I plan to add options for more formats. 
 Actually you can change that option only by changing these lines:
 
-void MyFrame::OnOpen(wxCommandEvent& event)
+     void MyFrame::OnOpen(wxCommandEvent& event)
+     
+     wxFileDialog openFileDialog(this,
+     	wxEmptyString,
+     	wxEmptyString,
+     	wxEmptyString,
+     	"Image files (*.jpg)|*.jpg|All Files (*.*)|*.*",
+     	wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+     
+	 and 
 
-   wxFileDialog openFileDialog(this,
-       wxEmptyString,
-       wxEmptyString,
-       wxEmptyString,
-       "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*",
-       wxFD_OPEN | wxFD_FILE_MUST_EXIST);
- and 
-
-void MyFrame::OnSave(wxCommandEvent& event)
-
-   if (ImageHelper.getOriginalImageInitiated() == true)
-   {
-       auto name_final = ImageHelper.getOriginalImage().GetName();
-       auto path = ImageHelper.getOriginalImage().GetPath();
-       auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
-
+     void MyFrame::OnSave(wxCommandEvent& event)
+     
+        if (ImageHelper.getOriginalImageInitiated() == true)
+        {
+            auto name_final = ImageHelper.getOriginalImage().GetName();
+            auto path = ImageHelper.getOriginalImage().GetPath();
+            auto tosave = path + "\\" + name_final + "_proc_" + ".jpg";
+     
 
 ### Dependecies
 
