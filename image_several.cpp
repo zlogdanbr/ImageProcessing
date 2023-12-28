@@ -1,6 +1,6 @@
 #include "childframes.h"
 
-CLoadImageSet::CLoadImageSet(	wxWindow* parent,
+CLoadImageSetBase::CLoadImageSetBase(	wxWindow* parent,
 								CWriteLogs* outxt,
 								wxWindowID id,
 								const wxString& title,
@@ -108,11 +108,11 @@ CLoadImageSet::CLoadImageSet(	wxWindow* parent,
 
 }
 
-CLoadImageSet::~CLoadImageSet()
+CLoadImageSetBase::~CLoadImageSetBase()
 {
 }
 
-bool CLoadImageSet::readImagePath(wxWindow* parent, wxTextCtrl* txtctrl)
+bool CLoadImageSetBase::readImagePath(wxWindow* parent, wxTextCtrl* txtctrl)
 {
 	wxFileDialog openFileDialog(parent,
 		wxEmptyString,
@@ -132,7 +132,7 @@ bool CLoadImageSet::readImagePath(wxWindow* parent, wxTextCtrl* txtctrl)
 	return false;
 }
 
-void CLoadImageSet::setEventButtons()
+void CLoadImageSetBase::setEventButtons()
 {
 	
 	_paths = {	m_textCtrlImagePath1 ,
@@ -202,7 +202,7 @@ void CLoadImageSet::setEventButtons()
 
 }
 
-void CLoadImageSet::setImageArray()
+void CLoadImageSetBase::setImageArray()
 {
 	for (  auto& txtcrl : _paths)
 	{
@@ -217,6 +217,15 @@ void CLoadImageSet::setImageArray()
 			}
 		}
 	}
+
+}
+
+CLoadImageSet::CLoadImageSet(wxWindow* parent,
+				CWriteLogs* outxt,
+				wxWindowID id,
+				const wxString& title)
+	:CLoadImageSetBase(parent, outxt, wxID_ANY, title)
+{
 
 }
 

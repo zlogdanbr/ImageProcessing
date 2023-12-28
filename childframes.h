@@ -315,7 +315,7 @@ public:
 };
 
 
-class CLoadImageSet : public wxDialog
+class CLoadImageSetBase : public wxDialog
 {
 private:
 
@@ -369,7 +369,7 @@ protected:
 
 public:
 
-    CLoadImageSet(  wxWindow* parent, 
+    CLoadImageSetBase(  wxWindow* parent,
                     CWriteLogs* outxt,
                     wxWindowID id = wxID_ANY, 
                     const wxString& title = wxEmptyString, 
@@ -377,7 +377,7 @@ public:
                     const wxSize& size = wxSize(482, 408),
                     long style = wxDEFAULT_DIALOG_STYLE);
 
-    ~CLoadImageSet();
+    ~CLoadImageSetBase();
 
     
     std::vector<Mat> getImages() const
@@ -385,11 +385,22 @@ public:
         return _images;
     }
 
-    void doProcess();
+    virtual void doProcess() = 0;
 
     bool IsoK = false;
 
     
+};
+
+class CLoadImageSet : public CLoadImageSetBase
+{
+public:
+    CLoadImageSet(wxWindow* parent,
+        CWriteLogs* outxt,
+        wxWindowID id = wxID_ANY,
+        const wxString& title = wxEmptyString);
+
+    virtual void doProcess() override;
 };
 
 #endif
