@@ -229,14 +229,7 @@ void CLoadImageSet::doProcess()
 	{
 		return;
 	}
-	bool f = false;
-	if (_images.size() == 2)
-	{
-	  f = ApplyAndCompare2(_images[0], _images[1]);
-	}
-	else
-	{
-		ApplyAndCompare(_images);
-	}
+	ApplyAndCompare(_images);
+
 }
 
