@@ -163,6 +163,7 @@ namespace image_info
 {
 	Descriptors getImageDescriptors(const Mat& img);
 	void createCSV(Descriptors& descriptors, std::string fname);
+	void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname);
 }
 
 

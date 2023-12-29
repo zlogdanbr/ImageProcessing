@@ -216,6 +216,40 @@ namespace image_info
             myfile.close();
         }
     }
+
+    void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname)
+    {
+        std::ofstream myfile(fname);
+        int i = 0;
+        if (myfile.is_open())
+        {
+            for (const auto& descriptor : descriptors)
+            {
+                // CV_WRAP KeyPoint(float x, float y, float size, float angle=-1, float response=0, int octave=0, int class_id=-1);
+                if (i == 0)
+                {
+                    myfile << "x,y,size,angle,response,octave,class_id" << std::endl;
+                    i++;
+                    continue;
+                }
+                                
+                // write fields to s
+                std::stringstream s;
+                s << descriptor.pt.x << ",";
+                s << descriptor.pt.y << ",";
+                s << descriptor.size << ",";
+                s << descriptor.angle << ",";
+                s << descriptor.response << ",";
+                s << descriptor.octave << ",";
+                s << descriptor.class_id << "," << std::endl;
+                
+
+                myfile << s.str();
+
+            }
+            myfile.close();
+        }
+    }
 }
 
 

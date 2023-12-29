@@ -418,7 +418,7 @@ Mat CInputDialog::DoFunction()
         {
             Mat img = imghelper->getOrginalImageOpenCV();
             std::string s = imghelper->getOriginalImage();
-            std::string s2 = getFileName(s);
+            std::string s2 = getOnlyNameNoExt(s);
 
             Descriptors descriptors = image_info::getImageDescriptors(img);
             std::stringstream os;
@@ -427,6 +427,7 @@ Mat CInputDialog::DoFunction()
             {
                 create_dir("out");
             };
+            
             os <<"out\\" << getFileName(s2) << ".csv";
 
             wxBusyInfo* wait = ProgramBusy();

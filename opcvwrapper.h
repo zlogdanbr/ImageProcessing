@@ -143,6 +143,8 @@ getImageXY(std::vector<std::vector<Point> >& raw_contourns);
 
 void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns);
 
+std::vector < cv::KeyPoint > ApplySift(const Mat& img);
+
 /*
 *   Actual detectors
 */

@@ -24,6 +24,7 @@ uintmax_t getFileSize(const std::string& _file);
 std::string getExtension(const std::string& _file);
 std::string getFileName(const std::string& _file);
 std::string getPathOfFile(const std::string& _file);
+std::string getOnlyNameNoExt(const std::string& _file);
 wxString getCurrentDir();
 
 

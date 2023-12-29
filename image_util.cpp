@@ -155,7 +155,6 @@ namespace image_util
             imshow(std::to_string(cnt), i);
             cnt++;
         }
-        // moveWindow()
 
     }
 

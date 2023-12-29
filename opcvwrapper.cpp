@@ -5,7 +5,7 @@
 #include <wx/gdicmn.h> 
 #include <wx/textdlg.h>
 #include "image_interest_points.h"
-
+#include <wx/busyinfo.h>
 
 std::pair< std::vector<int>, std::vector<int>>
 getImageXY(std::vector<std::vector<Point> >& raw_contourns)
@@ -62,7 +62,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
     int standard_size_width = Standard.width;
     int standard_size_height = Standard.height;
 
-    image_util::Function1Parameter option = ApplyFindContournsThreshold;
+    std::vector<std::vector < cv::KeyPoint >> kps;
     
     for (int i = 0; i < images.size(); i++)
     {
@@ -71,8 +71,32 @@ void ApplyAndCompare(std::vector<Mat>& images)
             resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
         }
 
-        images[i] = option(images[i]);
+        std::vector < cv::KeyPoint >  kp = ApplySift(images[i]);
+        kps.push_back(kp);
+
+        wxWindowDisabler disableAll;
+        wxBusyInfo* wait = new wxBusyInfo("Please wait, working...");
+
+        std::stringstream os;
+
+        if (directory_exists("out") == false)
+        {
+            create_dir("out");
+        };
+
+        os << "out\\" << "image_sift_" << i << ".csv";
+
+        drawKeypoints(images[i], kp, images[i]);
+
+        image_info::createCSV(kp, os.str());
+
+        if (nullptr != wait)
+        {
+            delete wait;
+        }
+        
     }
+    
 
     image_util::showManyImagesOnScreen(images);
 
@@ -282,6 +306,12 @@ Mat equalizeGrayImage(const Mat& img)
 //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html
 Mat equalizeColorImage(const Mat& img)
 {
+
+    if (isGrayScaleImage(img))
+    {
+        return img;
+    }
+
     Mat hist_equalized_image;
     cvtColor(img, hist_equalized_image, COLOR_BGR2YCrCb);
     std::vector<Mat> vec_channels;
@@ -870,6 +900,15 @@ Mat ApplyFindContournsCanny(const Mat& img)
     }
 
     return drawing;
+}
+
+std::vector < cv::KeyPoint> ApplySift(const Mat& img)
+{
+    Mat gray = convertograyScale(img);
+    auto sift = SIFT::create();
+    std::vector<cv::KeyPoint> keypoints;
+    sift->detect(gray, keypoints);
+    return keypoints;
 }
 
 /*
