@@ -60,6 +60,7 @@ MyFrame::MyFrame() :wxFrame{ nullptr, -1, "diMage", wxPoint(-1, -1) }
 void MyFrame::onImageDraw(wxCommandEvent& event)
 {
     // Not working
+    wxMessageBox("Not Implemented yet", "Error", wxOK | wxICON_ERROR);
     outxt.writeTo("Not implemented yet.\n");
 }
 
@@ -97,11 +98,13 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         }
         else
         {
+            wxMessageBox("Algorithm error", "Error", wxOK | wxICON_ERROR);
             outxt.writeTo("Algorithm error\n");
         }
     }
     else
     {
+        wxMessageBox("Please load an image first", "Error", wxOK | wxICON_ERROR);
         outxt.writeTo("Image not loaded\n");
     }
 }
@@ -176,6 +179,7 @@ void MyFrame::onCompare(wxCommandEvent& event)
         catch (...)
         {
             outxt.writeTo("Error. Cannot compare images.\n");
+            wxMessageBox("Error. Cannot compare images", "Error", wxOK | wxICON_ERROR);
         }
     }
 
@@ -183,9 +187,17 @@ void MyFrame::onCompare(wxCommandEvent& event)
 
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {   
-    CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);
-    outxt.writeTo("Open Data Input dialog.\n");    
-    InputDialog->ShowModal();
+    if (ImageHelper.getOriginalImageInitiated() == true)
+    {
+        CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);
+        outxt.writeTo("Open Data Input dialog.\n");
+        InputDialog->ShowModal();
+    }
+    else
+    {
+        wxMessageBox("Image not loaded", "Error", wxOK | wxICON_ERROR);
+        outxt.writeTo("Image not loaded\n");
+    }
 }
 
 void MyFrame::onCustomKernel(wxCommandEvent& event)
@@ -201,6 +213,7 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
     }
     else
     {
+        wxMessageBox("Image not loaded", "Error", wxOK | wxICON_ERROR);
         outxt.writeTo("Image not loaded\n");
     }
 
@@ -212,6 +225,7 @@ void MyFrame::onRevert(wxCommandEvent& event)
     {
         if (ImageHelper.revert() == false)
         {
+            wxMessageBox("Image not loaded", "Error", wxOK | wxICON_ERROR);
             outxt.writeTo("Error, final image not loaded\n");
         }
     }
