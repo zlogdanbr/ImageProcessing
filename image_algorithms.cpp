@@ -128,32 +128,41 @@ template<typename F, typename...Args>
 Mat
 CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
 {
-    if (imghelper->getOriginalImageInitiated() == false)
+    try
     {
-        Mat out;
-        Mat img;
-        if (loadImage(setPath(Gray), img) == true)
+        if (imghelper->getOriginalImageInitiated() == false)
         {
-            wxBusyInfo* wait = ProgramBusy();
-            out = f(img, args ...);
-            Stop(wait);
-            auto s = out.size();
-            if (s.height == 0 || s.width == 0)
-            {         
-                return out;
+            Mat out;
+            Mat img;
+            if (loadImage(setPath(Gray), img) == true)
+            {
+                wxBusyInfo* wait = ProgramBusy();
+                out = f(img, args ...);
+                Stop(wait);
+                auto s = out.size();
+                if (s.height == 0 || s.width == 0)
+                {
+                    return out;
+                }
+                //setFinalImg(out);
             }
+        }
+        else
+        {
+            Mat out;
+            wxBusyInfo* wait = ProgramBusy();
+            out = f(imghelper->getOrginalImageOpenCV(), args ...);
+            Stop(wait);
+            return out;
             //setFinalImg(out);
         }
     }
-    else
+    catch (...)
     {
-        Mat out;
-        wxBusyInfo* wait = ProgramBusy();
-        out = f(imghelper->getOrginalImageOpenCV(), args ...);
-        Stop(wait);
-        return out;
-        //setFinalImg(out);
+        Mat empty;
+        return empty;
     }
+
 
     Mat empty;
     return empty;

@@ -846,9 +846,14 @@ Mat ApplyFindContournsCanny(const Mat& img)
     Mat src_gray;
     int thresh = 50;
 
-    Mat src = img.clone();
-
-    cvtColor(src, src_gray, COLOR_BGR2GRAY);
+    if (isGrayScaleImage(img) == false)
+    {
+        cvtColor(src_gray, src_gray, COLOR_BGR2GRAY);
+    }
+    else
+    {
+        src_gray = img.clone();
+    }
     blur(src_gray, src_gray, Size(3, 3));
 
     Mat canny_output;
