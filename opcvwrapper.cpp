@@ -175,9 +175,18 @@ void showImage(const Mat& img, const std::string& title)
     wxRect sizeScreen = wxGetClientDisplayRect();
     Mat clone = img.clone();
     fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
-    auto axes = CvPlot::plotImage(clone);
-    cv::Mat mat = axes.render(clone.size().width, clone.size().height);
-    CvPlot::show(title, axes);
+
+    try
+    {
+        auto axes = CvPlot::plotImage(clone);
+        cv::Mat mat = axes.render(clone.size().width, clone.size().height);
+        CvPlot::show(title, axes);
+        waitKey(0);
+    }
+    catch (...)
+    {
+        imshow(title, clone);
+    }
 }
 
 // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html

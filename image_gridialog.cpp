@@ -38,7 +38,7 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"C
         {
             // set values
             getGridData();
-            Close();
+            //Close();
         });
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
