@@ -6,6 +6,11 @@
 
 namespace image_constants
 {
+
+	/*
+	*	All algorithms are identified using this vector, if you remove any of them,
+	*   they will be disabled in the program
+	*/
 	std::vector<wxString>
 		_algorithms_ =
 	{

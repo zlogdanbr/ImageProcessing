@@ -43,7 +43,6 @@ namespace image_util
 	using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int)>;
 	using FunctionHarris          = std::function<Mat(Mat, int, int, double, double)>;
 
-
 	using Function1ParContainer = std::map < wxString, Function1Parameter >;
 	using Function2ParContainer = std::map < wxString, Function2Parameter >;
 	using Function3ParContainer = std::map < wxString, Function3Parameters >;

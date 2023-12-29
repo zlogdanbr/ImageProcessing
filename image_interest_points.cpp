@@ -225,7 +225,6 @@ namespace image_info
         {
             for (const auto& descriptor : descriptors)
             {
-                // CV_WRAP KeyPoint(float x, float y, float size, float angle=-1, float response=0, int octave=0, int class_id=-1);
                 if (i == 0)
                 {
                     myfile << "x,y,size,angle,response,octave,class_id" << std::endl;
@@ -242,10 +241,7 @@ namespace image_info
                 s << descriptor.response << ",";
                 s << descriptor.octave << ",";
                 s << descriptor.class_id << "," << std::endl;
-                
-
                 myfile << s.str();
-
             }
             myfile.close();
         }

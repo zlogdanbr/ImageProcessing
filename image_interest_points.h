@@ -120,6 +120,7 @@ public:
 	double getArea(std::vector<cv::Point>& region) const;
 	double getPerimeter(std::vector<cv::Point>& region, bool closed = true) const;
 	double getRoundNess(std::vector<cv::Point>& region);
+	
 	// implement for each type of contour you are using
 	virtual void getObjectsInfo() = 0;
 
@@ -161,8 +162,21 @@ public:
 
 namespace image_info
 {
+	/*
+	*		gets image descriptors using parameters like 
+	*		centroid, area, perimeter etc
+	*/
 	Descriptors getImageDescriptors(const Mat& img);
+
+	/*
+	*		Creates a csv file with the descriptors from the above function
+	*/
 	void createCSV(Descriptors& descriptors, std::string fname);
+
+	/*
+	*		Creates a csv file with with sif descriptors called somewhere
+	*		else
+	*/
 	void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname);
 }
 
