@@ -46,6 +46,27 @@ void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns)
 }
 
 
+Mat ApplySiftToImage(const Mat& img)
+{
+    Mat clone = img.clone();
+    std::vector < cv::KeyPoint >  kp = ApplySift(clone);
+
+    std::stringstream os;
+
+    if (directory_exists("out") == false)
+    {
+        create_dir("out");
+    };
+
+    os << "out\\" << "image_sift_" << ".csv";
+
+    drawKeypoints(clone, kp, clone);
+
+    image_info::createCSV(kp, os.str());
+    return clone;
+
+}
+
 void ApplyAndCompare(std::vector<Mat>& images)
 {
     //Descriptors& descriptors

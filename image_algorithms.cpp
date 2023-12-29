@@ -254,6 +254,7 @@ void CInputDialog::setSimpleMaps()
     fsimple["Segmentation Erode"] = segmentErode;
     fsimple["Find Contourns ( Threshold )"] = ApplyFindContournsThreshold;
     fsimple["Find Contourns ( Canny )"] = ApplyFindContournsCanny;
+    fsimple["Find Sift Descriptors"] = ApplySiftToImage;
 
 }
 
