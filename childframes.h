@@ -22,6 +22,7 @@
 #include "logs.h"
 #include "filesys.h"
 #include "image_util.h"
+#include <wx/busyinfo.h>
 
 using namespace image_util;
 
@@ -237,6 +238,22 @@ protected:
 
     void setSimpleMaps();
     void setOtherMaps();
+
+    wxBusyInfo* ProgramBusy()
+    {
+        wxWindowDisabler disableAll;
+        wxBusyInfo* wait = new wxBusyInfo("Please wait, working...");
+        return wait;
+    }
+
+    void Stop(wxBusyInfo* wait)
+    {
+        wxYield();
+        if (nullptr != wait)
+        {
+            delete wait;
+        }
+    }
 
     Mat DoFunction();
 

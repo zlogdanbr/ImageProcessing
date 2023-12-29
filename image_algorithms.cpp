@@ -5,7 +5,7 @@
 #include <wx/textdlg.h>
 #include "image_interest_points.h"
 #include "filesys.h"
-#include <wx/busyinfo.h>
+
 
 using namespace std::chrono;
 using   tp = high_resolution_clock::time_point;
@@ -134,7 +134,9 @@ CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
         Mat img;
         if (loadImage(setPath(Gray), img) == true)
         {
+            wxBusyInfo* wait = ProgramBusy();
             out = f(img, args ...);
+            Stop(wait);
             auto s = out.size();
             if (s.height == 0 || s.width == 0)
             {         
@@ -146,7 +148,9 @@ CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
     else
     {
         Mat out;
+        wxBusyInfo* wait = ProgramBusy();
         out = f(imghelper->getOrginalImageOpenCV(), args ...);
+        Stop(wait);
         return out;
         //setFinalImg(out);
     }
@@ -415,7 +419,10 @@ Mat CInputDialog::DoFunction()
                 create_dir("out");
             };
             os <<"out\\" << getFileName(s2) << ".csv";
+
+            wxBusyInfo* wait = ProgramBusy();
             image_info::createCSV(descriptors, os.str());
+            Stop(wait);
             std::string msg = "csv file " + os.str() + " has been created";
             outxt->writeTo(msg.c_str());
         }
