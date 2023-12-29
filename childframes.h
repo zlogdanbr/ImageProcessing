@@ -207,17 +207,17 @@ protected:
 
     wxString SelectionText;
 
-    void ApplyAlgorithm(Function1Parameter& f, bool Gray);
-    void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
-    void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
-    void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
-    void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
-    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
-    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);   
-    void ApplyAlgorithm(FunctionHarris& f, bool Gray, int, int, double, double);
+    Mat ApplyAlgorithm(Function1Parameter& f, bool Gray);
+    Mat ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
+    Mat ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
+    Mat ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
+    Mat ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
+    Mat ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
+    Mat ApplyAlgorithm(Function2Slider& f, bool Gray, double t);   
+    Mat ApplyAlgorithm(FunctionHarris& f, bool Gray, int, int, double, double);
 
     template<typename F, typename...Args>
-    void ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args);
+    Mat ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args);
 
     void fillComboInfo();
 
@@ -238,7 +238,7 @@ protected:
     void setSimpleMaps();
     void setOtherMaps();
 
-    void DoFunction();
+    Mat DoFunction();
 
     std::function<Mat(Mat)>
         getAlgoFunctionOnePar(wxString key);
@@ -267,7 +267,7 @@ protected:
     FunctionHarris
         getAlgoHarris(wxString key);
 
-
+    bool shouldQuit = false;
 
 public:
 
