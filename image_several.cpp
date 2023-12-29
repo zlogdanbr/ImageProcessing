@@ -1,13 +1,15 @@
 #include "childframes.h"
 
 CLoadImageSetBase::CLoadImageSetBase(	wxWindow* parent,
-								CWriteLogs* outxt,
-								wxWindowID id,
-								const wxString& title,
-								const wxPoint& pos,
-								const wxSize& size, long style) :
-								outxt{ outxt },
-								wxDialog(parent, id, title, pos, size, style)
+										CWriteLogs* outxt,
+										wxWindowID id,
+										const wxString& title,
+										int inputs,
+										const wxPoint& pos,
+										const wxSize& size, long style) :
+										outxt{ outxt },
+										wxDialog(parent, id, title, pos, size, style),
+										inputs{ inputs }
 {
 	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
@@ -34,65 +36,15 @@ CLoadImageSetBase::CLoadImageSetBase(	wxWindow* parent,
 
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer(wxVERTICAL);
-
-	m_buttonLoadImage1 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage1, 0, wxALL, 5);
-
-	m_buttonLoadImage2 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage2, 0, wxALL, 5);
-
-	m_buttonLoadImage3 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage3, 0, wxALL, 5);
-
-	m_buttonLoadImage4 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage4, 0, wxALL, 5);
-
-	m_buttonLoadImage5 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage5, 0, wxALL, 5);
-
-	m_buttonLoadImage6 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage6, 0, wxALL, 5);
-
-	m_buttonLoadImage7 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage7, 0, wxALL, 5);
-
-	m_buttonLoadImage8 = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
-	bSizer15->Add(m_buttonLoadImage8, 0, wxALL, 5);
-
+	AddButtons(bSizer15);
 
 	bSizer14->Add(bSizer15, 1, wxEXPAND, 5);
 
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer(wxVERTICAL);
-
-	m_textCtrlImagePath1 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath1, 0, wxALL, 5);
-
-	m_textCtrlImagePath2 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath2, 0, wxALL, 5);
-
-	m_textCtrlImagePath3 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath3, 0, wxALL, 5);
-
-	m_textCtrlImagePath4 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath4, 0, wxALL, 5);
-
-	m_textCtrlImagePath5 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath5, 0, wxALL, 5);
-
-	m_textCtrlImagePath6 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath6, 0, wxALL, 5);
-
-	m_textCtrlImagePath7 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath7, 0, wxALL, 5);
-
-	m_textCtrlImagePath8 = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
-	bSizer17->Add(m_textCtrlImagePath8, 0, wxALL, 5);
-
+	AddTextCrlt(bSizer17);
 
 	bSizer14->Add(bSizer17, 1, wxEXPAND, 5);
-
-
 	m_panel6->SetSizer(bSizer14);
 	m_panel6->Layout();
 	bSizer14->Fit(m_panel6);
@@ -100,7 +52,6 @@ CLoadImageSetBase::CLoadImageSetBase(	wxWindow* parent,
 
 	this->SetSizer(bSizer10);
 	this->Layout();
-
 	this->Centre(wxBOTH);
 
 	// add code from here
@@ -110,6 +61,26 @@ CLoadImageSetBase::CLoadImageSetBase(	wxWindow* parent,
 
 CLoadImageSetBase::~CLoadImageSetBase()
 {
+}
+
+
+void CLoadImageSetBase::AddButtons(wxBoxSizer* sizer1)
+{
+	for (int i = 0; i < inputs; i++)
+	{
+		_actions[i] = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
+		sizer1->Add(_actions[i], 0, wxALL, 5);
+
+	}
+}
+
+void CLoadImageSetBase::AddTextCrlt(wxBoxSizer* sizer2)
+{
+	for (int i = 0; i < inputs; i++)
+	{
+		_paths[i] = new wxTextCtrl(m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(400, -1), 0);
+		sizer2->Add(_paths[i], 0, wxALL, 5);
+	}
 }
 
 bool CLoadImageSetBase::readImagePath(wxWindow* parent, wxTextCtrl* txtctrl)
@@ -135,78 +106,98 @@ bool CLoadImageSetBase::readImagePath(wxWindow* parent, wxTextCtrl* txtctrl)
 void CLoadImageSetBase::setEventButtons()
 {
 	
-	_paths = {	m_textCtrlImagePath1 ,
-				m_textCtrlImagePath2 ,
-				m_textCtrlImagePath3 ,
-				m_textCtrlImagePath4 ,
-				m_textCtrlImagePath5 ,
-				m_textCtrlImagePath6 ,
-				m_textCtrlImagePath7 ,
-				m_textCtrlImagePath8 };
-
-	_actions = {	m_buttonLoadImage1 ,
-					m_buttonLoadImage2 ,
-					m_buttonLoadImage3 ,
-					m_buttonLoadImage4 ,
-					m_buttonLoadImage5 ,
-					m_buttonLoadImage6 ,
-					m_buttonLoadImage7 ,
-					m_buttonLoadImage8 };
-
 	m_buttonOK->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			IsoK = true;
 			Close();
 		});
 
+	int i = 0;
 	_actions[0]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[0]);
 		});
+	i++;
 
 	_actions[1]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[1]);
 		});
 
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
+
 	_actions[2]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[2]);
 		});
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
 
 	_actions[3]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[3]);
 		});
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
 
 	_actions[4]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[4]);
 		});
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
 
 	_actions[5]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[5]);
 		});
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
 
 	_actions[6]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[6]);
 		});
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
 
 	_actions[7]->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
 		{
 			readImagePath(this, _paths[7]);
 		});
+	i++;
+	if (i == inputs)
+	{
+		return;
+	}
 
 
 }
 
 void CLoadImageSetBase::setImageArray()
 {
-	for (  auto& txtcrl : _paths)
+	for (int i = 0 ; i < inputs; i++)
 	{
-		wxString path = getTextFromBox(txtcrl);
+		wxString path = getTextFromBox(_paths[i]);
 		std::string spath = convertWxStringToString(path);
 		if (spath != "")
 		{
@@ -223,8 +214,9 @@ void CLoadImageSetBase::setImageArray()
 CLoadImageSet::CLoadImageSet(wxWindow* parent,
 				CWriteLogs* outxt,
 				wxWindowID id,
-				const wxString& title)
-	:CLoadImageSetBase(parent, outxt, wxID_ANY, title)
+				const wxString& title,
+				int inputs)
+	:CLoadImageSetBase(parent, outxt, wxID_ANY, title, inputs)
 {
 
 }

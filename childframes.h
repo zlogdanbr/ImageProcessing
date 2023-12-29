@@ -354,8 +354,24 @@ protected:
         return txtctrl->GetLabelText();
     }
 
-    std::vector< wxTextCtrl* > _paths;
-    std::vector< wxButton* > _actions;
+    std::vector< wxTextCtrl* > _paths = {   m_textCtrlImagePath1 ,
+                                            m_textCtrlImagePath2 ,
+                                            m_textCtrlImagePath3 ,
+                                            m_textCtrlImagePath4 ,
+                                            m_textCtrlImagePath5 ,
+                                            m_textCtrlImagePath6 ,
+                                            m_textCtrlImagePath7 ,
+                                            m_textCtrlImagePath8 };
+
+    std::vector< wxButton* > _actions = {   m_buttonLoadImage1 ,
+                                            m_buttonLoadImage2 ,
+                                            m_buttonLoadImage3 ,
+                                            m_buttonLoadImage4 ,
+                                            m_buttonLoadImage5 ,
+                                            m_buttonLoadImage6 ,
+                                            m_buttonLoadImage7 ,
+                                            m_buttonLoadImage8 };
+
 
     bool readImagePath( wxWindow* parent, wxTextCtrl* txtctrl);
 
@@ -367,15 +383,21 @@ protected:
 
     CWriteLogs* outxt = nullptr;
 
+    int inputs = 2;
+
+    void AddButtons(wxBoxSizer* sizer1);
+    void AddTextCrlt(wxBoxSizer* sizer2);
+
 public:
 
     CLoadImageSetBase(  wxWindow* parent,
-                    CWriteLogs* outxt,
-                    wxWindowID id = wxID_ANY, 
-                    const wxString& title = wxEmptyString, 
-                    const wxPoint& pos = wxDefaultPosition, 
-                    const wxSize& size = wxSize(482, 408),
-                    long style = wxDEFAULT_DIALOG_STYLE);
+                        CWriteLogs* outxt,
+                        wxWindowID id = wxID_ANY, 
+                        const wxString& title = wxEmptyString, 
+                        int inputs = 2,
+                        const wxPoint& pos = wxDefaultPosition, 
+                        const wxSize& size = wxSize(482, 408),
+                        long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CLoadImageSetBase();
 
@@ -398,7 +420,8 @@ public:
     CLoadImageSet(wxWindow* parent,
         CWriteLogs* outxt,
         wxWindowID id = wxID_ANY,
-        const wxString& title = wxEmptyString);
+        const wxString& title = wxEmptyString,
+        int inputs = 2);
 
     virtual void doProcess() override;
 };
