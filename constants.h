@@ -9,7 +9,7 @@ namespace image_constants
 	std::vector<wxString>
 		_algorithms_ =
 	{
-		//"Undo",
+		"Undo",
 		"Convert to Gray Scale",
 		"Equalize Gray Scale Image",
 		"Equalize Color Scale Image",

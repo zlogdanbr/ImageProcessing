@@ -85,8 +85,10 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
         int hs = sizeScreen.height;
         int ws = sizeScreen.width;
 
-        cv::namedWindow("Final", cv::WINDOW_NORMAL);
-        Rect rect = selectROI("Final", clone, false);
+        cv::namedWindow("tmp", cv::WINDOW_NORMAL);
+        clone = fitImageOnScreen(clone, ws, hs);
+        Rect rect = selectROI("tmp", clone, false);
+        destroyWindow("tmp");
         clone = Mat(clone, rect);
         clone = fitImageOnScreen(clone,ws, hs);
         if (clone.empty() == false)
@@ -95,11 +97,6 @@ void MyFrame::onSelectRoi(wxCommandEvent& event)
             outxt.writeTo("ROI selected.\n");
             ImageHelper.SetOriginalNew();
             ImageHelper.setOriginalInfact(clone);
-        }
-        else
-        {
-            wxMessageBox("Algorithm error", "Error", wxOK | wxICON_ERROR);
-            outxt.writeTo("Algorithm error\n");
         }
     }
     else
@@ -129,6 +126,7 @@ void MyFrame::onHelpFile(wxCommandEvent& event)
 
 void MyFrame::OnExit(wxCommandEvent& event)
 {
+    destroyAllWindows();
     Close();
 }
 
