@@ -61,7 +61,7 @@ public:
     bool SaveImage(std::string& Path);
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };
-    void SetOriginalNew();
+    Mat SetOriginalNew();
 
     void addtoCache(Mat& img)
     {

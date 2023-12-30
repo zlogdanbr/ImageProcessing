@@ -102,7 +102,7 @@ protected:
     CImageHelper* imghelper{ nullptr };
     CWriteLogs* outxt{ nullptr };
     std::string  setPath(bool Gray);
-    void  setFinalImg(Mat& out);   
+    Mat  setFinalImg(Mat& out);   
     virtual void setControlslayout() = 0;
 
 };
@@ -204,7 +204,7 @@ protected:
     CImageHelper* imghelper{ nullptr };
     CWriteLogs* outxt{ nullptr };
     std::string  setPath(bool Gray);
-    void  setFinalImg(Mat& out);
+    Mat  setFinalImg(Mat& out);
 
     wxString SelectionText;
 

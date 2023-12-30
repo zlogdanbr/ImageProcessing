@@ -14,18 +14,20 @@ CInputDialogBase::setPath(bool Gray)
     return spath;
 }
 
-void  
+Mat  
 CInputDialogBase::setFinalImg(Mat& out)
 {
+    Mat _out;
     if (out.empty() == false)
     {
         imghelper->setFinalImageOpenCV(out);
         outxt->writeTo("Algorithm applied correctly\n");
-        imghelper->SetOriginalNew();
+        _out = imghelper->SetOriginalNew();
     }
     else
     {
         outxt->writeTo("Algorithm error\n");
     }
+    return _out;
 }
 

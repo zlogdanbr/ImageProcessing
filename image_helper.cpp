@@ -45,7 +45,7 @@ bool CImageHelper::revert()
     return true;
 }
 
-void CImageHelper::SetOriginalNew()
+Mat CImageHelper::SetOriginalNew()
 {
     Mat savefinal;
     savefinal = Final_ImageOpenCVFormat.clone();
@@ -55,7 +55,7 @@ void CImageHelper::SetOriginalNew()
     addtoCache(savefinal);
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
-    showImage(savefinal, "Final");
+    return savefinal;
 }
 
 bool CImageHelper::SaveImage(std::string& Path)

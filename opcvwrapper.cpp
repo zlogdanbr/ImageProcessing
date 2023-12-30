@@ -138,7 +138,7 @@ Mat ApplyCustomAlgo(const Mat& image)
 
 }
 
-Mat ApplyDIfferenceOfGaussian(const Mat& im)
+Mat ApplyDifferenceOfGaussian(const Mat& im)
 {
     Mat img1 = GaussianImageSmoothExtended(im, 3, 0.1, 0.1);
     Mat img2 = GaussianImageSmoothExtended(im, 3, 1, 1);

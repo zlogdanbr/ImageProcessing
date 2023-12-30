@@ -85,6 +85,7 @@ CInputDialog::CInputDialog(     wxWindow* parent,
             if (s.width != 0 && s.height != 0)
             {
                 setFinalImg(out);
+                showImage(out, "Final");
             }
  
         });
@@ -108,19 +109,22 @@ CInputDialog::setPath(bool Gray)
     return spath;
 }
 
-void
+Mat
 CInputDialog::setFinalImg(Mat& out)
 {
+    Mat _out;
+
     if (out.empty() == false)
     {
         imghelper->setFinalImageOpenCV(out);
         outxt->writeTo("Algorithm applied correctly\n");
-        imghelper->SetOriginalNew();
+        _out = imghelper->SetOriginalNew();
     }
     else
     {
         outxt->writeTo("Algorithm error\n");
     }
+    return _out;
 }
 
 
@@ -144,6 +148,7 @@ CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
                 {
                     return out;
                 }
+                return out;
                 //setFinalImg(out);
             }
         }
@@ -239,9 +244,9 @@ void CInputDialog::setSimpleMaps()
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
-    fsimple["Difference of Gaussians"] = ApplyDIfferenceOfGaussian;
-    fsimple["Sharpening"] = Sharpening;
-    fsimple["Unsharp"] = Unsharp;
+    //fsimple["Difference of Gaussians"] = ApplyDifferenceOfGaussian;
+    //fsimple["Sharpening"] = Sharpening;
+    //fsimple["Unsharp"] = Unsharp;
     fsimple["Hough Transform Lines"] = ApplyHoughTransformLines;
     fsimple["Hough Transform Circles"] = ApplyHoughTransformCircles;
     fsimple["Convert to Binary"] = getBinaryImage;
