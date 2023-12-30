@@ -240,6 +240,15 @@ protected:
             final_image = TopOf;
             return;
         }
+        else
+        {
+            if (original.empty() == false)
+            {
+                final_image.deallocate();
+                final_image = actual_first;
+                setOriginalImage();
+            }
+        }
     }
 
     std::function<Mat(Mat)>
@@ -272,6 +281,8 @@ protected:
     bool shouldQuit = false;
 
     void DoFunction();
+
+    Mat actual_first;
 
 public:
 

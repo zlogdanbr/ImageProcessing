@@ -40,21 +40,14 @@ public:
 
     bool getFirstOfCache(Mat& img)
     {
-        if (image_cache.empty() == false )
-        {      
-            if (image_cache.size() > 1)
-            {
-                image_cache.pop();
-                img = image_cache.top();
-            }
-
-            if (image_cache.size() == 1)
-            {
-                img = image_cache.top();
-            }
-            return true;
+        Mat top;
+        image_cache.pop();
+        if (image_cache.empty())
+        {
+            return false;
         }
-        return false;
+        img = image_cache.top();
+        return true;
     }
 
     bool isEmpty()

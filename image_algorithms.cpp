@@ -40,6 +40,7 @@ CInputDialog::CInputDialog(     wxWindow* parent,
                                 wxDialog(parent, id, title, pos, size, style),
                                 original{original}
 {
+    actual_first = original.clone();
     this->SetTitle("Algorithms");
     this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
