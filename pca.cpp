@@ -1,6 +1,4 @@
-#include "image_interest_points.h"
-
-
+#include "pca.h"
 
 /*
 *  Calculates the PCA object from a contour
