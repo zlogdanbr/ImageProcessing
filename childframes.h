@@ -23,6 +23,7 @@
 #include "filesys.h"
 #include "image_util.h"
 #include <wx/busyinfo.h>
+#include <mutex>
 
 using namespace image_util;
 
@@ -197,30 +198,27 @@ class CInputDialog final : public wxDialog
 private:   
 
 protected:
+
+    Mat original;
+    Mat final_image;
+
     wxButton* button1 = nullptr;
     wxButton* button2 = nullptr;
     wxComboBox* comboBox1 = nullptr;
-
-    CImageHelper* imghelper{ nullptr };
-    CWriteLogs* outxt{ nullptr };
-    std::string  setPath(bool Gray);
-    Mat  setFinalImg(Mat& out);
-
     wxString SelectionText;
 
-    Mat ApplyAlgorithm(Function1Parameter& f, bool Gray);
-    Mat ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
-    Mat ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
-    Mat ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
-    Mat ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
-    Mat ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
-    Mat ApplyAlgorithm(Function2Slider& f, bool Gray, double t);   
-    Mat ApplyAlgorithm(FunctionHarris& f, bool Gray, int, int, double, double);
+    void ApplyAlgorithm(Function1Parameter& f, bool Gray);
+    void ApplyAlgorithm(Function2Parameter& f, bool Gray, int kernel_size);
+    void ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2);
+    void ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size, double p1, double p2);
+    void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
+    void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
+    void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);   
+    void ApplyAlgorithm(FunctionHarris& f, bool Gray, int, int, double, double);
 
     template<typename F, typename...Args>
-    Mat ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args);
-
-    void fillComboInfo();
+    void ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args);
+   
 
     Function1ParContainer fsimple;
     Function2ParContainer fadjust;
@@ -236,13 +234,17 @@ protected:
 
     wxString getSelectionText() { return SelectionText; };
 
+    void fillComboInfo();
     void setSimpleMaps();
     void setOtherMaps();
 
     wxBusyInfo* ProgramBusy()
     {
+        std::mutex mtex;
+        mtex.lock();
         wxWindowDisabler disableAll;
         wxBusyInfo* wait = new wxBusyInfo("Please wait, working...");
+        mtex.unlock();
         return wait;
     }
 
@@ -255,7 +257,15 @@ protected:
         }
     }
 
-    Mat DoFunction();
+    void setOriginalImage()
+    {
+        std::mutex mtex;
+        mtex.lock();
+        original.deallocate();
+        original = final_image.clone();
+        mtex.unlock();
+        shouldQuit = true;
+    }
 
     std::function<Mat(Mat)>
         getAlgoFunctionOnePar(wxString key);
@@ -286,18 +296,23 @@ protected:
 
     bool shouldQuit = false;
 
+    void DoFunction();
+
 public:
 
-    CInputDialog(   wxWindow* parent, 
-                    CImageHelper* imghelper,
-                    CWriteLogs* outxt,
-                    wxWindowID id = wxID_ANY, 
+    CInputDialog(   wxWindow* parent,
+                    const Mat& original,
+                    wxWindowID id = wxID_ANY,
                     const wxString& title = wxEmptyString, 
                     const wxPoint& pos = wxDefaultPosition, 
                     const wxSize& size = wxSize(335, 75), 
                     long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CInputDialog();
+
+    Mat getOutPutImage() { return final_image; };
+
+
 
 };
 

@@ -56,46 +56,10 @@ namespace image_util
 	using CDataValue = std::vector<CPointCst>;
 	using RGB_CST = unsigned char[3];
 
-	Mat convertRectoImg(Rect& r, Mat& img);
-
-	std::vector<Mat> splitChannel(Mat& img);
-
-	void drawCirclesAtImgFromRoi(Mat& img, Rect& roi);
-	void drawSquaresAtImgFromRoi(Mat& img, Rect& roi);
-
 	wxImage wx_from_mat(Mat& img);
 	Mat mat_from_wx(wxImage& wx);
 
-	void putpixel(int i, int j, wxImage img, RGB& rgb);
-
-	//------------------------------------------------------------------------
-	// Mid Point Algorithm for circles
-	// https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
-	// Adapted from 
-	// https://www.thecrazyprogrammer.com/2016/12/bresenhams-midpoint-circle-algorithm-c-c.html
-	//------------------------------------------------------------------------
-	void drawcircle(int x0, int y0, int radius, wxImage img, RGB& r);
-
 	Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen);
-
-	template<typename T1, typename T2>
-	auto Plus(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) + std::forward<T2>(t2))
-	{
-		return std::forward<T1>(t1) + std::forward<T2>(t2);
-	}
-
-	template<typename T1, typename T2>
-	auto Sub(T1&& t1, T2&& t2) -> decltype(std::forward<T1>(t1) - std::forward<T2>(t2))
-	{
-		return std::forward<T1>(t1) - std::forward<T2>(t2);
-	}
-
-	template<typename T1, typename T2, typename F>
-	auto GenericFunction(T1&& t1, T2&& t2, F&& f) -> decltype(std::forward<T2>(t2))
-	{
-		t2 = F(t1);
-		return t2;
-	}
 
 	void showManyImagesOnScreen(std::vector<Mat>& images);
 

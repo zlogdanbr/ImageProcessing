@@ -56,7 +56,6 @@ private:
     void onHelpFile(wxCommandEvent& event);
     void onRevert(wxCommandEvent& event);
     void onSelectRoi(wxCommandEvent& event);
-    void onCompare(wxCommandEvent& event);
     void onMakeSameSize(wxCommandEvent& event);
     void onImageDraw(wxCommandEvent& event);
 
@@ -70,7 +69,6 @@ private:
         CONTRAST_ID_IMG,
         REVETR_IMG_ID,
         SELECT_ROI,
-        COMPARE_IMG,
         MAKE_SAME_SIZE,
         DRAW_ON_IMAGE
     };
@@ -86,7 +84,6 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
         Bind(wxEVT_MENU, &MyFrame::onRevert, this, REVETR_IMG_ID);
         Bind(wxEVT_MENU, &MyFrame::onSelectRoi, this, SELECT_ROI);
-        Bind(wxEVT_MENU, &MyFrame::onCompare, this, COMPARE_IMG);
         Bind(wxEVT_MENU, &MyFrame::onMakeSameSize, this, MAKE_SAME_SIZE);
         Bind(wxEVT_MENU, &MyFrame::onImageDraw, this, DRAW_ON_IMAGE);
         
@@ -105,9 +102,6 @@ private:
 
         auto menuSelectRoi = menuAlgo->Append(SELECT_ROI, "Select Roi", "Select Roi"); 
         menuSelectRoi->SetBitmap(wxArtProvider::GetBitmap(wxART_COPY, wxART_MENU));
-
-        auto menuCompare = menuAlgo->Append(COMPARE_IMG, "Show Difference", "Show Difference");
-        menuCompare->SetBitmap(wxArtProvider::GetBitmap(wxART_CROSS_MARK, wxART_MENU));
 
         auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Analyse Image Space", "Image Space");
         menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));

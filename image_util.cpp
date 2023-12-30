@@ -2,47 +2,7 @@
 
 namespace image_util
 {
-    // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
-    void drawCirclesAtImgFromRoi(Mat& img, Rect& roi)
-    {
-        Point Mycenter(roi.x + roi.width / 2,
-            roi.y + roi.height / 2);
 
-        int radius = cvRound((roi.width + roi.height) * 0.25);
-        circle(img, Mycenter, radius, Scalar(255, 0, 0), 4);
-    }
-
-    // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
-    void drawSquaresAtImgFromRoi(Mat& img, Rect& roi)
-    {
-        Scalar color = Scalar(255, 0, 0);
-        rectangle(img,
-            Point(cvRound(roi.x * 1),
-                cvRound(roi.y * 1)),
-            Point(cvRound((roi.x + roi.width - 1) * 1),
-                cvRound((roi.y + roi.height - 1) * 1)),
-            color,
-            3,
-            8,
-            0);
-    }
-
-    //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html
-    std::vector<Mat> splitChannel(Mat& img)
-    {
-        Mat colorrgb;
-        cvtColor(img, colorrgb, COLOR_BGR2YCrCb);
-        std::vector<Mat> vec_channels;
-        split(colorrgb, vec_channels);
-        return vec_channels;
-    }
-
-    // https://docs.opencv.org/4.x/d5/d98/tutorial_mat_operations.html
-    Mat convertRectoImg(Rect& r, Mat& img)
-    {
-        Mat roi = Mat(img, r);
-        return roi;
-    }
 
     // http://cool-emerald.blogspot.com/2017/11/opencv-with-wxwidgets.html
     wxImage wx_from_mat(Mat& img)
@@ -65,42 +25,6 @@ namespace image_util
         Mat im2(Size(wx.GetWidth(), wx.GetHeight()), CV_8UC3, wx.GetData());
         cvtColor(im2, im2, COLOR_RGB2BGR);
         return im2;
-    }
-
-    void putpixel(int i, int j, wxImage img, RGB& rgb)
-    {
-        img.SetRGB(i, j, rgb[0], rgb[1], rgb[2]);
-    }
-
-    void drawcircle(int x0, int y0, int radius, wxImage img, RGB& r)
-    {
-        int x = radius;
-        int y = 0;
-        int err = 0;
-
-        while (x >= y)
-        {
-            putpixel(x0 + x, y0 + y, img, r);
-            putpixel(x0 + y, y0 + x, img, r);
-            putpixel(x0 - y, y0 + x, img, r);
-            putpixel(x0 - x, y0 + y, img, r);
-            putpixel(x0 - x, y0 - y, img, r);
-            putpixel(x0 - y, y0 - x, img, r);
-            putpixel(x0 + y, y0 - x, img, r);
-            putpixel(x0 + x, y0 - y, img, r);
-
-            if (err <= 0)
-            {
-                y += 1;
-                err += 2 * y + 1;
-            }
-
-            if (err > 0)
-            {
-                x -= 1;
-                err -= 2 * x + 1;
-            }
-        }
     }
 
     Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen)

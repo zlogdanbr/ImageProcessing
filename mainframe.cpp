@@ -133,7 +133,6 @@ void MyFrame::OnExit(wxCommandEvent& event)
 void MyFrame::OnClose(wxCommandEvent& event)
 {
     destroyAllWindows();
-    ImageHelper.clearCache();
     ImageHelper.clean();
 }
 
@@ -149,52 +148,20 @@ void MyFrame::OnOpen(wxCommandEvent& event)
     openFileCustom->OpenFile(*this);
 }
 
-void MyFrame::onCompare(wxCommandEvent& event)
-{
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        Mat i1 = convertograyScale(ImageHelper.getOriginalInFact());
-        Mat i2 = convertograyScale(ImageHelper.getOrginalImageOpenCV());
-        i1.convertTo(i1, CV_8UC1);
-        i2.convertTo(i2, CV_8UC1);
-
-        Size s = i1.size();
-        int w = s.width;
-        int h = s.height;
-
-        resize(i1, i1, Size(w/2, h/2), INTER_LINEAR);
-        resize(i2, i2, Size(w/2, h/2), INTER_LINEAR);
-        Mat clone;
-
-        try
-        {
-            hconcat(i1, i2, clone);
-            wxRect sizeScreen = wxGetClientDisplayRect();
-            cv::namedWindow("Comparison", cv::WINDOW_NORMAL);
-            clone = fitImageOnScreen(clone, sizeScreen.width, sizeScreen.height);
-            showImage(clone, "Comparison");
-        }
-        catch (...)
-        {
-            outxt.writeTo("Error. Cannot compare images.\n");
-            wxMessageBox("Error. Cannot compare images", "Error", wxOK | wxICON_ERROR);
-        }
-    }
-
-}
-
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {   
-    if (ImageHelper.getOriginalImageInitiated() == true)
+    CInputDialog* InputDialog = new CInputDialog(this, ImageHelper.getOrginalImageOpenCV());
+    outxt.writeTo("Open Data Input dialog.\n");
+
+    InputDialog->ShowModal();
+
+    Mat out = InputDialog->getOutPutImage();
+
+    if (out.empty() == false)
     {
-        CInputDialog* InputDialog = new CInputDialog(this, &ImageHelper, &outxt);
-        outxt.writeTo("Open Data Input dialog.\n");
-        InputDialog->ShowModal();
-    }
-    else
-    {
-        wxMessageBox("Image not loaded", "Error", wxOK | wxICON_ERROR);
-        outxt.writeTo("Image not loaded\n");
+        ImageHelper.setFinalImageOpenCV(out);
+        ImageHelper.setOrginalImageOpenCV(out);
+        showImage(out, "Final");
     }
 }
 
@@ -207,7 +174,6 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
         MyDialog->setLogs(&outxt);
         outxt.writeTo("Open Data Input dialog.\n");
         MyDialog->Show(true);
-
     }
     else
     {
@@ -219,12 +185,4 @@ void MyFrame::onCustomKernel(wxCommandEvent& event)
 
 void MyFrame::onRevert(wxCommandEvent& event)
 {
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        if (ImageHelper.revert() == false)
-        {
-            wxMessageBox("Image not loaded", "Error", wxOK | wxICON_ERROR);
-            outxt.writeTo("Error, final image not loaded\n");
-        }
-    }
 }

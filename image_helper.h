@@ -47,7 +47,6 @@ public:
         return original_initiated;
     }
 
-    bool revert();
 
     std::string getOriginalImage() { return original; };
 
@@ -62,31 +61,6 @@ public:
     void setFinalGray(bool b) { final_isgray = b; };
     const bool getFinalGray() const { return final_isgray; };
     Mat SetOriginalNew();
-
-    void addtoCache(Mat& img)
-    {
-        cache.push(img);
-    }
-
-    Mat getLastCache()
-    {
-        Mat top;
-        cache.pop();
-        if (cache.empty())
-        {
-            return top;
-        }
-        top = cache.top();
-        return top;
-    }
-
-    void clearCache()
-    {
-        while (cache.empty() == false)
-        {
-            cache.pop();
-        }
-    }
     void setOriginalInfact(Mat& m) { _Save_Original_ = m; };
     Mat  getOriginalInFact() { return _Save_Original_; };
 
@@ -98,7 +72,6 @@ private:
     bool original_initiated = false;
     bool final_isgray = false;
     std::string original = "";
-    std::stack<Mat> cache;
 
     Mat _Save_Original_;
 };

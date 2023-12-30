@@ -1,11 +1,9 @@
 ﻿#include "opcvwrapper.h"
 #include "image_util.h"
+#include "image_interest_points.h"
 #include <iostream>
 #include <fstream>
-#include <wx/gdicmn.h> 
-#include <wx/textdlg.h>
-#include "image_interest_points.h"
-#include <wx/busyinfo.h>
+
 
 std::pair< std::vector<int>, std::vector<int>>
 getImageXY(std::vector<std::vector<Point> >& raw_contourns)
@@ -95,9 +93,6 @@ void ApplyAndCompare(std::vector<Mat>& images)
         std::vector < cv::KeyPoint >  kp = ApplySift(images[i]);
         kps.push_back(kp);
 
-        wxWindowDisabler disableAll;
-        wxBusyInfo* wait = new wxBusyInfo("Please wait, working...");
-
         std::stringstream os;
 
         if (directory_exists("out") == false)
@@ -110,11 +105,6 @@ void ApplyAndCompare(std::vector<Mat>& images)
         drawKeypoints(images[i], kp, images[i]);
 
         image_info::createCSV(kp, os.str());
-
-        if (nullptr != wait)
-        {
-            delete wait;
-        }
         
     }
     
@@ -133,8 +123,10 @@ Mat ApplyCustomAlgo(const Mat& image)
 
     img1 = ApplyErode(img1);
 
-
-    return img2 - img1;
+    Mat final = img2 - img1;
+    img1.deallocate();
+    img2.deallocate();
+    return final;
 
 }
 
@@ -146,6 +138,9 @@ Mat ApplyDifferenceOfGaussian(const Mat& im)
     img2 = ApplyLaplacianExtended(img2);
 
     Mat final = img1 - img2;
+
+    img1.deallocate();
+    img2.deallocate();
 
     return final;
 }
@@ -426,6 +421,10 @@ Mat ApplyLaplacianExtended(const Mat& src, int kernel_size, int scale, int delta
 
     // converting back to CV_8U
     convertScaleAbs(dst, abs_dst);
+
+    src_gray.deallocate();
+    dst.deallocate();
+
     return abs_dst;
 
 }
@@ -450,6 +449,9 @@ Mat ApplyCustomKernel(const Mat& img, Mat& kernel)
                 final,
                 img.depth(),
                 kernel);
+
+    src_gray.deallocate();
+
     return final;
 }
 
@@ -480,6 +482,7 @@ Mat ApplySobelXExtended(    const Mat& img,
                     delta,          // delta value that is added to the results prior to storing them in dst
                     128             // #BorderTypes. #BORDER_WRAP is not supported.
             ); 
+    src_gray.deallocate();
     return sobelX;
 }
 
@@ -502,7 +505,7 @@ Mat ApplySobelYExtended(const Mat& img,
         delta,          // delta value that is added to the results prior to storing them in dst
         128             // #BorderTypes. #BORDER_WRAP is not supported.
     );
-
+    src_gray.deallocate();
     return sobelY;
 }
 
@@ -526,6 +529,9 @@ Mat ApplySobelExtended( const Mat& img,
     cv::Mat sobel;
     //compute the L1 norm
     sobel = abs(sobelX) + abs(sobelY);
+    src_gray.deallocate();
+    sobelX.deallocate();
+    sobelY.deallocate();
     return sobel;
 }
 
@@ -565,7 +571,8 @@ Mat ApplyHoughTransformLines(const Mat& img)
         Vec4i l = linesP[i];
         line(cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 3, LINE_AA);
     }
-
+    contours.deallocate();
+    dst.deallocate();
     return cdst;
 }
 
@@ -611,6 +618,9 @@ Mat ApplyHoughTransformCircles(const Mat& img)
                     2); // thickness
         ++itc;
     }
+
+    contours.deallocate();
+    dst.deallocate();
     return cdst;
 
 }
@@ -620,14 +630,20 @@ Mat Sharpening(const Mat& img)
 {
     Mat Iconv = 0.5 * ApplyLaplacianExtended(img, 3, 1);
     Mat igray = convertograyScale(img);
-    return igray - Iconv;
+    Mat final =  igray - Iconv;
+    Iconv.deallocate();
+    igray.deallocate();
+    return final;
 }
 
 Mat Unsharp(const Mat& img)
 {
     Mat Iconv = GaussianImageSmoothExtended(img,3, 150,150);
     Mat igray = convertograyScale(img);
-    return (1.5) * igray - 0.5 * Iconv;
+    Mat final = (1.5) * igray - 0.5 * Iconv;
+    Iconv.deallocate();
+    igray.deallocate();
+    return final;
 }
 
 Mat ApplyErodeEx(const Mat& img,int type)
@@ -700,8 +716,12 @@ Mat segmentErode(const Mat& img)
 
     img1 = ApplyErode(img1);
 
+    Mat final = img1 - img2;
 
-    return img2 - img1;
+    img1.deallocate();
+    img2.deallocate();
+
+    return final;
 }
 
 /* -------------------------------------------------------------------------------------------
@@ -740,6 +760,9 @@ Mat detectCornersHarrisAlgoFull(    const Mat& image,
                     255,
                     cv::THRESH_BINARY);
 
+    imgclone.deallocate();
+    cornerStrength.deallocate();
+
     return harrisCorners;
 }
 
@@ -752,6 +775,8 @@ Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)
         contours, // output contours
         threshold, // low threshold
         aperture); // high threshold
+
+    grayscale.deallocate();
     return contours;
 }
 
@@ -788,6 +813,9 @@ std::vector<Vec4i> GetLinesHoughTransform(  const Mat& img,
         50,
         minLineLength,
         maxLineGap);
+
+    dst.deallocate();
+    contours.deallocate();
 
     return linesP;
 }
@@ -856,24 +884,26 @@ std::vector<cv::Vec3f> GetCirclesHoughTransform(const Mat& img,
         minRadius,
         maxRadius); // min and max radius
 
+    contours.deallocate();
+    dst.deallocate();
+    cdst.deallocate();
+
     return circles;
 
 }
 
 Mat ApplyFindContournsThreshold(const Mat& img)
 {
-    Mat src_gray;
-    Mat src = img.clone();
     // Convert image to grayscale
     Mat gray;
 
-    if (isGrayScaleImage(src) == false)
+    if (isGrayScaleImage(img) == false)
     {
-        cvtColor(src, gray, COLOR_BGR2GRAY);
+        cvtColor(img, gray, COLOR_BGR2GRAY);
     }
     else
     {
-        gray = src.clone();
+        gray = img.clone();
     }
 
     // Convert image to binary
@@ -888,6 +918,9 @@ Mat ApplyFindContournsThreshold(const Mat& img)
     {
         drawContours(drawing, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
     }
+
+    gray.deallocate();
+    bw.deallocate();
 
     return drawing;
 }
@@ -919,6 +952,8 @@ Mat ApplyFindContournsCanny(const Mat& img)
     {
         drawContours(drawing, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
     }
+
+    src_gray.deallocate();
 
     return drawing;
 }

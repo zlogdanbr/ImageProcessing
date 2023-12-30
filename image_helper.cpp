@@ -24,27 +24,6 @@ void CImageHelper::clean()
     }
 }
 
-
-bool CImageHelper::revert()
-{
-
-    if (cache.empty() || cache.size() == 1)
-    {
-        return false;
-    }
-
-    Mat tmp = getLastCache();
-
-    destroyAllWindows();
-    clean();
-
-    setOrginalImageOpenCV(tmp);
-    original_initiated = true;
-    showImage(tmp, "Final");
-
-    return true;
-}
-
 Mat CImageHelper::SetOriginalNew()
 {
     Mat savefinal;
@@ -52,7 +31,6 @@ Mat CImageHelper::SetOriginalNew()
     destroyAllWindows();
     clean();
     cv::namedWindow("Final", cv::WINDOW_NORMAL);
-    addtoCache(savefinal);
     setOrginalImageOpenCV(savefinal);
     original_initiated = true;
     return savefinal;

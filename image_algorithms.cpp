@@ -31,16 +31,14 @@ end_tracking(tp& start)
 }
 
 CInputDialog::CInputDialog(     wxWindow* parent,
-                                CImageHelper* imghelper,
-                                CWriteLogs* outxt,
+                                const Mat& original,
                                 wxWindowID id, 
                                 const wxString& title, 
                                 const wxPoint& pos, 
                                 const wxSize& size, 
-                                long style) : 
-                                wxDialog(parent, id, title, pos, size, style), 
-                                imghelper{ imghelper },
-                                outxt{ outxt }
+                                long style): 
+                                wxDialog(parent, id, title, pos, size, style),
+                                original{original}
 {
     this->SetTitle("Algorithms");
     this->SetSizeHints(wxDefaultSize, wxDefaultSize);
@@ -57,7 +55,7 @@ CInputDialog::CInputDialog(     wxWindow* parent,
 
     wxBoxSizer* bSizer3;
     bSizer3 = new wxBoxSizer(wxVERTICAL);
-    button2 = new wxButton(this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxSize(70, -1), 0);
+    button2 = new wxButton(this, wxID_ANY, wxT("OK"), wxDefaultPosition, wxSize(70, -1), 0);
     bSizer3->Add(button2, 0, wxALL, 5);
 
     bSizer1->Add(bSizer3, 1, wxEXPAND, 5);
@@ -80,12 +78,11 @@ CInputDialog::CInputDialog(     wxWindow* parent,
             // set values
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();
-            Mat out = DoFunction();            
-            Size s = out.size();
+            DoFunction();            
+            Size s = final_image.size();
             if (s.width != 0 && s.height != 0)
             {
-                setFinalImg(out);
-                showImage(out, "Final");
+                showImage(final_image, "Final");
             }
  
         });
@@ -93,6 +90,7 @@ CInputDialog::CInputDialog(     wxWindow* parent,
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
         {
             // cancel
+            destroyAllWindows();
             Close();
         });
 }
@@ -101,115 +99,54 @@ CInputDialog::~CInputDialog()
 {
 }
 
-std::string
-CInputDialog::setPath(bool Gray)
-{
-    auto spath = imghelper->getOriginalImage();
-    imghelper->setFinalGray(Gray);
-    return spath;
-}
-
-Mat
-CInputDialog::setFinalImg(Mat& out)
-{
-    Mat _out;
-
-    if (out.empty() == false)
-    {
-        imghelper->setFinalImageOpenCV(out);
-        outxt->writeTo("Algorithm applied correctly\n");
-        _out = imghelper->SetOriginalNew();
-    }
-    else
-    {
-        outxt->writeTo("Algorithm error\n");
-    }
-    return _out;
-}
-
-
 template<typename F, typename...Args>
-Mat
+void
 CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
 {
-    try
+    if (original.empty() == false)
     {
-        if (imghelper->getOriginalImageInitiated() == false)
-        {
-            Mat out;
-            Mat img;
-            if (loadImage(setPath(Gray), img) == true)
-            {
-                wxBusyInfo* wait = ProgramBusy();
-                out = f(img, args ...);
-                Stop(wait);
-                auto s = out.size();
-                if (s.height == 0 || s.width == 0)
-                {
-                    return out;
-                }
-                return out;
-                //setFinalImg(out);
-            }
-        }
-        else
-        {
-            Mat out;
-            wxBusyInfo* wait = ProgramBusy();
-            out = f(imghelper->getOrginalImageOpenCV(), args ...);
-            Stop(wait);
-            return out;
-            //setFinalImg(out);
-        }
+        final_image = f(original, args ...);
+        setOriginalImage();
     }
-    catch (...)
-    {
-        Mat empty;
-        return empty;
-    }
-
-
-    Mat empty;
-    return empty;
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(Function1Parameter& f,bool Gray)
 {
-    return ApplyAlgorithmEffective(f, Gray);
+    ApplyAlgorithmEffective(f, Gray);
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(Function2Parameter& f,bool Gray, int kernel_size)
 {
-    return ApplyAlgorithmEffective(f, Gray, kernel_size);
+    ApplyAlgorithmEffective(f, Gray, kernel_size);
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(Function4Parameters& f, bool Gray, int kernel_size,double p1, double p2)
 {
-    return ApplyAlgorithmEffective(f, Gray, kernel_size, p1, p2);
+   ApplyAlgorithmEffective(f, Gray, kernel_size, p1, p2);
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(Function3Parameters& f, bool Gray, int p1, int p2)
 {
-    return ApplyAlgorithmEffective(f, Gray, p1, p2);
+    ApplyAlgorithmEffective(f, Gray, p1, p2);
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(Function5Parameters& f, bool Gray,int kernel_size,int p1,int p2,int p3)
 {
-    return ApplyAlgorithmEffective(f, Gray, kernel_size, p1, p2, p3);
+    ApplyAlgorithmEffective(f, Gray, kernel_size, p1, p2, p3);
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(Function2Slider& f, bool Gray, double t)
 {
-    return ApplyAlgorithmEffective(f, Gray, t);
+    ApplyAlgorithmEffective(f, Gray, t);
 }
 
-Mat
+void
 CInputDialog::ApplyAlgorithm(
                                 FunctionSobelParameters& f,
                                 bool Gray,
@@ -223,7 +160,8 @@ CInputDialog::ApplyAlgorithm(
     return ApplyAlgorithmEffective(f, Gray, image_type, depth, type, delta, kernel_size);
 }
 
-Mat CInputDialog::ApplyAlgorithm(
+void
+CInputDialog::ApplyAlgorithm(
                                 FunctionHarris& f, 
                                 bool Gray, 
                                 int neighborhood_size, 
@@ -231,7 +169,7 @@ Mat CInputDialog::ApplyAlgorithm(
                                 double threshold, 
                                 double Harris_parameter)
 {
-    return ApplyAlgorithmEffective(f, Gray, neighborhood_size, aperture_size, threshold, Harris_parameter);
+    ApplyAlgorithmEffective(f, Gray, neighborhood_size, aperture_size, threshold, Harris_parameter);
 }
 
 void CInputDialog::setSimpleMaps()
@@ -398,35 +336,15 @@ double Distance(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
     return sqrt(pow(xrhs - xlhs, 2) + pow(yrhs - ylhs, 2));
 }
 
-Mat CInputDialog::DoFunction()
+void CInputDialog::DoFunction()
 {
     wxString _algorithm = getSelectionText();
-
-    outxt->writeTo("Applying algorithm: " + _algorithm + " please wait...\n");
-
-    if (_algorithm == "Undo")
-    {
-        if (imghelper->getOriginalImageInitiated() == true)
-        {
-            if (imghelper->revert() == false)
-            {
-                outxt->writeTo("Error, final image not loaded\n");
-            }
-        }
-        shouldQuit = true;
-        Mat empty;
-        return empty;
-    }
-
+    
     if (_algorithm == "Find Contourns Descriptors")
     {
-        if (imghelper->getOriginalImageInitiated() == true)
+        if (original.empty() == false)
         {
-            Mat img = imghelper->getOrginalImageOpenCV();
-            std::string s = imghelper->getOriginalImage();
-            std::string s2 = getOnlyNameNoExt(s);
-
-            Descriptors descriptors = image_info::getImageDescriptors(img);
+            Descriptors descriptors = image_info::getImageDescriptors(original);
             std::stringstream os;
 
             if (directory_exists("out") == false)
@@ -434,26 +352,20 @@ Mat CInputDialog::DoFunction()
                 create_dir("out");
             };
             
-            os <<"out\\" << getFileName(s2) << ".csv";
-
-            wxBusyInfo* wait = ProgramBusy();
+            os << "out\\" << getFileName("output_descriptor") << ".csv";
             image_info::createCSV(descriptors, os.str());
-            Stop(wait);
-            std::string msg = "csv file " + os.str() + " has been created";
-            outxt->writeTo(msg.c_str());
+
         }
-        shouldQuit = true;
-        Mat empty;
-        return empty;
+        setOriginalImage();
+        return;
     }
 
     Function1Parameter  function1P  = getAlgoFunctionOnePar(_algorithm);
 
     if (function1P != nullptr)
     {
-        Mat out = ApplyAlgorithm(function1P, true);
-        shouldQuit = true;
-        return out;
+        ApplyAlgorithm(function1P, true);
+        return;        
     }
 
     Function2Parameter  function2P = getAlgoFunctionTwoPar(_algorithm);
@@ -489,14 +401,13 @@ Mat CInputDialog::DoFunction()
             else
             {
                 shouldQuit = true;
-                Mat empty;
-                return empty;
+                return;
             }
  
         }
-        Mat out = ApplyAlgorithm(function2P, true, option);
+        ApplyAlgorithm(function2P, true, option);
         shouldQuit = true;
-        return out;
+        return;
     }
 
     Function3Parameters function3P = getAlgoFunctionThreePar(_algorithm);
@@ -517,11 +428,11 @@ Mat CInputDialog::DoFunction()
             if (dialog3.ShowModal() == wxID_OK)
             {
                 Aperture = dialog3.GetValue();
-                out = ApplyAlgorithm(function3P, true, threshold, Aperture);
+                ApplyAlgorithm(function3P, true, threshold, Aperture);
             }
         }
         shouldQuit = true;
-        return out;
+        return;
     }
 
     Function4Parameters function4P = getAlgoFunctionFourPar(_algorithm);
@@ -544,10 +455,10 @@ Mat CInputDialog::DoFunction()
             {
                 factor = 1.0;
             }
-            out = ApplyAlgorithm(function4P, true, 3, sigma/factor, sigma/factor);
+            ApplyAlgorithm(function4P, true, 3, sigma/factor, sigma/factor);
         }
         shouldQuit = true;
-        return out;
+        return;
     }
 
     Function5Parameters function5P = getAlgoFunctionFivePar(_algorithm);
@@ -566,11 +477,11 @@ Mat CInputDialog::DoFunction()
             if (dialog2.ShowModal() == wxID_OK)
             {
                 delta = dialog2.GetValue();
-                out = ApplyAlgorithm(function5P, true, 3, scale, delta, CV_16S);
+                ApplyAlgorithm(function5P, true, 3, scale, delta, CV_16S);
             }
         }
         shouldQuit = true;
-        return out;
+        return;
     }
 
     Function2Parameter  functionAdjust = getAlgoFunctionAdjust(_algorithm);
@@ -611,11 +522,11 @@ Mat CInputDialog::DoFunction()
         if (scale == INVALID_VALUE_INT)
         {
             shouldQuit = true;
-            return out;
+            return;
         }
-        out = ApplyAlgorithm(functionAdjust, true, scale);
+        ApplyAlgorithm(functionAdjust, true, scale);
         shouldQuit = true;
-        return out;
+        return;
     }
 
     Function2Slider     functionSlider = getAlgoFunctionSlider(_algorithm);
@@ -655,7 +566,7 @@ Mat CInputDialog::DoFunction()
             if (v == INVALID_VALUE_DOUBLE)
             {
                 shouldQuit = true;
-                return out;
+                return;
             }
 
             if (_algorithm == "Threshold")
@@ -667,11 +578,11 @@ Mat CInputDialog::DoFunction()
                 threshold = static_cast<double>(v)/100;
             }
                 
-            out = ApplyAlgorithm(functionSlider, true, threshold);
+            ApplyAlgorithm(functionSlider, true, threshold);
 
         }
         shouldQuit = true;
-        return out;
+        return;
     }
 
     FunctionSobelParameters     functionS = getAlgoSobel(_algorithm);
@@ -724,9 +635,9 @@ Mat CInputDialog::DoFunction()
         {
             type = dialog4.GetValue();
         }
-        out = ApplyAlgorithm(functionS, true, image_type, depth, type, delta, kernel_size);
+        ApplyAlgorithm(functionS, true, image_type, depth, type, delta, kernel_size);
         shouldQuit = true;
-        return out;
+        return;
     }
 
     FunctionHarris farris = getAlgoHarris(_algorithm);
@@ -734,13 +645,10 @@ Mat CInputDialog::DoFunction()
     if (farris != nullptr)
     {
         Mat out;
-        out = ApplyAlgorithm(farris, true, 3, 2, 0.001, 0.0001);
+        ApplyAlgorithm(farris, true, 3, 2, 0.001, 0.0001);
         shouldQuit = true;
-        return out;
+        return;
     }
-
-    Mat empty;
-    return empty;
 }
 
 

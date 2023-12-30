@@ -32,7 +32,6 @@ void COpenImage::OpenFile(wxFrame& frame)
                 outxt->writeTo("Image loaded correctly\n");
                 imghelper->setOrginalImageOpenCV(img);
                 imghelper->setOriginalImage(spath);
-                imghelper->addtoCache(img);
                 imghelper->setOriginalInfact(img);
                 showImage(img, "Original");
             }
