@@ -39,7 +39,6 @@ namespace image_constants
 		"Morphological Top Hat",
 		"Apply custom algo",
 		"Gaussian Extended",
-		//"Difference of Gaussians",
 		"Median",
 		//"Sharpening",
 		//"Unsharp",

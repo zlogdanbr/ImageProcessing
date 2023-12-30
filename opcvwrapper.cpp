@@ -65,9 +65,27 @@ Mat ApplySiftToImage(const Mat& img)
 
 }
 
+void showResults(float c)
+{
+    wxString msg = "";
+    if (c <= 0)
+    {
+        msg = "Images are not from the same object";
+    }
+    else
+    {
+        std::stringstream os;
+        os << "Images have " << c << " ratio";
+        msg = os.str().c_str();
+    }
+
+    wxMessageBox(msg, "Result", wxOK );
+}
+
 void ApplyAndCompare(std::vector<Mat>& images)
 {
     //Descriptors& descriptors
+
     std::vector< Descriptors > descriptors_set;
     Size Standard = images[0].size();
     for (const auto& i : images)
@@ -81,7 +99,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
     int standard_size_width = Standard.width;
     int standard_size_height = Standard.height;
 
-    std::vector<std::vector < cv::KeyPoint >> kps;
+    std::vector<int> kps;
     
     for (int i = 0; i < images.size(); i++)
     {
@@ -91,7 +109,7 @@ void ApplyAndCompare(std::vector<Mat>& images)
         }
 
         std::vector < cv::KeyPoint >  kp = ApplySift(images[i]);
-        kps.push_back(kp);
+        kps.push_back(kp.size());
 
         std::stringstream os;
 
@@ -107,8 +125,9 @@ void ApplyAndCompare(std::vector<Mat>& images)
         image_info::createCSV(kp, os.str());
         
     }
-    
 
+    float c = CompareUsingSift(images[0], images[1]);
+    showResults(c);
     image_util::showManyImagesOnScreen(images);
 
 }
@@ -965,6 +984,31 @@ std::vector < cv::KeyPoint> ApplySift(const Mat& img)
     std::vector<cv::KeyPoint> keypoints;
     sift->detect(gray, keypoints);
     return keypoints;
+}
+
+float CompareUsingSift(const Mat& img1, const Mat& img2)
+{
+    auto sift = SIFT::create();
+
+    std::vector<KeyPoint> keypoints1;
+    std::vector<KeyPoint> keypoints2;
+    Mat descriptors1;
+    Mat descriptors2;
+
+    sift->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+    sift->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+
+    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+    std::vector< DMatch > matches;
+    matcher->match(descriptors1, descriptors2, matches);
+
+    float m1 = static_cast<float>(matches.size());
+    float m2 = static_cast<float>(keypoints1.size());
+    float m3 = static_cast<float>(keypoints2.size());
+
+    float ratio = m1 / (m2 + m3);
+
+    return ratio;
 }
 
 /*

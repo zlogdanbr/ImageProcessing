@@ -177,6 +177,8 @@ Mat ApplyDifferenceOfGaussian(const Mat& im);
 Mat ApplyFindContournsThreshold(const Mat& img);
 Mat ApplyFindContournsCanny(const Mat& img);
 Mat ApplySiftToImage(const Mat& img);
+float CompareUsingSift(const Mat& img1, const Mat& img2);
+void showResults(float c);
 
 /*************************************************************************************
 *   Helper functions
