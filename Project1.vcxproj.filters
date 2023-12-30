@@ -30,9 +30,6 @@
     <ClCompile Include="image_helper.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="childframes.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="savekernel.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>

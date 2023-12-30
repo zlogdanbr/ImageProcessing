@@ -2,43 +2,82 @@
 #include "childframes.h"
 #include "savekernel.h"
 
-void CGridInputDialog::setControlslayout()
+
+CGridDialogInput::CGridDialogInput(   wxWindow* parent, 
+                        Mat& img,
+                        wxWindowID id, 
+                        const wxString& title, 
+                        const wxPoint& pos, 
+                        const wxSize& size, long style) : 
+                        wxDialog(parent, id, title, pos, size, style)
 {
-    // set base sizer
-    basePanel->SetSizer(baseSizer);
+    final = img.clone();
+    this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
-    // add buttons to the horizontal box
-    hbox1->Add(button1);
-    hbox1->Add(button2);
-    hbox1->Add(button3);
-    hbox1->Add(button4);
-    hbox1->Add(button5);
+    wxBoxSizer* bSizer4;
+    bSizer4 = new wxBoxSizer(wxHORIZONTAL);
 
-    // add buttons to the horizontal box
-    hbox2->Add(grid);
+    wxBoxSizer* bSizer5;
+    bSizer5 = new wxBoxSizer(wxVERTICAL);
 
-    // set horizontal base sizer at panel1 and panel2
-    panel1->SetSizer(hbox1);
-    panel2->SetSizer(hbox2);
+    button1 = new wxButton(this, wxID_ANY, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0);
+    bSizer5->Add(button1, 0, wxALL, 5);
 
-    // add panel1 to the base sizer at the base panel
-    baseSizer->Add(panel1);
-    baseSizer->Add(panel2);
+    button2 = new wxButton(this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0);
+    bSizer5->Add(button2, 0, wxALL, 5);
 
+    button3 = new wxButton(this, wxID_ANY, wxT("Clear"), wxDefaultPosition, wxDefaultSize, 0);
+    bSizer5->Add(button3, 0, wxALL, 5);
+
+    button4 = new wxButton(this, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0);
+    bSizer5->Add(button4, 0, wxALL, 5);
+
+    button5 = new wxButton(this, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0);
+    bSizer5->Add(button5, 0, wxALL, 5);
+
+
+    bSizer4->Add(bSizer5, 1, wxEXPAND, 5);
+
+    wxBoxSizer* bSizer6;
+    bSizer6 = new wxBoxSizer(wxVERTICAL);
+
+    grid = new wxGrid(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0);
+
+    // Grid
     grid->CreateGrid(13, 13);
+    grid->EnableEditing(true);
+    grid->EnableGridLines(true);
+    grid->EnableDragGridSize(false);
+    grid->SetMargins(0, 0);
 
-    Center();
-}
+    // Columns
+    grid->EnableDragColMove(false);
+    grid->EnableDragColSize(true);
+    grid->SetColLabelAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
 
-CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"Custom Kernel Input" }
-{
-    setControlslayout();
+    // Rows
+    grid->EnableDragRowSize(true);
+    grid->SetRowLabelAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
+
+    // Label Appearance
+
+    // Cell Defaults
+    grid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_TOP);
+    bSizer6->Add(grid, 0, wxALL, 5);
+
+
+    bSizer4->Add(bSizer6, 1, wxEXPAND, 5);
+
+    this->SetSizer(bSizer4);
+    this->Layout();
+
+    this->Centre(wxBOTH);
 
     button1->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
         {
             // set values
             getGridData();
-            //Close();
+            Close();
         });
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -90,18 +129,15 @@ CGridInputDialog::CGridInputDialog(wxFrame* parent) :CInputDialogBase{ parent,"C
             }
 
         });
-
 }
 
+CGridDialogInput::~CGridDialogInput()
+{
+}
 
-void CGridInputDialog::getGridData() const
+void CGridDialogInput::getGridData()
 {
 
-    if (imghelper->getOriginalImageInitiated() == false)
-    {
-        outxt->writeTo("Image not loaded.\n");
-        return;
-    }
     std::vector<std::vector<double>> data;
 
     wxGridTableBase* wxData = grid->GetTable();
@@ -123,7 +159,6 @@ void CGridInputDialog::getGridData() const
             }
             catch (...)
             {
-                outxt->writeTo("Error in the kernel values.\n");
                 return;
             }
 
@@ -151,35 +186,9 @@ void CGridInputDialog::getGridData() const
                         kernel.at<float>(i, j) = data[i][j];
                     }
                 }
-
-                Mat img_orig = imghelper->getOrginalImageOpenCV();
-                Mat out = ApplyCustomKernel(img_orig, kernel);
-
-                if (out.empty() == false)
-                {
-                    imghelper->setFinalImageOpenCV(out);                    
-                    imghelper->setFinalGray(true);
-                    imghelper->SetOriginalNew();
-                    showImage(out, "Final");
-                }
-                else
-                {
-                    outxt->writeTo("Error appplying algo.\n");
-                }
-            }
-            else
-            {
-                outxt->writeTo("Kernels dimension must be higher than 2.\n");
+                final = ApplyCustomKernel(final, kernel);
             }
         }
-        else
-        {
-            outxt->writeTo("Kernels must have odd sizes.\n");
-        }
-
-    }
-    else
-    {
-        outxt->writeTo("Incorrect kernel size.\n");
     }
 }
+

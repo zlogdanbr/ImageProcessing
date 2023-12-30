@@ -74,37 +74,6 @@ void MyFrame::onMakeSameSize(wxCommandEvent& event)
     }
 }
 
-void MyFrame::onSelectRoi(wxCommandEvent& event)
-{
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-     
-        Mat clone = ImageHelper.getOrginalImageOpenCV();
-
-        wxRect sizeScreen = wxGetClientDisplayRect();
-        int hs = sizeScreen.height;
-        int ws = sizeScreen.width;
-
-        cv::namedWindow("tmp", cv::WINDOW_NORMAL);
-        clone = fitImageOnScreen(clone, ws, hs);
-        Rect rect = selectROI("tmp", clone, false);
-        destroyWindow("tmp");
-        clone = Mat(clone, rect);
-        clone = fitImageOnScreen(clone,ws, hs);
-        if (clone.empty() == false)
-        {
-            ImageHelper.setFinalImageOpenCV(clone);
-            outxt.writeTo("ROI selected.\n");
-            ImageHelper.SetOriginalNew();
-            ImageHelper.setOriginalInfact(clone);
-        }
-    }
-    else
-    {
-        wxMessageBox("Please load an image first", "Error", wxOK | wxICON_ERROR);
-        outxt.writeTo("Image not loaded\n");
-    }
-}
 
 void MyFrame::onHelpFile(wxCommandEvent& event)
 {
@@ -167,26 +136,4 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
             showImage(out, "Final");
         }
     }
-}
-
-void MyFrame::onCustomKernel(wxCommandEvent& event)
-{
-    if (ImageHelper.getOriginalImageInitiated() == true)
-    {
-        CGridInputDialog* MyDialog{ new CGridInputDialog(this)};
-        MyDialog->setImageHelper(&ImageHelper);
-        MyDialog->setLogs(&outxt);
-        outxt.writeTo("Open Data Input dialog.\n");
-        MyDialog->Show(true);
-    }
-    else
-    {
-        wxMessageBox("Image not loaded", "Error", wxOK | wxICON_ERROR);
-        outxt.writeTo("Image not loaded\n");
-    }
-
-}
-
-void MyFrame::onRevert(wxCommandEvent& event)
-{
 }

@@ -81,77 +81,38 @@ private:
     CWriteLogs* outxt{ nullptr };
 };
 
-class CInputDialogBase  : public wxFrame 
+
+
+
+class CGridDialogInput : public wxDialog
 {
-public:
-
-    CInputDialogBase(wxFrame* parent, wxString name);
-    ~CInputDialogBase()
-    {
-
-    }
-
-    void setImageHelper(CImageHelper* imghlp) { imghelper = imghlp; };
-    void setLogs(CWriteLogs* l) { outxt = l; };
-
-    wxFrame* _parent = nullptr;
-
-protected:
-
-    //--------------------------------------------------------------
-    // Helpers
-    //--------------------------------------------------------------
-    CImageHelper* imghelper{ nullptr };
-    CWriteLogs* outxt{ nullptr };
-    std::string  setPath(bool Gray);
-    Mat  setFinalImg(Mat& out);   
-    virtual void setControlslayout() = 0;
-
-};
-
-
-class CGridInputDialog final : public CInputDialogBase
-{
-public:
-
-    CGridInputDialog(wxFrame* parent);
-    ~CGridInputDialog()
-    {
-
-    }
-
 private:
 
-    //--------------------------------------------------------------
-    // Components
-    //--------------------------------------------------------------
-    wxPanel* basePanel = new wxPanel(this, -1);
-    wxPanel* panel1{ new wxPanel(basePanel) };
-    wxPanel* panel2{ new wxPanel(basePanel, -1) };
+protected:
+    wxButton* button1;
+    wxButton* button2;
+    wxButton* button3;
+    wxButton* button4;
+    wxButton* button5;
+    wxGrid* grid;
 
-    wxBoxSizer* baseSizer{ new wxBoxSizer(wxVERTICAL) };
-    wxBoxSizer* hbox1{ new wxBoxSizer(wxHORIZONTAL) };
-    wxBoxSizer* hbox2{ new wxBoxSizer(wxHORIZONTAL) };
+    void getGridData();
 
-    wxButton* button1{ new wxButton(panel1, wxID_ANY, "OK")};
-    wxButton* button2{ new wxButton(panel1, wxID_ANY, "Cancel")};
-    wxButton* button3{ new wxButton(panel1, wxID_ANY, "Clear")};
-    wxButton* button4{ new wxButton(panel1, wxID_ANY, "Save") };
-    wxButton* button5{ new wxButton(panel1, wxID_ANY, "Load") };
+    Mat final;
 
-    wxGrid* grid = { new wxGrid(
-                                    panel2,
-                                    -1,
-                                    wxPoint(-1,-1),
-                                    wxSize(-1,-1),
-                                    wxEXPAND
-                                )
-                    };
+public:
 
-    void setControlslayout() override;
+    CGridDialogInput(  wxWindow* parent,
+                Mat& img,
+                wxWindowID id = wxID_ANY, 
+                const wxString& title = wxEmptyString, 
+                const wxPoint& pos = wxDefaultPosition, 
+                const wxSize& size = wxSize(1188, 333), 
+                long style = wxDEFAULT_DIALOG_STYLE);
 
-    void getGridData() const;
-    
+    ~CGridDialogInput();
+
+    Mat getFinal() { return final; };
 
 };
 

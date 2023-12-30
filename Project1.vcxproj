@@ -273,7 +273,6 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="childframes.cpp" />
     <ClCompile Include="COpenCVDraw.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_gridialog.cpp" />

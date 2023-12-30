@@ -52,6 +52,7 @@ namespace image_constants
 		"Find Contourns ( Threshold )",
 		"Find Contourns ( Canny )",
 		"Find Contourns Descriptors",
-		"Find Sift Descriptors"
+		"Find Sift Descriptors",
+		"Apply Custom Kernel"
 	};
 }

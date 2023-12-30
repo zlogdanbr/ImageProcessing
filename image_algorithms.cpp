@@ -348,6 +348,18 @@ void CInputDialog::DoFunction()
         }
         return;
     }
+
+
+    if (_algorithm == "Apply Custom Kernel")
+    {
+        if (original.empty() == false)
+        {
+            CGridDialogInput dialog(this, original, wxID_ANY, "Custom Kernel Selection");
+            dialog.ShowModal();
+            final_image = dialog.getFinal();
+            setOriginalImage();
+        }
+    }
     
     if (_algorithm == "Find Contourns Descriptors")
     {
