@@ -15,13 +15,14 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/all_layers.hpp>
+#include "wx/wx.h"
+#include <wx/gdicmn.h> 
 #include <iostream>
 #include <vector>
 #include <map>
 #include <algorithm>
 #include "filesys.h"
-#include "wx/wx.h"
-#include <wx/gdicmn.h> 
+
 
 using namespace cv;
 using namespace dnn;

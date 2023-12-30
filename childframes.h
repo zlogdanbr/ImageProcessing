@@ -15,15 +15,16 @@
 #include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/spinctrl.h>
+#include <wx/busyinfo.h>
 #include <functional>
 #include <thread>
+#include <mutex>
 #include "image_helper.h"
 #include "opcvwrapper.h"
 #include "logs.h"
 #include "filesys.h"
 #include "image_util.h"
-#include <wx/busyinfo.h>
-#include <mutex>
+
 
 using namespace image_util;
 
@@ -201,6 +202,7 @@ protected:
 
     Mat original;
     Mat final_image;
+    ImageCache revertContainer;
 
     wxButton* button1 = nullptr;
     wxButton* button2 = nullptr;
@@ -263,8 +265,20 @@ protected:
         mtex.lock();
         original.deallocate();
         original = final_image.clone();
+        revertContainer.AddImgToCache(original);
         mtex.unlock();
         shouldQuit = true;
+    }
+
+    void revert()
+    {
+        Mat TopOf;
+        if (revertContainer.getFirstOfCache(TopOf) == true)
+        {
+            final_image.deallocate();
+            final_image = TopOf;
+            return;
+        }
     }
 
     std::function<Mat(Mat)>

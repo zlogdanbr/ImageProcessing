@@ -7,10 +7,10 @@
 #ifndef _MAIN_FRAME_MY_APP_DVG_
 #define _MAIN_FRAME_MY_APP_DVG_
 
+#include <chrono>
 #include "image_helper.h"
 #include "childframes.h"
 #include "logs.h"
-#include <chrono>
 
 
 class MyFrame : public wxFrame

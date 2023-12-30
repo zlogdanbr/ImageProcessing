@@ -78,13 +78,13 @@ CInputDialog::CInputDialog(     wxWindow* parent,
             // set values
             int item = comboBox1->GetSelection();
             SelectionText = comboBox1->GetValue();
+            destroyAllWindows();
             DoFunction();            
             Size s = final_image.size();
             if (s.width != 0 && s.height != 0)
             {
-                showImage(final_image, "Final");
-            }
- 
+                showImage(final_image, "Temporary");
+            } 
         });
 
     button2->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
@@ -339,6 +339,15 @@ double Distance(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
 void CInputDialog::DoFunction()
 {
     wxString _algorithm = getSelectionText();
+
+    if (_algorithm == "Undo")
+    {
+        if (revertContainer.isEmpty() == false)
+        {
+            revert();
+        }
+        return;
+    }
     
     if (_algorithm == "Find Contourns Descriptors")
     {

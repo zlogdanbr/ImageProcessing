@@ -13,6 +13,10 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/artprov.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <queue>
+#include <stack>
+#include <deque>
 #include <memory>
 #include <map>
 #include <iostream>
@@ -21,10 +25,47 @@
 #include "filesys.h"
 #include "opcvwrapper.h"
 #include <functional>
-#include <queue>
-#include <stack>
-#include <deque>
-#include<opencv2/highgui/highgui.hpp>
+
+
+class ImageCache
+{
+public:
+
+    ImageCache() = default;
+
+    void AddImgToCache(Mat& img)
+    {
+        image_cache.push(img);
+    }
+
+    bool getFirstOfCache(Mat& img)
+    {
+        if (image_cache.empty() == false )
+        {      
+            if (image_cache.size() > 1)
+            {
+                image_cache.pop();
+                img = image_cache.top();
+            }
+
+            if (image_cache.size() == 1)
+            {
+                img = image_cache.top();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    bool isEmpty()
+    {
+        return image_cache.empty();
+    }
+private:
+
+    std::stack<Mat> image_cache;
+
+};
 
 
 std::string convertWxStringToString(const wxString wsx);
