@@ -932,7 +932,7 @@ Mat ApplyFindContournsCanny(const Mat& img)
 
     if (isGrayScaleImage(img) == false)
     {
-        cvtColor(src_gray, src_gray, COLOR_BGR2GRAY);
+        cvtColor(img, src_gray, COLOR_BGR2GRAY);
     }
     else
     {
