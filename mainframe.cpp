@@ -150,18 +150,22 @@ void MyFrame::OnOpen(wxCommandEvent& event)
 
 void MyFrame::onAllMenu(wxCommandEvent& event)
 {   
-    CInputDialog* InputDialog = new CInputDialog(this, ImageHelper.getOrginalImageOpenCV());
-    outxt.writeTo("Open Data Input dialog.\n");
 
-    InputDialog->ShowModal();
-
-    Mat out = InputDialog->getOutPutImage();
-
-    if (out.empty() == false)
+    if (ImageHelper.getOriginalImageInitiated() == true)
     {
-        ImageHelper.setFinalImageOpenCV(out);
-        ImageHelper.setOrginalImageOpenCV(out);
-        showImage(out, "Final");
+        CInputDialog* InputDialog = new CInputDialog(this, ImageHelper.getOrginalImageOpenCV());
+        outxt.writeTo("Open Data Input dialog.\n");
+
+        InputDialog->ShowModal();
+
+        Mat out = InputDialog->getOutPutImage();
+
+        if (out.empty() == false)
+        {
+            ImageHelper.setFinalImageOpenCV(out);
+            ImageHelper.setOrginalImageOpenCV(out);
+            showImage(out, "Final");
+        }
     }
 }
 
