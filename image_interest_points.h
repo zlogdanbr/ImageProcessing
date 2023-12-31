@@ -182,7 +182,8 @@ namespace image_info
 
 namespace sift_algo
 {
-	void ApplyAndCompareSIFT(std::vector<Mat>& images);
+	void ApplyAndCompareSIFT(	std::vector<Mat>& images,
+								std::vector<std::string>& filenames);
 
 	std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
 }

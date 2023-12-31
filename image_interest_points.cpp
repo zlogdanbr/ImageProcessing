@@ -261,7 +261,8 @@ namespace sift_algo
         return keypoints;
     }
 
-    void ApplyAndCompareSIFT(std::vector<Mat>& images)
+    void ApplyAndCompareSIFT(   std::vector<Mat>& images, 
+                                std::vector<std::string>& filenames)
     {
 
         if (images.size() != 2)
@@ -283,18 +284,20 @@ namespace sift_algo
         std::vector < cv::KeyPoint >  kp1 = ApplySift(img1, descriptor1);
         std::vector < cv::KeyPoint >  kp2 = ApplySift(img1, descriptor2);
 
-        std::stringstream os;
+        std::stringstream os1;
 
         if (directory_exists("out") == false)
         {
             create_dir("out");
         };
 
-        os << "out\\" << "image_sift_01" << ".csv";
-        image_info::createCSV(kp1, os.str());
+        os1 << "out\\" << "image_sift_" << getOnlyNameNoExt(filenames[0]) <<  ".csv";
+        image_info::createCSV(kp1, os1.str());
+        
+        std::stringstream os2;
 
-        os << "out\\" << "image_sift_02" << ".csv";
-        image_info::createCSV(kp2, os.str());
+        os2 << "out\\" << "image_sift_" << getOnlyNameNoExt(filenames[1]) << ".csv";
+        image_info::createCSV(kp2, os2.str());
 
         Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
         std::vector< DMatch > matches;
@@ -302,13 +305,15 @@ namespace sift_algo
         matcher->match(descriptor1, descriptor2, matches);
         Mat result;
 
-        drawMatches(img1,        // InputArray 	img1,
-            kp1,         // const std::vector< KeyPoint > & 	keypoints1,
-            img2,        // InputArray 	img2,
-            kp2,         // const std::vector< KeyPoint > & 	keypoints2,
-            matches,     // const std::vector< DMatch > & 	matches1to2,
-            result,      // InputOutputArray 	outImg
-            1);          // const int 	matchesThickness
+        drawMatches(
+                        img1,        // InputArray 	img1,
+                        kp1,         // const std::vector< KeyPoint > & 	keypoints1,
+                        img2,        // InputArray 	img2,
+                        kp2,         // const std::vector< KeyPoint > & 	keypoints2,
+                        matches,     // const std::vector< DMatch > & 	matches1to2,
+                        result,      // InputOutputArray 	outImg
+                        1          // const int 	matchesThickness
+                  );
 
         image_util::showManyImagesOnScreen(images);
         showImage(result, "Result");

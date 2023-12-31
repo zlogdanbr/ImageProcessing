@@ -71,7 +71,6 @@ void CLoadImageSetBase::AddButtons(wxBoxSizer* sizer1)
 	{
 		_actions[i] = new wxButton(m_panel6, wxID_ANY, wxT("Load Image"), wxDefaultPosition, wxDefaultSize, 0);
 		sizer1->Add(_actions[i], 0, wxALL, 5);
-
 	}
 }
 
@@ -99,6 +98,7 @@ bool CLoadImageSetBase::readImagePath(wxWindow* parent, wxTextCtrl* txtctrl)
 		wxString path = openFileDialog.GetPath();
 		std::string spath = convertWxStringToString(path);
 		setTextAtBox(txtctrl, path);
+		_filenames.push_back(spath);
 		return true;
 	}
 	return false;
@@ -227,6 +227,7 @@ void CApplySift::doProcess()
 	{
 		return;
 	}
-	sift_algo::ApplyAndCompareSIFT(_images);
+
+	sift_algo::ApplyAndCompareSIFT(_images, _filenames);
 }
 

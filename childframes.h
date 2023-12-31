@@ -394,6 +394,7 @@ protected:
     bool readImagePath( wxWindow* parent, wxTextCtrl* txtctrl);
 
     std::vector<Mat> _images;
+    std::vector<std::string> _filenames;
 
     void setImageArray();
 
