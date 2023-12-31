@@ -54,7 +54,7 @@
     <ClCompile Include="COpenCVDraw.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="image_several.cpp">
+    <ClCompile Include="image_sift.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="image_interest_points.cpp">

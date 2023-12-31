@@ -7,9 +7,7 @@
 #define _CVWRAPPER_
 
 #include "image_util.h"
-#include <thread>
-#define CVPLOT_HEADER_ONLY 
-#include <CvPlot/cvplot.h>
+
 
 /*************************************************************************************
 *   basic operations
@@ -176,20 +174,16 @@ Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat ApplyDifferenceOfGaussian(const Mat& im);
 Mat ApplyFindContournsThreshold(const Mat& img);
 Mat ApplyFindContournsCanny(const Mat& img);
-Mat ApplySiftToImage(const Mat& img);
+
 /*************************************************************************************
-*   Helper functions
+*   SIFT functions
 /*************************************************************************************/
 
 void ApplyAndCompareSIFT(std::vector<Mat>& images);
 
-std::pair< std::vector<int>, std::vector<int>>
-getImageXY(std::vector<std::vector<Point> >& raw_contourns);
+Mat ApplySiftToImage(const Mat& img);
 
-void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns);
-
-std::vector < cv::KeyPoint > 
-ApplySift(const Mat& img, Mat& descriptors);
+std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
 
 /*************************************************************************************
 *   IA

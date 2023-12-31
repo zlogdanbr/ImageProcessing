@@ -5,74 +5,6 @@
 #include <fstream>
 
 
-std::pair< std::vector<int>, std::vector<int>>
-getImageXY(std::vector<std::vector<Point> >& raw_contourns)
-{
-    std::vector<int> x;
-    std::vector<int> y;
-
-    for (const auto& cont : raw_contourns)
-    {
-        for (const auto& c : cont)
-        {
-            x.push_back(c.x);
-            y.push_back(c.y);
-        }
-    }
-
-    std::pair< std::vector<int>, std::vector<int>> p(x, y);
-    return p;
-}
-
-void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns)
-{
-    std::vector<int> x;
-    std::vector<int> y;
-
-    auto axes = CvPlot::makePlotAxes();
-    for (const auto& cont : raw_contourns)
-    {
-        for (const auto& c : cont)
-        {
-            x.push_back(1 * c.x);
-            y.push_back(-1 * c.y);
-        }
-    }
-
-    axes.create<CvPlot::Series>(x, y, "-g");
-    CvPlot::show("Countours", axes);
-}
-
-
-float CompareUsingSift(const Mat& img1, const Mat& img2)
-{
-    auto sift = SIFT::create();
-
-    std::vector<KeyPoint> keypoints1;
-    std::vector<KeyPoint> keypoints2;
-    Mat descriptors1;
-    Mat descriptors2;
-
-    sift->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-    sift->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
-
-    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
-    std::vector< DMatch > matches;
-    matcher->match(descriptors1, descriptors2, matches);
-
-    float m1 = static_cast<float>(matches.size());
-    float m2 = static_cast<float>(keypoints1.size());
-    float m3 = static_cast<float>(keypoints2.size());
-    float m4 = static_cast<float>(descriptors1.size().width * descriptors1.size().height);
-    float m5 = static_cast<float>(descriptors2.size().width * descriptors2.size().height);
-
-    float factor_d = m4 + m5;
-
-    float ratio = (m1/factor_d)*1000;
-
-    return ratio;
-}
-
 std::vector < cv::KeyPoint> ApplySift(const Mat& img, Mat& descriptors)
 {
     Mat gray = convertograyScale(img);
@@ -143,15 +75,16 @@ void ApplyAndCompareSIFT(std::vector<Mat>& images)
     matcher->match(descriptor1, descriptor2, matches);
     Mat result;
 
-   drawMatches(        img1,        // InputArray 	img1,
+    drawMatches(       img1,        // InputArray 	img1,
                        kp1,         // const std::vector< KeyPoint > & 	keypoints1,
                        img2,        // InputArray 	img2,
                        kp2,         // const std::vector< KeyPoint > & 	keypoints2,
                        matches,     // const std::vector< DMatch > & 	matches1to2,
                        result,      // InputOutputArray 	outImg
-                       2);          // const int 	matchesThickness
+                       1);          // const int 	matchesThickness
 
-   showImage(result, "Result");
+    image_util::showManyImagesOnScreen(images);
+    showImage(result, "Result");
 
 }
 /**

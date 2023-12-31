@@ -85,7 +85,7 @@ private:
         auto menumenuALL = menuAlgo->Append(ONE_ID_TO_ALL,  "Algorithms", "Base Algorithms");
         menumenuALL->SetBitmap(wxArtProvider::GetBitmap(wxART_HELP_BOOK, wxART_MENU));
         
-        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "Analyse Image Space", "Image Space");
+        auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "SIFT Algorithm Comparison", "Image Space");
         menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
     }

@@ -22,7 +22,9 @@
 #include <map>
 #include <algorithm>
 #include "filesys.h"
-
+#include <thread>
+#define CVPLOT_HEADER_ONLY 
+#include <CvPlot/cvplot.h>
 
 using namespace cv;
 using namespace dnn;
@@ -63,5 +65,12 @@ namespace image_util
 	Mat fitImageOnScreen(Mat& img, int wscreen, int hscreen);
 
 	void showManyImagesOnScreen(std::vector<Mat>& images);
+
+	std::pair< std::vector<int>, std::vector<int>>
+	getImageXY(std::vector<std::vector<Point> >& raw_contourns);
+
+	void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns);
+
+
 
 }

@@ -82,4 +82,42 @@ namespace image_util
 
     }
 
+    std::pair< std::vector<int>, std::vector<int>>
+        getImageXY(std::vector<std::vector<Point> >& raw_contourns)
+    {
+        std::vector<int> x;
+        std::vector<int> y;
+
+        for (const auto& cont : raw_contourns)
+        {
+            for (const auto& c : cont)
+            {
+                x.push_back(c.x);
+                y.push_back(c.y);
+            }
+        }
+
+        std::pair< std::vector<int>, std::vector<int>> p(x, y);
+        return p;
+    }
+
+    void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns)
+    {
+        std::vector<int> x;
+        std::vector<int> y;
+
+        auto axes = CvPlot::makePlotAxes();
+        for (const auto& cont : raw_contourns)
+        {
+            for (const auto& c : cont)
+            {
+                x.push_back(1 * c.x);
+                y.push_back(-1 * c.y);
+            }
+        }
+
+        axes.create<CvPlot::Series>(x, y, "-g");
+        CvPlot::show("Countours", axes);
+    }
+
 }

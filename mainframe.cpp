@@ -66,7 +66,7 @@ void MyFrame::onImageDraw(wxCommandEvent& event)
 
 void MyFrame::onMakeSameSize(wxCommandEvent& event)
 {
-    CLoadImageSet ImgSet(this,&outxt, -1, "Select Images", 2);
+    CApplySift ImgSet(this,&outxt, -1, "Select Images", 2);
     ImgSet.ShowModal();
     if (ImgSet.IsoK)
     {

@@ -189,8 +189,6 @@ void CLoadImageSetBase::setEventButtons()
 	{
 		return;
 	}
-
-
 }
 
 void CLoadImageSetBase::setImageArray()
@@ -211,26 +209,23 @@ void CLoadImageSetBase::setImageArray()
 
 }
 
-CLoadImageSet::CLoadImageSet(wxWindow* parent,
-				CWriteLogs* outxt,
-				wxWindowID id,
-				const wxString& title,
-				int inputs)
-	:CLoadImageSetBase(parent, outxt, wxID_ANY, title, inputs)
+CApplySift::CApplySift(	wxWindow* parent,
+						CWriteLogs* outxt,
+						wxWindowID id,
+						const wxString& title,
+						int inputs)
+					    :CLoadImageSetBase(parent, outxt, wxID_ANY, title, inputs)
 {
 
 }
 
-void CLoadImageSet::doProcess()
+void CApplySift::doProcess()
 {
-
 	setImageArray();
-
 	if (_images.size() < 2)
 	{
 		return;
 	}
 	ApplyAndCompareSIFT(_images);
-
 }
 

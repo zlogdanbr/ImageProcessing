@@ -432,14 +432,14 @@ public:
     
 };
 
-class CLoadImageSet : public CLoadImageSetBase
+class CApplySift : public CLoadImageSetBase
 {
 public:
-    CLoadImageSet(wxWindow* parent,
-        CWriteLogs* outxt,
-        wxWindowID id = wxID_ANY,
-        const wxString& title = wxEmptyString,
-        int inputs = 2);
+    CApplySift( wxWindow* parent,
+                CWriteLogs* outxt,
+                wxWindowID id = wxID_ANY,
+                const wxString& title = wxEmptyString,
+                int inputs = 2);
 
     virtual void doProcess() override;
 };
