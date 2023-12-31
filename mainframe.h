@@ -53,7 +53,7 @@ private:
     void OnSave(wxCommandEvent& event);
     void onAllMenu(wxCommandEvent& event);
     void onHelpFile(wxCommandEvent& event);
-    void onMakeSameSize(wxCommandEvent& event);
+    void onApplySIFT(wxCommandEvent& event);
     void onImageDraw(wxCommandEvent& event);
 
     enum  Opt 
@@ -75,7 +75,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::OnSave, this, wxID_SAVE);     
         Bind(wxEVT_MENU, &MyFrame::onHelpFile, this, wxID_ABOUT);
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
-        Bind(wxEVT_MENU, &MyFrame::onMakeSameSize, this, MAKE_SAME_SIZE);
+        Bind(wxEVT_MENU, &MyFrame::onApplySIFT, this, MAKE_SAME_SIZE);
         Bind(wxEVT_MENU, &MyFrame::onImageDraw, this, DRAW_ON_IMAGE);
         
     }

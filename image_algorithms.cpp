@@ -354,10 +354,11 @@ void CInputDialog::DoFunction()
     {
         if (original.empty() == false)
         {
-            CGridDialogInput dialog(this, original, wxID_ANY, "Custom Kernel Selection");
-            dialog.ShowModal();
-            final_image = dialog.getFinal();
+            CGridDialogInput* dialog = new CGridDialogInput(this, original, wxID_ANY, "Custom Kernel Selection");
+            dialog->ShowModal();
+            final_image = dialog->getFinal();
             setOriginalImage();
+            delete dialog;
         }
     }
     
@@ -390,16 +391,16 @@ void CInputDialog::DoFunction()
             int N =  0;
             Mat out;
 
-            wxNumberEntryDialog dialogCrop1(this, "Width of window", "Crop size", "Crop size", 8, 4, 32);
-            if (dialogCrop1.ShowModal() == wxID_OK)
+            wxNumberEntryDialog* dialogCrop1= new wxNumberEntryDialog(this, "Width of window", "Crop size", "Crop size", 8, 4, 32);
+            if (dialogCrop1->ShowModal() == wxID_OK)
             {
-                M = dialogCrop1.GetValue();
+                M = dialogCrop1->GetValue();
             }
 
-            wxNumberEntryDialog dialogCrop2(this, "Height of window", "Crop size", "Crop size", 8, 4, 32);
-            if (dialogCrop2.ShowModal() == wxID_OK)
+            wxNumberEntryDialog* dialogCrop2= new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 32);
+            if (dialogCrop2->ShowModal() == wxID_OK)
             {
-                N = dialogCrop2.GetValue();
+                N = dialogCrop2->GetValue();
             }
             final_image = cropImage(original, M, N);
             setOriginalImage();

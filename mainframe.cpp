@@ -64,7 +64,7 @@ void MyFrame::onImageDraw(wxCommandEvent& event)
     outxt.writeTo("Not implemented yet.\n");
 }
 
-void MyFrame::onMakeSameSize(wxCommandEvent& event)
+void MyFrame::onApplySIFT(wxCommandEvent& event)
 {
     CApplySift ImgSet(this,&outxt, -1, "Select Images", 2);
     ImgSet.ShowModal();
@@ -125,15 +125,16 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
         CInputDialog* InputDialog = new CInputDialog(this, ImageHelper.getOrginalImageOpenCV());
         outxt.writeTo("Open Data Input dialog.\n");
 
-        InputDialog->ShowModal();
-
-        Mat out = InputDialog->getOutPutImage();
-
-        if (out.empty() == false)
+        if (InputDialog->ShowModal() == wxID_CANCEL)
         {
-            ImageHelper.setFinalImageOpenCV(out);
-            ImageHelper.setOrginalImageOpenCV(out);
-            showImage(out, "Final");
+            Mat out = InputDialog->getOutPutImage();
+
+            if (out.empty() == false)
+            {
+                ImageHelper.setFinalImageOpenCV(out);
+                ImageHelper.setOrginalImageOpenCV(out);
+                showImage(out, "Final");
+            }
         }
     }
 }
