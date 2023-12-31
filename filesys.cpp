@@ -7,14 +7,12 @@ wxString getCurrentDir()
 	return s;
 }
 
-
 std::string getOnlyNameNoExt(const std::string& _file)
 {
 	fs::path p(_file);
 	auto name = p.stem();
 	return name.string();
 }
-
 
 std::string getExtension(const std::string& _file)
 {
