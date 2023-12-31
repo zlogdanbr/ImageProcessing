@@ -1,4 +1,5 @@
 #include "childframes.h"
+#include "image_interest_points.h"
 
 CLoadImageSetBase::CLoadImageSetBase(	wxWindow* parent,
 										CWriteLogs* outxt,
@@ -226,6 +227,6 @@ void CApplySift::doProcess()
 	{
 		return;
 	}
-	ApplyAndCompareSIFT(_images);
+	sift_algo::ApplyAndCompareSIFT(_images);
 }
 

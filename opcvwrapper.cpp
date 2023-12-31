@@ -5,22 +5,11 @@
 #include <fstream>
 
 
-std::vector < cv::KeyPoint> ApplySift(const Mat& img, Mat& descriptors)
-{
-    Mat gray = convertograyScale(img);
-    auto sift = SIFT::create();
-    std::vector<cv::KeyPoint> keypoints;
-    sift->detect(gray, keypoints);
-
-    sift->detectAndCompute(gray, noArray(), keypoints, descriptors);
-    return keypoints;
-}
-
 Mat ApplySiftToImage(const Mat& img)
 {
     Mat clone = img.clone();
     Mat descriptors;
-    std::vector < cv::KeyPoint >  kp = ApplySift(clone, descriptors);
+    std::vector < cv::KeyPoint >  kp = sift_algo::ApplySift(clone, descriptors);
 
     std::stringstream os;
 
@@ -38,55 +27,6 @@ Mat ApplySiftToImage(const Mat& img)
 
 }
 
-void ApplyAndCompareSIFT(std::vector<Mat>& images)
-{
-
-    if (images.size() != 2)
-    {
-        return;
-
-    }
-
-    Mat& img1 = images[0];
-    Mat& img2 = images[1];
-
-    Mat descriptor1;
-    Mat descriptor2;
-
-    std::vector < cv::KeyPoint >  kp1 = ApplySift(img1, descriptor1);
-    std::vector < cv::KeyPoint >  kp2 = ApplySift(img1, descriptor2);
-
-    std::stringstream os;
-
-    if (directory_exists("out") == false)
-    {
-        create_dir("out");
-    };
-
-    os << "out\\" << "image_sift_01" << ".csv";
-    image_info::createCSV(kp1, os.str());
-
-    os << "out\\" << "image_sift_02" << ".csv";
-    image_info::createCSV(kp2, os.str());
-        
-    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
-    std::vector< DMatch > matches;
-
-    matcher->match(descriptor1, descriptor2, matches);
-    Mat result;
-
-    drawMatches(       img1,        // InputArray 	img1,
-                       kp1,         // const std::vector< KeyPoint > & 	keypoints1,
-                       img2,        // InputArray 	img2,
-                       kp2,         // const std::vector< KeyPoint > & 	keypoints2,
-                       matches,     // const std::vector< DMatch > & 	matches1to2,
-                       result,      // InputOutputArray 	outImg
-                       1);          // const int 	matchesThickness
-
-    image_util::showManyImagesOnScreen(images);
-    showImage(result, "Result");
-
-}
 /**
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.

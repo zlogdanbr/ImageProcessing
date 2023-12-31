@@ -179,11 +179,7 @@ Mat ApplyFindContournsCanny(const Mat& img);
 *   SIFT functions
 /*************************************************************************************/
 
-void ApplyAndCompareSIFT(std::vector<Mat>& images);
-
 Mat ApplySiftToImage(const Mat& img);
-
-std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
 
 /*************************************************************************************
 *   IA

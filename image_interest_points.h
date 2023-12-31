@@ -180,6 +180,13 @@ namespace image_info
 	void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname);
 }
 
+namespace sift_algo
+{
+	void ApplyAndCompareSIFT(std::vector<Mat>& images);
+
+	std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
+}
+
 
 
 
