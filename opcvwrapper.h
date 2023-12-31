@@ -35,6 +35,8 @@ Mat adjustBrightness(const Mat& img, int factor);
 
 Mat adjustGama(const Mat& img, double);
 
+Mat cropImage(const Mat& img);
+
 /*************************************************************************************
 *   Gray Scale
 **************************************************************************************/

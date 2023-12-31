@@ -71,6 +71,8 @@ namespace image_util
 
 	void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns);
 
+	Mat cropImage(const Mat& img, int M, int N);
 
+	Mat image_copy(Range&& r1, Range&& r2);
 
 }

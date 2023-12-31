@@ -120,4 +120,89 @@ namespace image_util
         CvPlot::show("Countours", axes);
     }
 
+
+    Mat image_copy(Mat& img, Range&& r1, Range&& r2)
+    {
+        Mat ret = img(r1, r2);
+        return ret;
+    }
+
+    std::pair<double, double> getNumber(double x)
+    {
+        double y = 0.0;
+        double d = 0.0;
+
+        y = modf(x, &d);
+
+        std::pair<double, double> p(d, y);
+
+        return p;
+    }
+
+    // https://learnopencv.com/cropping-an-image-using-opencv/
+    Mat cropImage(const Mat& img, int M, int N)
+    {
+        //int M = 76;
+        //int N = 104;
+
+        Mat clone = img.clone();
+
+        int imgheight = img.size().height;
+        int imgwidth = img.size().width;
+
+        int x1 = 0;
+        int y1 = 0;
+        for (int y = 0; y < imgheight; y = y + M)
+        {
+            for (int x = 0; x < imgwidth; x = x + N)
+            {
+                if ((imgheight - y) < M || (imgwidth - x) < N)
+                {
+                    break;
+                }
+                y1 = y + M;
+                x1 = x + N;
+
+                if (x1 >= imgwidth && y1 >= imgheight)
+                {
+                    x = imgwidth - 1;
+                    y = imgheight - 1;
+                    x1 = imgwidth - 1;
+                    y1 = imgheight - 1;
+
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(clone,Range(y, imgheight), Range(x, imgwidth));
+                    rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
+                }
+                else if (y1 >= imgheight)
+                {
+                    y = imgheight - 1;
+                    y1 = imgheight - 1;
+
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(clone, Range(y, imgheight), Range(x, x + N));
+                    rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
+                }
+                else if (x1 >= imgwidth)
+                {
+                    x = imgwidth - 1;
+                    x1 = imgwidth - 1;
+
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(clone, Range(y, y + M), Range(x, imgwidth));
+                    rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
+                }
+                else
+                {
+                    // crop the patches of size MxN
+                    Mat tiles = image_copy(clone, Range(y, y + M), Range(x, x + N));
+                    rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
+                }
+            }
+
+        }
+
+        return clone;
+    }
+
 }

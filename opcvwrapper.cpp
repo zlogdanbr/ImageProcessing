@@ -33,17 +33,16 @@ Mat ApplySiftToImage(const Mat& img)
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat img1 = convertograyScale(image);
-    Mat img2 = img1.clone();
-
-    img1 = ApplyErode(img1);
-
-    Mat final = img2 - img1;
-    img1.deallocate();
-    img2.deallocate();
-    return final;
+    Mat empty;
+    return empty;
 
 }
+
+Mat cropImage(const Mat& img, int M, int N)
+{
+    return image_util::cropImage(img, M, N);
+}
+
 
 Mat ApplyDifferenceOfGaussian(const Mat& im)
 {

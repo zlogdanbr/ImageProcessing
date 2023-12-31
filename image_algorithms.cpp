@@ -381,6 +381,33 @@ void CInputDialog::DoFunction()
         return;
     }
 
+    if (_algorithm == "Crop Image")
+    {
+        if (original.empty() == false)
+        {
+            
+            int M = 0;
+            int N =  0;
+            Mat out;
+
+            wxNumberEntryDialog dialogCrop1(this, "Width of window", "Crop size", "Crop size", 8, 4, 32);
+            if (dialogCrop1.ShowModal() == wxID_OK)
+            {
+                M = dialogCrop1.GetValue();
+            }
+
+            wxNumberEntryDialog dialogCrop2(this, "Height of window", "Crop size", "Crop size", 8, 4, 32);
+            if (dialogCrop2.ShowModal() == wxID_OK)
+            {
+                N = dialogCrop2.GetValue();
+            }
+            final_image = cropImage(original, M, N);
+            setOriginalImage();
+
+        }
+        return;
+    }
+
     Function1Parameter  function1P  = getAlgoFunctionOnePar(_algorithm);
 
     if (function1P != nullptr)

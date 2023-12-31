@@ -28,6 +28,7 @@ namespace image_constants
 		"Adjust Contrast",
 		"Adjust Brightness",
 		"Gamma Correction",
+		"Crop Image",
 		"Erode",
 		"Dilate",
 		"Closing",
