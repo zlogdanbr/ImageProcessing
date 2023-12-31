@@ -44,10 +44,51 @@ void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns)
 }
 
 
+float CompareUsingSift(const Mat& img1, const Mat& img2)
+{
+    auto sift = SIFT::create();
+
+    std::vector<KeyPoint> keypoints1;
+    std::vector<KeyPoint> keypoints2;
+    Mat descriptors1;
+    Mat descriptors2;
+
+    sift->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
+    sift->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
+
+    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+    std::vector< DMatch > matches;
+    matcher->match(descriptors1, descriptors2, matches);
+
+    float m1 = static_cast<float>(matches.size());
+    float m2 = static_cast<float>(keypoints1.size());
+    float m3 = static_cast<float>(keypoints2.size());
+    float m4 = static_cast<float>(descriptors1.size().width * descriptors1.size().height);
+    float m5 = static_cast<float>(descriptors2.size().width * descriptors2.size().height);
+
+    float factor_d = m4 + m5;
+
+    float ratio = (m1/factor_d)*1000;
+
+    return ratio;
+}
+
+std::vector < cv::KeyPoint> ApplySift(const Mat& img, Mat& descriptors)
+{
+    Mat gray = convertograyScale(img);
+    auto sift = SIFT::create();
+    std::vector<cv::KeyPoint> keypoints;
+    sift->detect(gray, keypoints);
+
+    sift->detectAndCompute(gray, noArray(), keypoints, descriptors);
+    return keypoints;
+}
+
 Mat ApplySiftToImage(const Mat& img)
 {
     Mat clone = img.clone();
-    std::vector < cv::KeyPoint >  kp = ApplySift(clone);
+    Mat descriptors;
+    std::vector < cv::KeyPoint >  kp = ApplySift(clone, descriptors);
 
     std::stringstream os;
 
@@ -65,70 +106,52 @@ Mat ApplySiftToImage(const Mat& img)
 
 }
 
-void showResults(float c)
+void ApplyAndCompareSIFT(std::vector<Mat>& images)
 {
-    wxString msg = "";
-    if (c <= 0)
+
+    if (images.size() != 2)
     {
-        msg = "Images are not from the same object";
-    }
-    else
-    {
-        std::stringstream os;
-        os << "Images have " << c << " ratio";
-        msg = os.str().c_str();
+        return;
+
     }
 
-    wxMessageBox(msg, "Result", wxOK );
-}
+    Mat& img1 = images[0];
+    Mat& img2 = images[1];
 
-void ApplyAndCompare(std::vector<Mat>& images)
-{
-    //Descriptors& descriptors
+    Mat descriptor1;
+    Mat descriptor2;
 
-    std::vector< Descriptors > descriptors_set;
-    Size Standard = images[0].size();
-    for (const auto& i : images)
+    std::vector < cv::KeyPoint >  kp1 = ApplySift(img1, descriptor1);
+    std::vector < cv::KeyPoint >  kp2 = ApplySift(img1, descriptor2);
+
+    std::stringstream os;
+
+    if (directory_exists("out") == false)
     {
-        if (i.size().width > Standard.width && i.size().height > Standard.height)
-        {
-            Standard = i.size();
-        }
-    }
+        create_dir("out");
+    };
 
-    int standard_size_width = Standard.width;
-    int standard_size_height = Standard.height;
+    os << "out\\" << "image_sift_01" << ".csv";
+    image_info::createCSV(kp1, os.str());
 
-    std::vector<int> kps;
-    
-    for (int i = 0; i < images.size(); i++)
-    {
-        if (i != 0)
-        {
-            resize(images[i], images[i], Size(standard_size_width, standard_size_height), INTER_AREA);
-        }
-
-        std::vector < cv::KeyPoint >  kp = ApplySift(images[i]);
-        kps.push_back(kp.size());
-
-        std::stringstream os;
-
-        if (directory_exists("out") == false)
-        {
-            create_dir("out");
-        };
-
-        os << "out\\" << "image_sift_" << i << ".csv";
-
-        drawKeypoints(images[i], kp, images[i]);
-
-        image_info::createCSV(kp, os.str());
+    os << "out\\" << "image_sift_02" << ".csv";
+    image_info::createCSV(kp2, os.str());
         
-    }
+    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+    std::vector< DMatch > matches;
 
-    float c = CompareUsingSift(images[0], images[1]);
-    showResults(c);
-    image_util::showManyImagesOnScreen(images);
+    matcher->match(descriptor1, descriptor2, matches);
+    Mat result;
+
+   drawMatches(        img1,        // InputArray 	img1,
+                       kp1,         // const std::vector< KeyPoint > & 	keypoints1,
+                       img2,        // InputArray 	img2,
+                       kp2,         // const std::vector< KeyPoint > & 	keypoints2,
+                       matches,     // const std::vector< DMatch > & 	matches1to2,
+                       result,      // InputOutputArray 	outImg
+                       2);          // const int 	matchesThickness
+
+   showImage(result, "Result");
 
 }
 /**
@@ -977,39 +1000,6 @@ Mat ApplyFindContournsCanny(const Mat& img)
     return drawing;
 }
 
-std::vector < cv::KeyPoint> ApplySift(const Mat& img)
-{
-    Mat gray = convertograyScale(img);
-    auto sift = SIFT::create();
-    std::vector<cv::KeyPoint> keypoints;
-    sift->detect(gray, keypoints);
-    return keypoints;
-}
-
-float CompareUsingSift(const Mat& img1, const Mat& img2)
-{
-    auto sift = SIFT::create();
-
-    std::vector<KeyPoint> keypoints1;
-    std::vector<KeyPoint> keypoints2;
-    Mat descriptors1;
-    Mat descriptors2;
-
-    sift->detectAndCompute(img1, noArray(), keypoints1, descriptors1);
-    sift->detectAndCompute(img2, noArray(), keypoints2, descriptors2);
-
-    Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
-    std::vector< DMatch > matches;
-    matcher->match(descriptors1, descriptors2, matches);
-
-    float m1 = static_cast<float>(matches.size());
-    float m2 = static_cast<float>(keypoints1.size());
-    float m3 = static_cast<float>(keypoints2.size());
-
-    float ratio = m1 / (m2 + m3);
-
-    return ratio;
-}
 
 /*
 I have just copied and pasted and edited here so I could see this working

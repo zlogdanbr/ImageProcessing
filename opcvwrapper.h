@@ -177,14 +177,11 @@ Mat ApplyDifferenceOfGaussian(const Mat& im);
 Mat ApplyFindContournsThreshold(const Mat& img);
 Mat ApplyFindContournsCanny(const Mat& img);
 Mat ApplySiftToImage(const Mat& img);
-float CompareUsingSift(const Mat& img1, const Mat& img2);
-void showResults(float c);
-
 /*************************************************************************************
 *   Helper functions
 /*************************************************************************************/
 
-void ApplyAndCompare(std::vector<Mat>& images);
+void ApplyAndCompareSIFT(std::vector<Mat>& images);
 
 std::pair< std::vector<int>, std::vector<int>>
 getImageXY(std::vector<std::vector<Point> >& raw_contourns);
@@ -192,7 +189,7 @@ getImageXY(std::vector<std::vector<Point> >& raw_contourns);
 void drawCountourXY(std::vector<std::vector<Point> >& raw_contourns);
 
 std::vector < cv::KeyPoint > 
-ApplySift(const Mat& img);
+ApplySift(const Mat& img, Mat& descriptors);
 
 /*************************************************************************************
 *   IA

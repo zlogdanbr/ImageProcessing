@@ -230,7 +230,7 @@ void CLoadImageSet::doProcess()
 	{
 		return;
 	}
-	ApplyAndCompare(_images);
+	ApplyAndCompareSIFT(_images);
 
 }
 
