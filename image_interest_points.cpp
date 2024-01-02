@@ -1,5 +1,5 @@
 #include "image_interest_points.h"
-
+#include <wx/busyinfo.h>
 #include "filesys.h"
 #include <fstream>
 
@@ -271,6 +271,28 @@ namespace fast_algo
 
 }
 
+namespace op_busy
+{
+    wxBusyInfo* ProgramBusy()
+    {
+        std::mutex mtex;
+        mtex.lock();
+        wxWindowDisabler disableAll;
+        wxBusyInfo* wait = new wxBusyInfo("Please wait, working...");
+        mtex.unlock();
+        return wait;
+    }
+
+    void Stop(wxBusyInfo* wait)
+    {
+        wxYield();
+        if (nullptr != wait)
+        {
+            delete wait;
+        }
+    }
+}
+
 
 namespace sift_algo
 {
@@ -359,6 +381,8 @@ namespace sift_algo
                                 std::vector<std::string>& filenames)
     {
 
+        wxBusyInfo* wait = op_busy::ProgramBusy();
+
         if (images.size() != 2)
         {
             return;
@@ -389,6 +413,7 @@ namespace sift_algo
 
         Mat result = getMatchedImage(descriptor1, descriptor2, kp1, kp2, img1, img2);
         
+        op_busy::Stop(wait);
         showImage(result, "Result");
 
     }

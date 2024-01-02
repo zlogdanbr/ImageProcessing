@@ -5,39 +5,11 @@
 #include <fstream>
 
 
-Mat ApplySiftToImage(const Mat& img)
-{
-    Mat clone = img.clone();
-    Mat descriptors;
-    std::vector < cv::KeyPoint >  kp = sift_algo::ApplySift(clone, descriptors);
-
-    std::stringstream os1;
-    std::string f = createFolderAtHomeUser("\\dimage\\");
-    os1 << f << "\\" << "out_file" << ".csv";
-
-    drawKeypoints(clone, kp, clone);
-
-    image_info::createCSV(kp, os1.str());
-    return clone;
-
-}
-
-/**
-    This function is the one I use to test algorithms I am studing
-    and applying them together with other filters.
-*/
-Mat ApplyCustomAlgo(const Mat& image)
-{
-    Mat empty;
-    return empty;
-
-}
 
 Mat cropImage(const Mat& img, int M, int N)
 {
     return image_util::cropImage(img, M, N);
 }
-
 
 Mat ApplyDifferenceOfGaussian(const Mat& im)
 {
@@ -867,6 +839,110 @@ Mat ApplyFindContournsCanny(const Mat& img)
     return drawing;
 }
 
+Mat ApplySiftToImage(const Mat& img)
+{
+    Mat clone = img.clone();
+    Mat descriptors;
+    std::vector < cv::KeyPoint >  kp = sift_algo::ApplySift(clone, descriptors);
+
+    std::stringstream os1;
+    std::string f = createFolderAtHomeUser("\\dimage\\");
+    os1 << f << "\\" << "out_file" << ".csv";
+
+    drawKeypoints(clone, kp, clone);
+
+    image_info::createCSV(kp, os1.str());
+    return clone;
+
+}
+
+
+
+// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
+void drawCirclesAtImgFromRoi(Mat& img, Rect& roi)
+{
+    Point Mycenter(roi.x + roi.width / 2,
+        roi.y + roi.height / 2);
+
+    int radius = cvRound((roi.width + roi.height) * 0.25);
+    circle(img, Mycenter, radius, Scalar(255, 0, 0), 4);
+
+}
+
+// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
+void drawSquaresAtImgFromRoi(Mat& img, Rect& roi)
+{
+    Scalar color = Scalar(255, 0, 0);
+    rectangle(img,
+        Point(cvRound(roi.x * 1),
+            cvRound(roi.y * 1)),
+        Point(cvRound((roi.x + roi.width - 1) * 1),
+            cvRound((roi.y + roi.height - 1) * 1)),
+        color,
+        3,
+        8,
+        0);
+
+}
+
+Mat FindFacesAndDrawRectangles(Mat& img)
+{
+    Mat clone = convertograyScale(img);
+    std::vector<Rect> faces = detectFacesInImage(img);
+
+    for (auto& roi : faces)
+    {
+        drawSquaresAtImgFromRoi(clone, roi);
+    }
+
+    return clone;
+}
+
+
+// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
+std::vector<Rect> detectFacesInImage(Mat& img)
+{
+    std::vector<Rect> faces;
+    CascadeClassifier cascade;
+    std::string f = "haarcascades//haarcascade_frontalface_default.xml";
+    if (cascade.load(f) == true)
+    {
+        cascade.detectMultiScale(img, faces);
+        return faces;
+    }
+    return faces;
+}
+
+// Only worked on linux Windows 10
+// Apparently there is some internal driver that prevents me from using
+// cascade classifiers
+// https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
+std::vector<Rect> detectEyesInImage(Mat& img)
+{
+
+    if (img.type() != CV_8UC1)
+    {   // not gray-level image
+        convertograyScale(img);
+    }
+
+    std::vector<Rect> eyes;
+    CascadeClassifier cascade;
+    std::string f = "haarcascades//haarcascade_eye.xml";
+    cascade.load(f);
+    cascade.detectMultiScale(img, eyes);
+    return eyes;
+
+}
+
+/**
+    This function is the one I use to test algorithms I am studing
+    and applying them together with other filters.
+*/
+Mat ApplyCustomAlgo(const Mat& image)
+{
+    Mat clone = image.clone();
+    return FindFacesAndDrawRectangles(clone);
+}
 
 /*
 I have just copied and pasted and edited here so I could see this working

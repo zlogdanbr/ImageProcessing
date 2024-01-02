@@ -189,6 +189,14 @@ Mat ApplySiftToImage(const Mat& img);
 
 Mat NN(const Mat& img);
 
+
+/*************************************************************************************
+*   Face/Eye detection
+/*************************************************************************************/
+std::vector<Rect> detectFacesInImage(Mat& img);
+std::vector<Rect> detectEyesInImage(Mat& img);
+Mat FindFacesAndDrawRectangles(Mat& img);
+
 #endif
 
 //--------------------------------------------------------------------------------------------------

@@ -105,7 +105,9 @@ CInputDialog::ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args)
 {
     if (original.empty() == false)
     {
+        wxBusyInfo* wait = ProgramBusy();
         final_image = f(original, args ...);
+        Stop(wait);
         setOriginalImage();
     }
 }
@@ -365,11 +367,13 @@ void CInputDialog::DoFunction()
     {
         if (original.empty() == false)
         {
+            wxBusyInfo* wait = ProgramBusy();
             Descriptors descriptors = image_info::getImageDescriptors(original);
             std::stringstream os1;
             std::string f = createFolderAtHomeUser("\\dimage\\");
             os1 << f << "\\" << "out_file" << ".csv";
             image_info::createCSV(descriptors, os1.str());
+            Stop(wait);
 
         }
         setOriginalImage();
