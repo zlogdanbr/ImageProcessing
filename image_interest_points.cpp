@@ -3,6 +3,7 @@
 #include "filesys.h"
 #include <fstream>
 
+
 void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
 {
     Mat src = original_image.clone();
@@ -378,18 +379,12 @@ namespace sift_algo
         std::vector < cv::KeyPoint >  kp2 = ApplySift(img2, descriptor2);
 
         std::stringstream os1;
-
-        if (directory_exists("out") == false)
-        {
-            create_dir("out");
-        };
-
-        os1 << "out\\" << "image_sift_" << getOnlyNameNoExt(filenames[0]) <<  ".csv";
-        image_info::createCSV(kp1, os1.str());
-        
         std::stringstream os2;
 
-        os2 << "out\\" << "image_sift_" << getOnlyNameNoExt(filenames[1]) << ".csv";
+        std::string f = createFolderAtHomeUser("\\dimage");
+        os1 << f << "\\" << "image_sift_" << getOnlyNameNoExt(filenames[0]) <<  ".csv";
+        image_info::createCSV(kp1, os1.str());
+        os2 << f << "\\" << "image_sift_" << getOnlyNameNoExt(filenames[1]) << ".csv";
         image_info::createCSV(kp2, os2.str());
 
         Mat result = getMatchedImage(descriptor1, descriptor2, kp1, kp2, img1, img2);

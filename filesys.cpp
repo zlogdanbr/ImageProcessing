@@ -1,6 +1,31 @@
 #include "filesys.h"
 namespace fs = std::filesystem;
 
+
+std::string createFolderAtHomeUser(std::string folder_name)
+{
+	std::stringstream os1;
+
+	wxStandardPaths path = wxStandardPaths::Get();
+	std::string home = path.GetDocumentsDir().ToStdString();
+
+	std::string out_dir = home + folder_name;
+
+	if ( directory_exists(out_dir) == false)
+	{
+		try
+		{
+			create_dir(out_dir);
+			return out_dir;
+		}
+		catch (...)
+		{
+			return "out";
+		}
+	}
+	return out_dir;
+}
+
 wxString getCurrentDir()
 {
 	wxString s = wxGetCwd();

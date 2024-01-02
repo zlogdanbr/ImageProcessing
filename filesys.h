@@ -14,6 +14,7 @@
 #include <chrono>
 #include <iomanip>
 #include "wx/filefn.h"
+#include <wx/stdpaths.h>
 
 bool directory_exists(const std::string& _directory);
 bool file_exists(const std::string& );
@@ -26,6 +27,8 @@ std::string getFileName(const std::string& _file);
 std::string getPathOfFile(const std::string& _file);
 std::string getOnlyNameNoExt(const std::string& _file);
 wxString getCurrentDir();
+
+std::string createFolderAtHomeUser(std::string folder_name);
 
 
 #endif
