@@ -4,8 +4,6 @@
 #include <iostream>
 #include <fstream>
 
-
-
 Mat cropImage(const Mat& img, int M, int N)
 {
     return image_util::cropImage(img, M, N);

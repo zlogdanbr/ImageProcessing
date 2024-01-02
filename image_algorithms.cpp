@@ -394,11 +394,19 @@ void CInputDialog::DoFunction()
             {
                 M = dialogCrop1->GetValue();
             }
+            else
+            {
+                return;
+            }
 
             wxNumberEntryDialog* dialogCrop2= new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 32);
             if (dialogCrop2->ShowModal() == wxID_OK)
             {
                 N = dialogCrop2->GetValue();
+            }
+            else
+            {
+                return;
             }
             final_image = cropImage(original, M, N);
             setOriginalImage();
