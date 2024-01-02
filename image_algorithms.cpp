@@ -48,7 +48,7 @@ CInputDialog::CInputDialog(     wxWindow* parent,
     wxBoxSizer* bSizer4;
     bSizer4 = new wxBoxSizer(wxVERTICAL);
 
-    comboBox1 = new wxComboBox(this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxSize(200, -1), 0, NULL, 0);
+    comboBox1 = new wxComboBox(this, wxID_ANY, wxT("Convert to Gray Scale"), wxDefaultPosition, wxSize(200, -1), 0, NULL, 0);
     bSizer4->Add(comboBox1, 0, wxALL, 5);
 
 
