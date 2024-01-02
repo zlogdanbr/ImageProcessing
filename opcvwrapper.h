@@ -178,7 +178,7 @@ Mat ApplyFindContournsThreshold(const Mat& img);
 Mat ApplyFindContournsCanny(const Mat& img);
 
 /*************************************************************************************
-*   SIFT functions
+*   SIFT
 /*************************************************************************************/
 
 Mat ApplySiftToImage(const Mat& img);

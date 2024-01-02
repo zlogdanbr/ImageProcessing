@@ -21,8 +21,11 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include "filesys.h"
 #include <thread>
+#include <chrono>
+#include <ctime>
+#include "filesys.h"
+
 #define CVPLOT_HEADER_ONLY 
 #include <CvPlot/cvplot.h>
 
@@ -73,6 +76,7 @@ namespace image_util
 
 	Mat cropImage(const Mat& img, int M, int N);
 
-	Mat image_copy(Range&& r1, Range&& r2);
+	Mat image_copy(Mat& img, Range&& r1, Range&& r2);
+
 
 }

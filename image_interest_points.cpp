@@ -248,17 +248,110 @@ namespace image_info
     }
 }
 
+namespace fast_algo
+{
+    std::vector < cv::KeyPoint >  ApplyFAST(const Mat& img)
+    {
+        Mat gray = convertograyScale(img);
+        cv::Ptr<cv::FeatureDetector> ptrDetector; // generic detector
+        ptrDetector = cv::FastFeatureDetector::create(80);
+        std::vector<cv::KeyPoint> keypoints;
+
+        // Keypoint detection
+        ptrDetector->detect(gray, keypoints);
+
+        return keypoints;
+    }
+
+    void ApplyAndCompareFAST(   std::vector<Mat>& images,
+                                std::vector<std::string>& filenames)
+    {
+    }
+
+}
+
+
 namespace sift_algo
 {
     std::vector < cv::KeyPoint> ApplySift(const Mat& img, Mat& descriptors)
     {
         Mat gray = convertograyScale(img);
-        auto sift = SIFT::create();
+        //auto sift = SIFT::create();
+        cv::Ptr<cv::Feature2D> sift = SIFT::create();
         std::vector<cv::KeyPoint> keypoints;
         sift->detect(gray, keypoints);
-
         sift->detectAndCompute(gray, noArray(), keypoints, descriptors);
         return keypoints;
+    }
+
+    Mat getMatchedImage(    Mat& descriptor1, 
+                            Mat& descriptor2, 
+                            std::vector < cv::KeyPoint >&  kp1,
+                            std::vector < cv::KeyPoint >&  kp2,
+                            Mat& img1,
+                            Mat& img2,
+                            int option)
+    {
+        Mat result;
+        std::vector< DMatch > matches;
+        if (option == 0)
+        {
+            cv::BFMatcher matcher(cv::NORM_L2, true);
+            
+
+            matcher.match(descriptor1, descriptor2, matches);
+
+            // extract the show_matches best matches
+            int show_matches = min(kp1.size(), kp2.size());
+            show_matches = min(show_matches, 10);
+            std::nth_element(matches.begin(), matches.begin() + show_matches, matches.end());
+            matches.erase(matches.begin() + show_matches, matches.end());
+        }
+        else
+        if (option == 1)
+        {
+            std::vector<std::vector<cv::DMatch>> matches2D;
+            cv::BFMatcher matcher(NORM_L2);
+            matcher.knnMatch(descriptor1, descriptor2, matches2D, 2); // find the k best match
+
+            double ratio = 0.85;
+            std::vector<std::vector<cv::DMatch>>::iterator it;
+            for (it = matches2D.begin(); it != matches2D.end(); ++it) 
+            {
+                // first best match/second best match
+                if ((*it)[0].distance / (*it)[1].distance < ratio)
+                {
+                    // it is an acceptable match
+                    matches.push_back((*it)[0]);
+                }
+            }
+        }
+        else
+        if (option == 2)
+        {
+
+            double maxDist = 0.4;
+
+            std::vector<std::vector<cv::DMatch>> matches2D;
+            cv::BFMatcher matcher(NORM_L2);
+            // maximum acceptable distance
+            // between the 2 descriptors
+            matcher.radiusMatch(descriptor1, descriptor2, matches2D, maxDist);
+
+            matches = matches2D[1];
+        }
+
+        drawMatches(
+            img1,        // InputArray 	img1,
+            kp1,         // const std::vector< KeyPoint > & 	keypoints1,
+            img2,        // InputArray 	img2,
+            kp2,         // const std::vector< KeyPoint > & 	keypoints2,
+            matches,     // const std::vector< DMatch > & 	matches1to2,
+            result,      // InputOutputArray 	outImg
+            1            // const int 	matchesThickness
+        );
+
+        return result;
     }
 
     void ApplyAndCompareSIFT(   std::vector<Mat>& images, 
@@ -282,7 +375,7 @@ namespace sift_algo
         Mat descriptor2;
 
         std::vector < cv::KeyPoint >  kp1 = ApplySift(img1, descriptor1);
-        std::vector < cv::KeyPoint >  kp2 = ApplySift(img1, descriptor2);
+        std::vector < cv::KeyPoint >  kp2 = ApplySift(img2, descriptor2);
 
         std::stringstream os1;
 
@@ -299,26 +392,10 @@ namespace sift_algo
         os2 << "out\\" << "image_sift_" << getOnlyNameNoExt(filenames[1]) << ".csv";
         image_info::createCSV(kp2, os2.str());
 
-        Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
-        std::vector< DMatch > matches;
-
-        matcher->match(descriptor1, descriptor2, matches);
-        Mat result;
-
-        drawMatches(
-                        img1,        // InputArray 	img1,
-                        kp1,         // const std::vector< KeyPoint > & 	keypoints1,
-                        img2,        // InputArray 	img2,
-                        kp2,         // const std::vector< KeyPoint > & 	keypoints2,
-                        matches,     // const std::vector< DMatch > & 	matches1to2,
-                        result,      // InputOutputArray 	outImg
-                        1          // const int 	matchesThickness
-                  );
-
-        image_util::showManyImagesOnScreen(images);
+        Mat result = getMatchedImage(descriptor1, descriptor2, kp1, kp2, img1, img2);
+        
         showImage(result, "Result");
 
     }
 }
-
 

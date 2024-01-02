@@ -7,29 +7,6 @@
 #include "filesys.h"
 
 
-using namespace std::chrono;
-using   tp = high_resolution_clock::time_point;
-
-// starts computing the execution time of a code
-const tp
-start_tracking()
-{
-    return high_resolution_clock::now();
-}
-
-// stops  computing the execution time of a code and print 
-// elapsed time
-std::string
-end_tracking(tp& start)
-{
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    std::stringstream os;
-
-    os << "Execution time(ms): " << duration.count() / 1000 << std::endl;
-    return os.str();
-}
-
 CInputDialog::CInputDialog(     wxWindow* parent,
                                 const Mat& original,
                                 wxWindowID id, 

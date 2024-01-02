@@ -8,7 +8,6 @@
 #include <memory>
 #include <limits.h>
 
-
 struct ComponentsDescriptor
 {
 	std::vector<cv::Point> region;
@@ -178,14 +177,32 @@ namespace image_info
 	*		else
 	*/
 	void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname);
+
+
+}
+
+namespace fast_algo
+{
+	void ApplyAndCompareFAST(std::vector<Mat>& images,
+		std::vector<std::string>& filenames);
+
+	std::vector < cv::KeyPoint >  ApplyFAST(const Mat& img);
 }
 
 namespace sift_algo
 {
-	void ApplyAndCompareSIFT(	std::vector<Mat>& images,
-								std::vector<std::string>& filenames);
+	void ApplyAndCompareSIFT(std::vector<Mat>& images,
+		std::vector<std::string>& filenames);
 
 	std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
+
+	Mat getMatchedImage(Mat& descriptor1,
+		Mat& descriptor2,
+		std::vector < cv::KeyPoint >& kp1,
+		std::vector < cv::KeyPoint >& kp2,
+		Mat& img1,
+		Mat& img2,
+		int option = 0);
 }
 
 
