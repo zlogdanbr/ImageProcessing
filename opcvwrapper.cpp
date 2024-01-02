@@ -11,18 +11,13 @@ Mat ApplySiftToImage(const Mat& img)
     Mat descriptors;
     std::vector < cv::KeyPoint >  kp = sift_algo::ApplySift(clone, descriptors);
 
-    std::stringstream os;
-
-    if (directory_exists("out") == false)
-    {
-        create_dir("out");
-    };
-
-    os << "out\\" << "image_sift_" << ".csv";
+    std::stringstream os1;
+    std::string f = createFolderAtHomeUser("\\dimage\\");
+    os1 << f << "\\" << "out_file" << ".csv";
 
     drawKeypoints(clone, kp, clone);
 
-    image_info::createCSV(kp, os.str());
+    image_info::createCSV(kp, os1.str());
     return clone;
 
 }

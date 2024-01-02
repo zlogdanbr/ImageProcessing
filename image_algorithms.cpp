@@ -344,15 +344,10 @@ void CInputDialog::DoFunction()
         if (original.empty() == false)
         {
             Descriptors descriptors = image_info::getImageDescriptors(original);
-            std::stringstream os;
-
-            if (directory_exists("out") == false)
-            {
-                create_dir("out");
-            };
-            
-            os << "out\\" << getFileName("output_descriptor") << ".csv";
-            image_info::createCSV(descriptors, os.str());
+            std::stringstream os1;
+            std::string f = createFolderAtHomeUser("\\dimage\\");
+            os1 << f << "\\" << "out_file" << ".csv";
+            image_info::createCSV(descriptors, os1.str());
 
         }
         setOriginalImage();
