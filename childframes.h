@@ -167,6 +167,7 @@ protected:
 
     wxButton* button1 = nullptr;
     wxButton* button2 = nullptr;
+    wxButton* button3 = nullptr;
     wxComboBox* comboBox1 = nullptr;
     wxString SelectionText;
 
@@ -291,14 +292,14 @@ public:
                     wxWindowID id = wxID_ANY,
                     const wxString& title = wxEmptyString, 
                     const wxPoint& pos = wxDefaultPosition, 
-                    const wxSize& size = wxSize(335, 75), 
+                    const wxSize& size = wxSize(467, 75),
                     long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CInputDialog();
 
     Mat getOutPutImage() { return final_image; };
 
-
+    bool op_cancelled = false;
 
 };
 

@@ -25,24 +25,35 @@ CInputDialog::CInputDialog(     wxWindow* parent,
     bSizer1 = new wxBoxSizer(wxHORIZONTAL);
 
     wxBoxSizer* bSizer2;
-    bSizer2 = new wxBoxSizer(wxVERTICAL);
+    bSizer2 = new wxBoxSizer(wxHORIZONTAL);
 
     button1 = new wxButton(this, wxID_ANY, wxT("Apply"), wxDefaultPosition, wxSize(70, -1), 0);
     bSizer2->Add(button1, 0, wxALL, 5);
+
+    button2 = new wxButton(this, wxID_ANY, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0);
+    bSizer2->Add(button2, 0, wxALL, 5);
+
+
     bSizer1->Add(bSizer2, 1, wxEXPAND, 5);
 
     wxBoxSizer* bSizer3;
     bSizer3 = new wxBoxSizer(wxVERTICAL);
-    button2 = new wxButton(this, wxID_ANY, wxT("OK"), wxDefaultPosition, wxSize(70, -1), 0);
-    bSizer3->Add(button2, 0, wxALL, 5);
+
+    button3 = new wxButton(this, wxID_ANY, wxT("Cancel"), wxDefaultPosition, wxSize(70, -1), 0);
+    bSizer3->Add(button3, 0, wxALL, 5);
+
 
     bSizer1->Add(bSizer3, 1, wxEXPAND, 5);
+
     wxBoxSizer* bSizer4;
     bSizer4 = new wxBoxSizer(wxVERTICAL);
 
-    comboBox1 = new wxComboBox(this, wxID_ANY, wxT("Convert to Gray Scale"), wxDefaultPosition, wxSize(150, -1), 0, NULL, 0);
+    comboBox1 = new wxComboBox(this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxSize(200, -1), 0, NULL, 0);
     bSizer4->Add(comboBox1, 0, wxALL, 5);
+
+
     bSizer1->Add(bSizer4, 1, wxEXPAND, 5);
+
 
     this->SetSizer(bSizer1);
     this->Layout();
@@ -71,6 +82,17 @@ CInputDialog::CInputDialog(     wxWindow* parent,
             destroyAllWindows();
             Close();
         });
+
+    // op_cancelled
+    button3->Bind(wxEVT_BUTTON, [&](wxCommandEvent& event)
+        {
+            // cancel
+            op_cancelled = true;
+            destroyAllWindows();
+            Close();
+        });
+
+
 }
 
 CInputDialog::~CInputDialog()

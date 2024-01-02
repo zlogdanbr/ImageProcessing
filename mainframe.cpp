@@ -125,7 +125,9 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
         CInputDialog* InputDialog = new CInputDialog(this, ImageHelper.getOrginalImageOpenCV());
         outxt.writeTo("Open Data Input dialog.\n");
 
-        if (InputDialog->ShowModal() == wxID_CANCEL)
+        InputDialog->ShowModal();
+
+        if (InputDialog->op_cancelled == false)
         {
             Mat out = InputDialog->getOutPutImage();
 
@@ -135,6 +137,10 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
                 ImageHelper.setOrginalImageOpenCV(out);
                 showImage(out, "Final");
             }
+        }
+        else
+        {
+            showImage(ImageHelper.getOrginalImageOpenCV(), "Final");
         }
     }
 }
