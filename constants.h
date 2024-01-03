@@ -41,8 +41,6 @@ namespace image_constants
 		"Apply custom algo",
 		"Gaussian Extended",
 		"Median",
-		//"Sharpening",
-		//"Unsharp",
 		"Laplacian Extended",
 		"Sobel",
 		"Canny Extended",

@@ -4,10 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-Mat cropImage(const Mat& img, int M, int N)
-{
-    return image_util::cropImage(img, M, N);
-}
+
 
 Mat ApplyDifferenceOfGaussian(const Mat& im)
 {
@@ -254,10 +251,10 @@ Mat GaussianImageSmoothExtended(    const Mat& img,
                                     double sigmaY
                                 )
 {
-    Mat Gray = convertograyScale(img);
+    //Mat Gray = convertograyScale(img);
     Mat Blurred;
     GaussianBlur(   
-                    Gray, 
+                    img,
                     Blurred, 
                     Size(kernel_size, kernel_size), 
                     sigmaX, // sigmaX standard deviation in X direction
@@ -854,8 +851,6 @@ Mat ApplySiftToImage(const Mat& img)
 
 }
 
-
-
 // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
 void drawCirclesAtImgFromRoi(Mat& img, Rect& roi)
 {
@@ -938,63 +933,13 @@ std::vector<Rect> detectEyesInImage(Mat& img)
 */
 Mat ApplyCustomAlgo(const Mat& image)
 {
-    Mat clone = image.clone();
-    return FindFacesAndDrawRectangles(clone);
-}
+    Mat final_image = convertograyScale(image);
 
-/*
-I have just copied and pasted and edited here so I could see this working
-it is not active at all unless you run this code using the function
-ApplyCustomAlgo, replacing the body function with
-
-MM(img);
-
-// https://learnopencv.com/deep-learning-with-opencvs-dnn-module-a-definitive-guide/
-
-*/
-Mat NN(const Mat& img)
-{
-    const std::string NNFolder = "C:\\Users\\Administrador\\Documents\\GitHub\\Image Data\\NN";
-    Mat image = img.clone();
-    std::vector<std::string> class_names;
-    std::ifstream ifs(std::string(NNFolder + "\\" + "object_detection_classes_coco.txt").c_str());
-    std::string line;
-    while (std::getline(ifs, line))
+    for (int i = 0; i < 5; i++)
     {
-        class_names.push_back(line);
+        final_image = ApplyErode(final_image);
     }
-
-    // load the neural network model
-    auto model = readNet(   NNFolder+"\\"+"frozen_inference_graph.pb", 
-                            NNFolder + "\\" + "ssd_mobilenet_v2_coco_2018_03_29.pbtxt.txt", 
-                            "TensorFlow");
-
-    // read the image from disk
-
-    int image_height = image.cols;
-    int image_width = image.rows;
-    //create blob from image
-    Mat blob = blobFromImage(image, 1.0, Size(300, 300), Scalar(127.5, 127.5, 127.5), true, false);
-    //create blob from image
-    model.setInput(blob);
-    //forward pass through the model to carry out the detection
-    Mat output = model.forward();
-    Mat detectionMat(output.size[2], output.size[3], CV_32F, output.ptr<float>());
-
-    for (int i = 0; i < detectionMat.rows; i++) 
-    {
-        int class_id = detectionMat.at<float>(i, 1);
-        float confidence = detectionMat.at<float>(i, 2);
-
-        // Check if the detection is of good quality
-        if (confidence > 0.4) {
-            int box_x = static_cast<int>(detectionMat.at<float>(i, 3) * image.cols);
-            int box_y = static_cast<int>(detectionMat.at<float>(i, 4) * image.rows);
-            int box_width = static_cast<int>(detectionMat.at<float>(i, 5) * image.cols - box_x);
-            int box_height = static_cast<int>(detectionMat.at<float>(i, 6) * image.rows - box_y);
-            rectangle(image, Point(box_x, box_y), Point(box_x + box_width, box_y + box_height), Scalar(255, 255, 255), 2);
-            putText(image, class_names[class_id - 1].c_str(), Point(box_x, box_y - 5), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(57, 89, 255), 1);
-        }
-    }
-    return image;
+    
+    final_image = ApplyFindContournsThreshold(final_image);
+    return final_image;
 }

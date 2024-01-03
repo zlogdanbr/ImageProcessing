@@ -184,8 +184,6 @@ void CInputDialog::setSimpleMaps()
     fsimple["Flip Image Horizontally"] = flipImageHorizontal;
     fsimple["Flip Image Vertically"] = flipImageVertical;
     fsimple["Flip Image"] = flipImage;
-    //fsimple["Sharpening"] = Sharpening;
-    //fsimple["Unsharp"] = Unsharp;
     fsimple["Hough Transform Lines"] = ApplyHoughTransformLines;
     fsimple["Hough Transform Circles"] = ApplyHoughTransformCircles;
     fsimple["Convert to Binary"] = getBinaryImage;
@@ -408,7 +406,8 @@ void CInputDialog::DoFunction()
             {
                 return;
             }
-            final_image = cropImage(original, M, N);
+            std::vector<Mat> v;
+            final_image = cropImage(original, M, N, v);
             setOriginalImage();
 
         }

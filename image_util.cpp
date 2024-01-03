@@ -140,7 +140,7 @@ namespace image_util
     }
 
     // https://learnopencv.com/cropping-an-image-using-opencv/
-    Mat cropImage(const Mat& img, int M, int N)
+    Mat cropImage(const Mat& img, int M, int N, std::vector<Mat>& subimages)
     {
         //int M = 76;
         //int N = 104;
@@ -172,6 +172,7 @@ namespace image_util
 
                     // crop the patches of size MxN
                     Mat tiles = image_copy(clone,Range(y, imgheight), Range(x, imgwidth));
+                    subimages.push_back(tiles);
                     rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
                 }
                 else if (y1 >= imgheight)
@@ -181,6 +182,7 @@ namespace image_util
 
                     // crop the patches of size MxN
                     Mat tiles = image_copy(clone, Range(y, imgheight), Range(x, x + N));
+                    subimages.push_back(tiles);
                     rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
                 }
                 else if (x1 >= imgwidth)
@@ -190,12 +192,14 @@ namespace image_util
 
                     // crop the patches of size MxN
                     Mat tiles = image_copy(clone, Range(y, y + M), Range(x, imgwidth));
+                    subimages.push_back(tiles);
                     rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
                 }
                 else
                 {
                     // crop the patches of size MxN
                     Mat tiles = image_copy(clone, Range(y, y + M), Range(x, x + N));
+                    subimages.push_back(tiles);
                     rectangle(clone, Point(x, y), Point(x1, y1), Scalar(0, 255, 0), 1);
                 }
             }
