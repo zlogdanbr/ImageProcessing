@@ -377,15 +377,14 @@ namespace sift_algo
         return result;
     }
 
-    void ApplyAndCompareSIFT(   std::vector<Mat>& images, 
+    Mat ApplyAndCompareSIFT(   std::vector<Mat>& images, 
                                 std::vector<std::string>& filenames)
     {
 
-        wxBusyInfo* wait = op_busy::ProgramBusy();
-
         if (images.size() != 2)
         {
-            return;
+            Mat empty;
+            return empty;
         }
 
         Mat& img1 = images[0];
@@ -412,10 +411,8 @@ namespace sift_algo
         image_info::createCSV(kp2, os2.str());
 
         Mat result = getMatchedImage(descriptor1, descriptor2, kp1, kp2, img1, img2);
-        
-        op_busy::Stop(wait);
-        showImage(result, "Result");
 
+        return result;
     }
 }
 

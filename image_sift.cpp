@@ -210,6 +210,28 @@ void CLoadImageSetBase::setImageArray()
 
 }
 
+namespace op_busy_sift
+{
+	wxBusyInfo* ProgramBusy()
+	{
+		std::mutex mtex;
+		mtex.lock();
+		wxWindowDisabler disableAll;
+		wxBusyInfo* wait = new wxBusyInfo("Please wait, working...");
+		mtex.unlock();
+		return wait;
+	}
+
+	void Stop(wxBusyInfo* wait)
+	{
+		wxYield();
+		if (nullptr != wait)
+		{
+			delete wait;
+		}
+	}
+}
+
 CApplySift::CApplySift(	wxWindow* parent,
 						CWriteLogs* outxt,
 						wxWindowID id,
@@ -228,12 +250,16 @@ void CApplySift::doProcess()
 		return;
 	}
 
+	wxBusyInfo* wait = op_busy_sift::ProgramBusy();
 	try
 	{
-		sift_algo::ApplyAndCompareSIFT(_images, _filenames);
+		Mat result = sift_algo::ApplyAndCompareSIFT(_images, _filenames);
+		op_busy_sift::Stop(wait);
+		showImage(result, "Result");
 	}
 	catch (std::exception& e)
 	{
+		op_busy_sift::Stop(wait);
 		std::string a = e.what();
 		wxMessageBox(a.c_str(), "Error", wxOK | wxICON_ERROR);
 	}

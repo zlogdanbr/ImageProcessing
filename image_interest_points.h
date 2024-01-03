@@ -191,7 +191,7 @@ namespace fast_algo
 
 namespace sift_algo
 {
-	void ApplyAndCompareSIFT(std::vector<Mat>& images,
+	Mat ApplyAndCompareSIFT(std::vector<Mat>& images,
 		std::vector<std::string>& filenames);
 
 	std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
