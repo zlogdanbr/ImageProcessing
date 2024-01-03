@@ -82,8 +82,6 @@ private:
 };
 
 
-
-
 class CGridDialogInput : public wxDialog
 {
 private:

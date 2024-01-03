@@ -381,12 +381,6 @@ namespace sift_algo
                                 std::vector<std::string>& filenames)
     {
 
-        if (images.size() != 2)
-        {
-            Mat empty;
-            return empty;
-        }
-
         Mat& img1 = images[0];
         Mat& img2 = images[1];
 
@@ -447,9 +441,6 @@ namespace template_matching
 
         rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
         //rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
-        
-        
-
         std::pair<Mat, Mat> p(img_display, result);
         return p;
     }

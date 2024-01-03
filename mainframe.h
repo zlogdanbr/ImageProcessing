@@ -30,7 +30,6 @@ private:
     //--------------------------------------------------------------
     // components---------------------------------------------------
     //--------------------------------------------------------------
-    wxStaticBitmap* staticBitmap1 = nullptr;
     CImageHelper ImageHelper{};
     wxTextCtrl* textCtrl{ new wxTextCtrl(
                                             this, 
@@ -91,7 +90,7 @@ private:
         auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "SIFT Algorithm Comparison", "Image Space");
         menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
-        auto menuTemplate = menuAlgo->Append(TEMPLATE_ID, "Template Matching", "Image Space");
+        auto menuTemplate = menuAlgo->Append(TEMPLATE_ID, "Global Template Matching", "Image Space");
         menuTemplate->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
     }
