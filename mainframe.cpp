@@ -85,6 +85,17 @@ void MyFrame::onApplyTemplate(wxCommandEvent& event)
 }
 
 
+void MyFrame::onApplyTemplateFull(wxCommandEvent& event)
+{
+    CMatchTemplateFull ImgSet(this, &outxt, -1, "Select Images", 8);
+    ImgSet.ShowModal();
+    if (ImgSet.IsoK)
+    {
+        ImgSet.doProcess();
+    }
+}
+
+
 void MyFrame::onHelpFile(wxCommandEvent& event)
 {
     std::stringstream os;

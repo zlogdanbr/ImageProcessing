@@ -445,5 +445,51 @@ namespace template_matching
         return p;
     }
 
+    Mat ApplyTemplateMatchingFull(  const Mat& BigImage,
+                                    std::vector<Mat>& templ)
+    {
+        Mat segmented1 = ApplyCannyAlgoFull(BigImage);
+        Mat img_display;
+        BigImage.copyTo(img_display);
+
+        for (auto& tmpt : templ)
+        {
+            Mat result;
+            
+            tmpt = ApplyCannyAlgoFull(tmpt);
+
+            int result_cols = BigImage.cols - tmpt.cols + 1;
+            int result_rows = BigImage.rows - tmpt.rows + 1;
+
+            result.create(result_rows, result_cols, CV_32FC1);
+            matchTemplate(segmented1, tmpt, result, TM_SQDIFF);
+            normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+
+            double minVal; 
+            double maxVal; 
+            Point minLoc; 
+            Point maxLoc;
+            Point matchLoc;
+
+            minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+
+            if ( abs(minVal) > 10e-7)
+            {
+                continue;
+            }
+
+            matchLoc = minLoc;
+
+            rectangle(  img_display, 
+                        matchLoc, 
+                        Point(matchLoc.x + tmpt.cols, matchLoc.y + tmpt.rows), 
+                        Scalar::all(0), 2, 8, 0);
+
+        }
+
+        
+        return img_display;
+    }
+
 }
 

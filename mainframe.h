@@ -55,6 +55,7 @@ private:
     void onApplySIFT(wxCommandEvent& event);
     void onImageDraw(wxCommandEvent& event);
     void onApplyTemplate(wxCommandEvent& event);
+    void onApplyTemplateFull(wxCommandEvent& event);
 
     enum  Opt 
     {
@@ -65,7 +66,8 @@ private:
         CONTRAST_ID_IMG,
         MAKE_SAME_SIZE,
         DRAW_ON_IMAGE,
-        TEMPLATE_ID
+        TEMPLATE_ID,
+        TEMPLATE_ID_FULL
     };
 
     void BinAllEvents()
@@ -78,7 +80,8 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
         Bind(wxEVT_MENU, &MyFrame::onApplySIFT, this, MAKE_SAME_SIZE);
         Bind(wxEVT_MENU, &MyFrame::onImageDraw, this, DRAW_ON_IMAGE);
-        Bind(wxEVT_MENU, &MyFrame::onApplyTemplate, this, TEMPLATE_ID);
+        Bind(wxEVT_MENU, &MyFrame::onApplyTemplate, this, TEMPLATE_ID); 
+        Bind(wxEVT_MENU, &MyFrame::onApplyTemplateFull, this, TEMPLATE_ID_FULL);
                 
     }
 
@@ -92,6 +95,9 @@ private:
 
         auto menuTemplate = menuAlgo->Append(TEMPLATE_ID, "Global Template Matching", "Image Space");
         menuTemplate->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
+
+        auto menuTemplateFull = menuAlgo->Append(TEMPLATE_ID_FULL, "Local Template Matching", "Image Space");
+        menuTemplateFull->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
     }
 };

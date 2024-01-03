@@ -209,6 +209,8 @@ namespace template_matching
 {
 	std::pair<Mat, Mat>  ApplyTemplateMatching(const Mat&, Mat&);
 
+	Mat ApplyTemplateMatchingFull(const Mat& BigImage, std::vector<Mat>& templ);
+
 }
 
 

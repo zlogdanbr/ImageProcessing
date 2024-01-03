@@ -58,7 +58,46 @@ void CMatchTemplate::doProcess()
 		wxMessageBox(a.c_str(), "Error", wxOK | wxICON_ERROR);
 	}
 
+}
+
+
+CMatchTemplateFull::CMatchTemplateFull(wxWindow* parent,
+	CWriteLogs* outxt,
+	wxWindowID id,
+	const wxString& title,
+	int inputs)
+	:CLoadImageSetBase(parent, outxt, wxID_ANY, title, inputs)
+{
+
+}
+
+void CMatchTemplateFull::doProcess()
+{
+	setImageArray();
+
+	//wxBusyInfo* wait = op_busy_local::ProgramBusy();
+
+	try
+	{
+		Mat img = _images[0];
+		std::vector<Mat> temps{ _images.begin() + 1, _images.end() };
+
+		_images.clear();
+
+		auto r = template_matching::ApplyTemplateMatchingFull(img, temps);
+		
+		//op_busy_local::Stop(wait);
+		showImage(r, "Original");
+	}
+	catch (std::exception& e)
+	{
+		//op_busy_local::Stop(wait);
+		std::string a = e.what();
+		wxMessageBox(a.c_str(), "Error", wxOK | wxICON_ERROR);
+	}
+
 
 
 }
+
 
