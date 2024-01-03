@@ -283,6 +283,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="image_sift.cpp" />
     <ClCompile Include="image_slide.cpp" />
     <ClCompile Include="image_spin.cpp" />
+    <ClCompile Include="image_template_matching.cpp" />
     <ClCompile Include="image_util.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainframe.cpp" />

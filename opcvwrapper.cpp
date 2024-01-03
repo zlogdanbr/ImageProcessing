@@ -927,6 +927,38 @@ std::vector<Rect> detectEyesInImage(Mat& img)
 
 }
 
+Mat ApplyFindContournsDvg(const Mat& img, const Mat& orig)
+{
+    // Convert image to grayscale
+    Mat gray;
+
+    if (isGrayScaleImage(img) == false)
+    {
+        cvtColor(img, gray, COLOR_BGR2GRAY);
+    }
+    else
+    {
+        gray = img.clone();
+    }
+
+    // Convert image to binary
+    Mat bw;
+    threshold(gray, bw, 50, 255, THRESH_BINARY | THRESH_OTSU);
+    // Find all the contours in the thresholded image
+    std::vector<std::vector<Point> > contours;
+    findContours(bw, contours, RETR_LIST, CHAIN_APPROX_NONE);
+
+    for (size_t i = 0; i < contours.size(); i++)
+    {
+        drawContours(orig, contours, static_cast<int>(i), Scalar(0, 0, 255), 2);
+    }
+
+    gray.deallocate();
+    bw.deallocate();
+
+    return orig;
+}
+
 /**
     This function is the one I use to test algorithms I am studing
     and applying them together with other filters.
@@ -935,11 +967,13 @@ Mat ApplyCustomAlgo(const Mat& image)
 {
     Mat final_image = convertograyScale(image);
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 15; i++)
     {
         final_image = ApplyErode(final_image);
     }
+
+    Mat tmp = ApplyFindContournsThreshold(image);
     
-    final_image = ApplyFindContournsThreshold(final_image);
+    final_image = ApplyFindContournsDvg(final_image, tmp);
     return final_image;
 }

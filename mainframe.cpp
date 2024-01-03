@@ -74,6 +74,16 @@ void MyFrame::onApplySIFT(wxCommandEvent& event)
     }
 }
 
+void MyFrame::onApplyTemplate(wxCommandEvent& event)
+{
+    CMatchTemplate ImgSet(this, &outxt, -1, "Select Images", 2);
+    ImgSet.ShowModal();
+    if (ImgSet.IsoK)
+    {
+        ImgSet.doProcess();
+    }
+}
+
 
 void MyFrame::onHelpFile(wxCommandEvent& event)
 {

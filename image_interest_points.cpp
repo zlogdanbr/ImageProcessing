@@ -419,3 +419,43 @@ namespace sift_algo
     }
 }
 
+
+namespace template_matching
+{
+    // https://docs.opencv.org/3.4/de/da9/tutorial_template_matching.html
+    std::pair<Mat,Mat> ApplyTemplateMatching(   const Mat& BigImage, 
+                                                Mat& templ)
+    {        
+
+        Mat result;
+        Mat img_display;
+        BigImage.copyTo(img_display);
+
+        Mat segmented1 = ApplyCannyAlgoFull(BigImage);
+        templ = ApplyCannyAlgoFull(templ);
+
+        int result_cols = BigImage.cols - templ.cols + 1;
+        int result_rows = BigImage.rows - templ.rows + 1;
+
+        result.create(result_rows, result_cols, CV_32FC1);
+
+        matchTemplate(segmented1, templ, result, TM_SQDIFF);
+
+        normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+        double minVal; double maxVal; Point minLoc; Point maxLoc;
+        Point matchLoc;
+        minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+
+        matchLoc = minLoc;
+
+        rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+        //rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+        
+        
+
+        std::pair<Mat, Mat> p(img_display, result);
+        return p;
+    }
+
+}
+

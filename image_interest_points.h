@@ -205,6 +205,12 @@ namespace sift_algo
 		int option = 0);
 }
 
+namespace template_matching
+{
+	std::pair<Mat, Mat>  ApplyTemplateMatching(const Mat&, Mat&);
+
+}
+
 
 
 

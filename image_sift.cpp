@@ -228,6 +228,14 @@ void CApplySift::doProcess()
 		return;
 	}
 
-	sift_algo::ApplyAndCompareSIFT(_images, _filenames);
+	try
+	{
+		sift_algo::ApplyAndCompareSIFT(_images, _filenames);
+	}
+	catch (std::exception& e)
+	{
+		std::string a = e.what();
+		wxMessageBox(a.c_str(), "Error", wxOK | wxICON_ERROR);
+	}
 }
 

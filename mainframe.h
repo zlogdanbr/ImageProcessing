@@ -55,6 +55,7 @@ private:
     void onHelpFile(wxCommandEvent& event);
     void onApplySIFT(wxCommandEvent& event);
     void onImageDraw(wxCommandEvent& event);
+    void onApplyTemplate(wxCommandEvent& event);
 
     enum  Opt 
     {
@@ -64,7 +65,8 @@ private:
         SUB_IMG_ID,
         CONTRAST_ID_IMG,
         MAKE_SAME_SIZE,
-        DRAW_ON_IMAGE
+        DRAW_ON_IMAGE,
+        TEMPLATE_ID
     };
 
     void BinAllEvents()
@@ -77,7 +79,8 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onAllMenu, this, ONE_ID_TO_ALL);  
         Bind(wxEVT_MENU, &MyFrame::onApplySIFT, this, MAKE_SAME_SIZE);
         Bind(wxEVT_MENU, &MyFrame::onImageDraw, this, DRAW_ON_IMAGE);
-        
+        Bind(wxEVT_MENU, &MyFrame::onApplyTemplate, this, TEMPLATE_ID);
+                
     }
 
     void AddSubitemsToMenu(wxMenu* menuAlgo)
@@ -87,6 +90,9 @@ private:
         
         auto menuSameSize= menuAlgo->Append(MAKE_SAME_SIZE, "SIFT Algorithm Comparison", "Image Space");
         menuSameSize->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
+
+        auto menuTemplate = menuAlgo->Append(TEMPLATE_ID, "Template Matching", "Image Space");
+        menuTemplate->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
     }
 };

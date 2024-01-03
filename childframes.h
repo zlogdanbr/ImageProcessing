@@ -446,4 +446,16 @@ public:
     virtual void doProcess() override;
 };
 
+class CMatchTemplate : public CLoadImageSetBase
+{
+public:
+    CMatchTemplate(wxWindow* parent,
+        CWriteLogs* outxt,
+        wxWindowID id = wxID_ANY,
+        const wxString& title = wxEmptyString,
+        int inputs = 2);
+
+    virtual void doProcess() override;
+};
+
 #endif
