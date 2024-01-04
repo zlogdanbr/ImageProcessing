@@ -84,7 +84,7 @@ void CMatchTemplateFull::doProcess()
 
 		_images.clear();
 
-		auto r = canny_matching::ApplyTemplateMatchingFull_TM_CCORR(img, temps);
+		auto r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_CCORR(img, temps);
 		
 		//op_busy_local::Stop(wait);
 		showImage(r, "Original");

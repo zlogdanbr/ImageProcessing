@@ -387,7 +387,7 @@ void CInputDialog::DoFunction()
             int N =  0;
             Mat out;
 
-            wxNumberEntryDialog* dialogCrop1= new wxNumberEntryDialog(this, "Width of window", "Crop size", "Crop size", 8, 4, 32);
+            wxNumberEntryDialog* dialogCrop1= new wxNumberEntryDialog(this, "Width of window", "Crop size", "Crop size", 8, 4, 128);
             if (dialogCrop1->ShowModal() == wxID_OK)
             {
                 M = dialogCrop1->GetValue();
@@ -397,7 +397,7 @@ void CInputDialog::DoFunction()
                 return;
             }
 
-            wxNumberEntryDialog* dialogCrop2= new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 32);
+            wxNumberEntryDialog* dialogCrop2= new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 128);
             if (dialogCrop2->ShowModal() == wxID_OK)
             {
                 N = dialogCrop2->GetValue();
