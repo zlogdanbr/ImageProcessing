@@ -196,20 +196,30 @@ namespace sift_algo
 
 	std::vector < cv::KeyPoint >  ApplySift(const Mat& img, Mat& descriptors);
 
-	Mat getMatchedImage(Mat& descriptor1,
-		Mat& descriptor2,
-		std::vector < cv::KeyPoint >& kp1,
-		std::vector < cv::KeyPoint >& kp2,
-		Mat& img1,
-		Mat& img2,
-		int option = 0);
+	Mat getMatchedImage(	Mat& descriptor1,
+							Mat& descriptor2,
+							std::vector < cv::KeyPoint >& kp1,
+							std::vector < cv::KeyPoint >& kp2,
+							Mat& img1,
+							Mat& img2,
+							int option = 0);
 }
 
 namespace template_matching
 {
 	std::pair<Mat, Mat>  ApplyTemplateMatching(const Mat&, Mat&);
 
-	Mat ApplyTemplateMatchingFull(const Mat& BigImage, std::vector<Mat>& templ);
+	Mat ApplyTemplateMatchingFull(	const Mat& BigImage, 
+									std::vector<Mat>& templ, 
+									int mode,
+									image_util::Function3Parameters f);
+
+	Mat ApplyTemplateMatchingFull_TM_SQDIFF(const Mat& BigImage, std::vector<Mat>& templ);
+	Mat ApplyTemplateMatchingFull_TM_SQDIFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ);
+	Mat ApplyTemplateMatchingFull_TM_CCORR(const Mat& BigImage, std::vector<Mat>& templ);
+	Mat ApplyTemplateMatchingFull_TM_CCORR_NORMED(const Mat& BigImage, std::vector<Mat>& templ);
+	Mat ApplyTemplateMatchingFull_TM_CCOEFF(const Mat& BigImage, std::vector<Mat>& templ);
+	Mat ApplyTemplateMatchingFull_TM_CCOEFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ);
 
 }
 

@@ -445,24 +445,39 @@ namespace template_matching
         return p;
     }
 
-    Mat ApplyTemplateMatchingFull(  const Mat& BigImage,
-                                    std::vector<Mat>& templ)
+    void uniformSizes(std::vector<Mat>& templ)
     {
-        Mat segmented1 = ApplyCannyAlgoFull(BigImage);
+        Size new_size(templ[0].size().width, templ[0].size().height);
+
+        for (int i = 1; i < templ.size(); i++)
+        {            
+            resize(templ[i], templ[i], new_size);
+        }
+    }
+
+
+    Mat ApplyTemplateMatchingFull(  const Mat& BigImage,
+                                    std::vector<Mat>& templ,
+                                    int mode,
+                                    image_util::Function3Parameters f)
+    {
+        Mat segmented1 = f(BigImage, 125, 350);
         Mat img_display;
         BigImage.copyTo(img_display);
+
+        //uniformSizes(templ);
 
         for (auto& tmpt : templ)
         {
             Mat result;
             
-            tmpt = ApplyCannyAlgoFull(tmpt);
+            tmpt = f(tmpt,125,350);
 
             int result_cols = BigImage.cols - tmpt.cols + 1;
             int result_rows = BigImage.rows - tmpt.rows + 1;
 
             result.create(result_rows, result_cols, CV_32FC1);
-            matchTemplate(segmented1, tmpt, result, TM_SQDIFF);
+            matchTemplate(segmented1, tmpt, result, mode);
             normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
 
             double minVal; 
@@ -478,7 +493,15 @@ namespace template_matching
                 continue;
             }
 
-            matchLoc = minLoc;
+            if (mode == TM_SQDIFF || mode == TM_SQDIFF_NORMED)
+            {
+                matchLoc = minLoc;
+            }
+            else
+            {
+                matchLoc = maxLoc;
+            }
+
 
             rectangle(  img_display, 
                         matchLoc, 
@@ -486,9 +509,38 @@ namespace template_matching
                         Scalar::all(0), 2, 8, 0);
 
         }
-
         
         return img_display;
+    }
+
+    Mat ApplyTemplateMatchingFull_TM_SQDIFF(const Mat& BigImage, std::vector<Mat>& templ)
+    {
+        return ApplyTemplateMatchingFull(BigImage, templ, TM_SQDIFF, ApplyCannyAlgoFull);
+    }
+
+    Mat ApplyTemplateMatchingFull_TM_SQDIFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ)
+    {
+        return ApplyTemplateMatchingFull(BigImage, templ, TM_SQDIFF_NORMED, ApplyCannyAlgoFull);
+    }
+
+    Mat ApplyTemplateMatchingFull_TM_CCORR(const Mat& BigImage, std::vector<Mat>& templ) 
+    {
+        return ApplyTemplateMatchingFull(BigImage, templ, TM_CCORR, ApplyCannyAlgoFull);
+    }
+
+    Mat ApplyTemplateMatchingFull_TM_CCORR_NORMED(const Mat& BigImage, std::vector<Mat>& templ)
+    {
+        return ApplyTemplateMatchingFull(BigImage, templ, TM_CCORR_NORMED, ApplyCannyAlgoFull);
+    }
+
+    Mat ApplyTemplateMatchingFull_TM_CCOEFF(const Mat& BigImage, std::vector<Mat>& templ)
+    {
+        return ApplyTemplateMatchingFull(BigImage, templ, TM_CCOEFF, ApplyCannyAlgoFull);
+    }
+
+    Mat ApplyTemplateMatchingFull_TM_CCOEFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ)
+    {
+        return ApplyTemplateMatchingFull(BigImage, templ, TM_CCOEFF_NORMED, ApplyCannyAlgoFull);
     }
 
 }
