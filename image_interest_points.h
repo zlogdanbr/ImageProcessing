@@ -209,18 +209,23 @@ namespace template_matching
 {
 	std::pair<Mat, Mat>  ApplyTemplateMatching(const Mat&, Mat&);
 
+	template<typename F, typename...Args>
 	Mat ApplyTemplateMatchingFull(	const Mat& BigImage, 
 									std::vector<Mat>& templ, 
 									int mode,
-									image_util::Function3Parameters f);
+									F& f,
+									Args&&... args);
 
+}
+
+namespace canny_matching
+{
 	Mat ApplyTemplateMatchingFull_TM_SQDIFF(const Mat& BigImage, std::vector<Mat>& templ);
 	Mat ApplyTemplateMatchingFull_TM_SQDIFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ);
 	Mat ApplyTemplateMatchingFull_TM_CCORR(const Mat& BigImage, std::vector<Mat>& templ);
 	Mat ApplyTemplateMatchingFull_TM_CCORR_NORMED(const Mat& BigImage, std::vector<Mat>& templ);
 	Mat ApplyTemplateMatchingFull_TM_CCOEFF(const Mat& BigImage, std::vector<Mat>& templ);
 	Mat ApplyTemplateMatchingFull_TM_CCOEFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ);
-
 }
 
 
