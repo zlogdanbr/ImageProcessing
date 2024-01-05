@@ -52,6 +52,7 @@ namespace image_constants
 		"Find Contourns ( Canny )",
 		"Find Contourns Descriptors",
 		"Find Sift Descriptors",
+		"Create PCA file",
 		"Apply Custom Kernel"
 	};
 }

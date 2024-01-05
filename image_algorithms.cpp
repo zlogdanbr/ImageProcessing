@@ -5,7 +5,8 @@
 #include <wx/textdlg.h>
 #include "image_interest_points.h"
 #include "filesys.h"
-
+#include "pca.h"
+#include <fstream>
 
 CInputDialog::CInputDialog(     wxWindow* parent,
                                 const Mat& original,
@@ -338,6 +339,26 @@ double Distance(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
 
 bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
 {
+
+    if (_algorithm == "Create PCA file")
+    {
+        if (original.empty() == false)
+        {
+            std::stringstream os = getEingenSpaceInfo(original);
+            std::stringstream os1;
+            std::string f = createFolderAtHomeUser("\\dimage\\");
+            os1 << f << "\\" << "pca" << ".txt";
+
+            std::ofstream myfile(os1.str());
+            if (myfile.is_open())
+            {
+                myfile << os.str();
+            }
+            myfile.close();
+        } 
+        return true;
+    }
+
     if (_algorithm == "Undo")
     {
         if (revertContainer.isEmpty() == false)
