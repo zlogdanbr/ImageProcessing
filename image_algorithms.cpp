@@ -336,7 +336,7 @@ double Distance(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
     return sqrt(pow(xrhs - xlhs, 2) + pow(yrhs - ylhs, 2));
 }
 
-bool CInputDialog::DoFunctionBasedOnName(wxString& _algorithm)
+bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
 {
     if (_algorithm == "Undo")
     {
@@ -516,7 +516,7 @@ bool CInputDialog::DoFunctionBasedOnFunctor(wxString& _algorithm)
     {
 
         double sigma = INVALID_VALUE_DOUBLE;
-        CNumentryDouble* dialog1 = new CNumentryDouble(this, 2000, 0, 1, wxID_ANY, "Sigma Value");
+        CNumentryDouble* dialog1 = new CNumentryDouble(this, 10000, 0, 1, wxID_ANY, "Sigma Value");
         dialog1->ShowModal();
         sigma = dialog1->getComponentValue()->GetValue();
         Mat out;
@@ -524,7 +524,7 @@ bool CInputDialog::DoFunctionBasedOnFunctor(wxString& _algorithm)
         if (sigma != INVALID_VALUE_DOUBLE)
         {
             dialog1 = nullptr;
-            dialog1 = new CNumentryDouble(this, 1000, 0, 100, wxID_ANY, "Division factor");
+            dialog1 = new CNumentryDouble(this, 10000, 0, 100, wxID_ANY, "Division factor");
             dialog1->ShowModal();
             double factor = dialog1->getComponentValue()->GetValue();
             if (factor == 0.0)
@@ -750,7 +750,7 @@ void CInputDialog::DoFunction()
 {
     wxString _algorithm = getSelectionText();
 
-    if (DoFunctionBasedOnName(_algorithm) == true)
+    if (DoFunctionBasedOnNameAlgo(_algorithm) == true)
     {
         return;
     }

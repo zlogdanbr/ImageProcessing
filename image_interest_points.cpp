@@ -430,14 +430,15 @@ namespace template_matching
 
         result.create(result_rows, result_cols, CV_32FC1);
 
-        matchTemplate(segmented1, templ, result, TM_SQDIFF);
+        matchTemplate(segmented1, templ, result, TM_CCORR);
 
         normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
         double minVal; double maxVal; Point minLoc; Point maxLoc;
         Point matchLoc;
         minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
 
-        matchLoc = minLoc;
+        matchLoc = maxLoc;
+
 
         rectangle(  img_display, 
                     matchLoc, 
@@ -492,11 +493,23 @@ namespace template_matching
 
             if (mode == TM_SQDIFF || mode == TM_SQDIFF_NORMED)
             {
+                if (abs(minVal) > 10e-7)
+                {
+                    continue;
+                }
                 matchLoc = minLoc;
             }
             else
             {
-                matchLoc = maxLoc;
+                double err = 10e-5;
+                if ( maxVal >= 1-err && maxVal<=1)
+                {
+                    matchLoc = maxLoc;     
+                }
+                else
+                {
+                    continue;
+                }
             }
 
 

@@ -278,11 +278,9 @@ protected:
         getAlgoHarris(wxString key);
 
     bool shouldQuit = false;
-
-    void DoFunction();
-
-    bool DoFunctionBasedOnName(wxString& _algorithm);
+    bool DoFunctionBasedOnNameAlgo(wxString& _algorithm);
     bool DoFunctionBasedOnFunctor(wxString& _algorithm);
+    void DoFunction();
     Mat actual_first;
 
 public:

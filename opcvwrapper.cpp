@@ -282,7 +282,7 @@ Mat ApplyLaplacianExtended(const Mat& src, int kernel_size, int scale, int delta
     src_gray = convertograyScale(src);
 
     // Reduce noise by blurring with a Gaussian filter ( kernel size = 3 )
-    GaussianBlur(src_gray, src_gray, Size(3, 3), 0, 0, BORDER_DEFAULT);
+    GaussianBlur(src_gray, src_gray, Size(3, 3), 1.5, 1.5, BORDER_DEFAULT);
 
     Mat abs_dst;
     Laplacian(src_gray,
