@@ -348,7 +348,7 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
             std::stringstream os = getEingenSpaceInfo(original);
             std::stringstream os1;
             std::string f = createFolderAtHomeUser("\\dimage\\");
-            os1 << f << "\\" << "pca" << ".txt";
+            os1 << f << "\\" << "pca" << ".csv";
 
             std::ofstream myfile(os1.str());
             if (myfile.is_open())

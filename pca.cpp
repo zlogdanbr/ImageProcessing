@@ -165,8 +165,6 @@ std::stringstream  getEingenSpaceInfo(const Mat& img)
     //------------------------------------------------------------------------
     //  Step 3 : Print values to a stringstream
     //------------------------------------------------------------------------
-    outinfo << "---------------------------------------------------------------------" << std::endl;
-    outinfo << "Image Components Information" << std::endl;
     eigenvectors evectors = _espace.first;
     eigenvalues  evalues = _espace.second;
 
@@ -175,24 +173,19 @@ std::stringstream  getEingenSpaceInfo(const Mat& img)
                             Distances& distances)
     */
 
+    outinfo << "eg1x,eg1y,eg2x,eg2y,evalue1,evalue2,centerx,centery" << std::endl;
     for (int i = 0; i < evectors.size(); i++)
     {
-        outinfo << "---------------------------------------------------------------------" << std::endl;
-        outinfo << "Eigenvectors of region " << i << std::endl;
         for (const auto evcts : evectors[i])
         {
-            outinfo << "\t\t[ " << evcts.x << " , " << evcts.y << " ] " << std::endl;
+            outinfo << evcts.x << "," << evcts.y << ",";
         }
-        outinfo << std::endl;
-        outinfo << "Eigenvalues of region " << i << std::endl;
         for (const auto evalue : evalues[i])
         {
-            outinfo << "\t\t[ " << evalue << " ] " << std::endl;
+            outinfo << evalue << ",";
         }
-        outinfo << std::endl;
 
-        outinfo << "Center of region " << i << std::endl;
-        outinfo << "\t\t[ " << _centers[i].first << " , " << _centers[i].second << " ]" << std::endl;
+        outinfo << _centers[i].first << "," << _centers[i].second << std::endl;
     }
 
     return outinfo;
