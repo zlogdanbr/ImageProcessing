@@ -181,12 +181,13 @@ std::stringstream  getEingenSpaceInfo(const Mat& img)
         outinfo << "Eigenvectors of region " << i << std::endl;
         for (const auto evcts : evectors[i])
         {
-            outinfo << "\t\t[ " << evcts.x << " , " << evcts.y << " ] ";
+            outinfo << "\t\t[ " << evcts.x << " , " << evcts.y << " ] " << std::endl;
         }
+        outinfo << std::endl;
         outinfo << "Eigenvalues of region " << i << std::endl;
         for (const auto evalue : evalues[i])
         {
-            outinfo << "\t\t[ " << evalue << " ] ";
+            outinfo << "\t\t[ " << evalue << " ] " << std::endl;
         }
         outinfo << std::endl;
 

@@ -344,6 +344,7 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
     {
         if (original.empty() == false)
         {
+            wxBusyInfo* wait = ProgramBusy();
             std::stringstream os = getEingenSpaceInfo(original);
             std::stringstream os1;
             std::string f = createFolderAtHomeUser("\\dimage\\");
@@ -355,6 +356,8 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
                 myfile << os.str();
             }
             myfile.close();
+
+            Stop(wait);
         } 
         return true;
     }
