@@ -46,7 +46,7 @@ wxDialog(parent, id, title, pos, size, style)
 	m_comboBox3->Append("TM_CCOEFF_NORMED");
 
 	bSizer10->Add(m_comboBox3, 0, wxALL, 5);
-	m_spinCtrlDouble3 = new wxSpinCtrlDouble(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 125, 1);
+	m_spinCtrlDouble3 = new wxSpinCtrlDouble(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 1000, 125, 1);
 	m_spinCtrlDouble3->SetDigits(0);
 	bSizer10->Add(m_spinCtrlDouble3, 0, wxALL, 5);
 	m_spinCtrlDouble4 = new wxSpinCtrlDouble(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 1000, 350, 1);
