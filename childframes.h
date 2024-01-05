@@ -493,7 +493,12 @@ protected:
 
 public:
 
-    CSelectTemplateParam(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(477, 302), long style = wxDEFAULT_DIALOG_STYLE);
+    CSelectTemplateParam(   wxWindow* parent, 
+                            wxWindowID id = wxID_ANY, 
+                            const wxString& title = wxEmptyString, 
+                            const wxPoint& pos = wxDefaultPosition, 
+                            const wxSize& size = wxSize(477, 302), 
+                            long style = wxDEFAULT_DIALOG_STYLE);
 
     ~CSelectTemplateParam();
 
