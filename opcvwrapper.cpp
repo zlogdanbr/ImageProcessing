@@ -8,10 +8,8 @@
 
 Mat ApplyDifferenceOfGaussian(const Mat& im)
 {
-    Mat img1 = GaussianImageSmoothExtended(im, 3, 0.1, 0.1);
-    Mat img2 = GaussianImageSmoothExtended(im, 3, 1, 1);
-    img1 = ApplyLaplacianExtended(img1);
-    img2 = ApplyLaplacianExtended(img2);
+    Mat img1 = GaussianImageSmoothExtended(im, 3, 0.01, 0.01);
+    Mat img2 = GaussianImageSmoothExtended(im, 3, 100, 100);
 
     Mat final = img1 - img2;
 

@@ -241,7 +241,7 @@ namespace image_info
                 s << descriptor.angle << ",";
                 s << descriptor.response << ",";
                 s << descriptor.octave << ",";
-                s << descriptor.class_id << "," << std::endl;
+                s << descriptor.class_id <<  std::endl;
                 myfile << s.str();
             }
             myfile.close();
@@ -518,34 +518,34 @@ namespace template_matching
     namespace canny_matching
     {
 
-        Mat ApplyTemplateMatchingFull_TM_SQDIFF(const Mat& BigImage, std::vector<Mat>& templ)
+        Mat ApplyTemplateMatchingFull_TM_SQDIFF(const Mat& BigImage, std::vector<Mat>& templ, int t1, int t2)
         {
-            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_SQDIFF, ApplyCannyAlgoFull, 125, 350);
+            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_SQDIFF, ApplyCannyAlgoFull, t1, t2);
         }
 
-        Mat ApplyTemplateMatchingFull_TM_SQDIFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ)
+        Mat ApplyTemplateMatchingFull_TM_SQDIFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ, int t1, int t2)
         {
-            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_SQDIFF_NORMED, ApplyCannyAlgoFull, 125, 350);
+            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_SQDIFF_NORMED, ApplyCannyAlgoFull, t1, t2);
         }
 
-        Mat ApplyTemplateMatchingFull_TM_CCORR(const Mat& BigImage, std::vector<Mat>& templ)
+        Mat ApplyTemplateMatchingFull_TM_CCORR(const Mat& BigImage, std::vector<Mat>& templ, int t1, int t2)
         {
-            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCORR, ApplyCannyAlgoFull, 125, 350);
+            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCORR, ApplyCannyAlgoFull, t1, t2);
         }
 
-        Mat ApplyTemplateMatchingFull_TM_CCORR_NORMED(const Mat& BigImage, std::vector<Mat>& templ)
+        Mat ApplyTemplateMatchingFull_TM_CCORR_NORMED(const Mat& BigImage, std::vector<Mat>& templ, int t1, int t2)
         {
-            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCORR_NORMED, ApplyCannyAlgoFull, 125, 350);
+            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCORR_NORMED, ApplyCannyAlgoFull, t1, t2);
         }
 
-        Mat ApplyTemplateMatchingFull_TM_CCOEFF(const Mat& BigImage, std::vector<Mat>& templ)
+        Mat ApplyTemplateMatchingFull_TM_CCOEFF(const Mat& BigImage, std::vector<Mat>& templ, int t1, int t2)
         {
-            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCOEFF, ApplyCannyAlgoFull, 125, 350);
+            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCOEFF, ApplyCannyAlgoFull, t1, t2);
         }
 
-        Mat ApplyTemplateMatchingFull_TM_CCOEFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ)
+        Mat ApplyTemplateMatchingFull_TM_CCOEFF_NORMED(const Mat& BigImage, std::vector<Mat>& templ, int t1, int t2)
         {
-            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCOEFF_NORMED, ApplyCannyAlgoFull, 125, 350);
+            return template_matching::ApplyTemplateMatchingFull(BigImage, templ, TM_CCOEFF_NORMED, ApplyCannyAlgoFull, t1, t2);
         }
     }
 

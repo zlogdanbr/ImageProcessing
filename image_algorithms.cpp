@@ -197,6 +197,7 @@ void CInputDialog::setSimpleMaps()
     fsimple["Find Contourns ( Threshold )"] = ApplyFindContournsThreshold;
     fsimple["Find Contourns ( Canny )"] = ApplyFindContournsCanny;
     fsimple["Find Sift Descriptors"] = ApplySiftToImage;
+    fsimple["Gaussian Difference"] = ApplyDifferenceOfGaussian;
 
 }
 
@@ -335,19 +336,16 @@ double Distance(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
     return sqrt(pow(xrhs - xlhs, 2) + pow(yrhs - ylhs, 2));
 }
 
-void CInputDialog::DoFunction()
+bool CInputDialog::DoFunctionBasedOnName(wxString& _algorithm)
 {
-    wxString _algorithm = getSelectionText();
-
     if (_algorithm == "Undo")
     {
         if (revertContainer.isEmpty() == false)
         {
             revert();
         }
-        return;
+        return true;
     }
-
 
     if (_algorithm == "Apply Custom Kernel")
     {
@@ -359,8 +357,9 @@ void CInputDialog::DoFunction()
             setOriginalImage();
             delete dialog;
         }
+        return true;
     }
-    
+
     if (_algorithm == "Find Contourns Descriptors")
     {
         if (original.empty() == false)
@@ -375,51 +374,65 @@ void CInputDialog::DoFunction()
 
         }
         setOriginalImage();
-        return;
+        return true;
     }
 
     if (_algorithm == "Crop Image")
     {
         if (original.empty() == false)
         {
-            
+
             int M = 0;
-            int N =  0;
+            int N = 0;
             Mat out;
 
-            wxNumberEntryDialog* dialogCrop1= new wxNumberEntryDialog(this, "Width of window", "Crop size", "Crop size", 8, 4, 128);
+            wxNumberEntryDialog* dialogCrop1 = new wxNumberEntryDialog(this, "Width of window", "Crop size", "Crop size", 8, 4, 128);
             if (dialogCrop1->ShowModal() == wxID_OK)
             {
                 M = dialogCrop1->GetValue();
             }
             else
             {
-                return;
+                return true;
             }
 
-            wxNumberEntryDialog* dialogCrop2= new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 128);
-            if (dialogCrop2->ShowModal() == wxID_OK)
+            dialogCrop1 = nullptr;
+
+            dialogCrop1 = new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 128);
+            if (dialogCrop1->ShowModal() == wxID_OK)
             {
-                N = dialogCrop2->GetValue();
+                N = dialogCrop1->GetValue();
             }
             else
             {
-                return;
+                if (dialogCrop1 != nullptr)
+                {
+                    delete dialogCrop1;
+                }
+                return true;
             }
             std::vector<Mat> v;
             final_image = cropImage(original, M, N, v);
             setOriginalImage();
-
+            if (dialogCrop1 != nullptr)
+            {
+                delete dialogCrop1;
+            }
         }
-        return;
+        return true;
     }
 
-    Function1Parameter  function1P  = getAlgoFunctionOnePar(_algorithm);
+    return false;
+}
+
+bool CInputDialog::DoFunctionBasedOnFunctor(wxString& _algorithm)
+{
+    Function1Parameter  function1P = getAlgoFunctionOnePar(_algorithm);
 
     if (function1P != nullptr)
     {
         ApplyAlgorithm(function1P, true);
-        return;        
+        return true;
     }
 
     Function2Parameter  function2P = getAlgoFunctionTwoPar(_algorithm);
@@ -428,13 +441,13 @@ void CInputDialog::DoFunction()
     {
         int option = 3;
         if (_algorithm == "Erosion+" || _algorithm == "Dilate+")
-        {      
+        {
             std::vector<wxString> choices = { "MORPH_RECT","MORPH_CROSS","MORPH_ELLIPSE" };
             wxSingleChoiceDialog dialog(
-                                            this, 
-                                            "Choose Basic Element", 
-                                            "Choose Basic Element",
-                                            static_cast<int>(choices.size()), choices.data());
+                this,
+                "Choose Basic Element",
+                "Choose Basic Element",
+                static_cast<int>(choices.size()), choices.data());
 
             dialog.ShowModal();
             wxString structural_element = dialog.GetStringSelection();
@@ -455,38 +468,46 @@ void CInputDialog::DoFunction()
             else
             {
                 shouldQuit = true;
-                return;
+                return true;
             }
- 
+
         }
         ApplyAlgorithm(function2P, true, option);
         shouldQuit = true;
-        return;
+        return true;
     }
 
     Function3Parameters function3P = getAlgoFunctionThreePar(_algorithm);
 
     if (function3P != nullptr)
     {
-        wxNumberEntryDialog dialog2(this, "low threshold", "low threshold", "low threshold", 125, 1, 1000);
+        wxNumberEntryDialog* dialog2 = new wxNumberEntryDialog(this, "low threshold", "low threshold", "low threshold", 125, 1, 1000);
         int threshold = 0;
         int Aperture = 0;
 
         Mat out;
 
-        if (dialog2.ShowModal() == wxID_OK)
+        if (dialog2->ShowModal() == wxID_OK)
         {
-            threshold = dialog2.GetValue();
+            threshold = dialog2->GetValue();
 
-            wxNumberEntryDialog dialog3(this, "high threshold", "high threshold", "high threshold", 350, 1, 1000);
-            if (dialog3.ShowModal() == wxID_OK)
+            dialog2 = nullptr;
+
+            dialog2 = new wxNumberEntryDialog(this, "high threshold", "high threshold", "high threshold", 350, 1, 1000);
+            if (dialog2->ShowModal() == wxID_OK)
             {
-                Aperture = dialog3.GetValue();
+                Aperture = dialog2->GetValue();
                 ApplyAlgorithm(function3P, true, threshold, Aperture);
             }
         }
+
+        if (dialog2 != nullptr)
+        {
+            delete dialog2;
+        }
+
         shouldQuit = true;
-        return;
+        return true;
     }
 
     Function4Parameters function4P = getAlgoFunctionFourPar(_algorithm);
@@ -495,47 +516,59 @@ void CInputDialog::DoFunction()
     {
 
         double sigma = INVALID_VALUE_DOUBLE;
-        CNumentryDouble dialog1(this, 2000, 0, 1, wxID_ANY, "Sigma Value");
-        dialog1.ShowModal();
-        sigma = dialog1.getComponentValue()->GetValue();
+        CNumentryDouble* dialog1 = new CNumentryDouble(this, 2000, 0, 1, wxID_ANY, "Sigma Value");
+        dialog1->ShowModal();
+        sigma = dialog1->getComponentValue()->GetValue();
         Mat out;
 
         if (sigma != INVALID_VALUE_DOUBLE)
         {
-            CNumentryDouble dialog2(this, 1000, 0, 100, wxID_ANY, "Division factor");
-            dialog2.ShowModal();
-            double factor = dialog2.getComponentValue()->GetValue();
+            dialog1 = nullptr;
+            dialog1 = new CNumentryDouble(this, 1000, 0, 100, wxID_ANY, "Division factor");
+            dialog1->ShowModal();
+            double factor = dialog1->getComponentValue()->GetValue();
             if (factor == 0.0)
             {
                 factor = 1.0;
             }
-            ApplyAlgorithm(function4P, true, 3, sigma/factor, sigma/factor);
+            ApplyAlgorithm(function4P, true, 3, sigma / factor, sigma / factor);
         }
         shouldQuit = true;
-        return;
+
+        if (dialog1 != nullptr)
+        {
+            delete dialog1;
+        }
+        return true;
     }
 
     Function5Parameters function5P = getAlgoFunctionFivePar(_algorithm);
     if (function5P != nullptr)
     {
-        wxNumberEntryDialog dialog1(this, "Scale", "Scale", "Scale", 1, 1, 1000);
+        wxNumberEntryDialog* dialog1 = new wxNumberEntryDialog(this, "Scale", "Scale", "Scale", 1, 1, 1000);
         int scale = 0;
         int delta = 0;
         Mat out;
 
-        if (dialog1.ShowModal() == wxID_OK)
+        if (dialog1->ShowModal() == wxID_OK)
         {
-            scale = dialog1.GetValue();
+            scale = dialog1->GetValue();
 
-            wxNumberEntryDialog dialog2(this, "Delta", "Delta", "Delta", 0, 0, 1000);
-            if (dialog2.ShowModal() == wxID_OK)
+            dialog1 = nullptr;
+            dialog1 = new wxNumberEntryDialog(this, "Delta", "Delta", "Delta", 0, 0, 1000);
+            if (dialog1->ShowModal() == wxID_OK)
             {
-                delta = dialog2.GetValue();
+                delta = dialog1->GetValue();
                 ApplyAlgorithm(function5P, true, 3, scale, delta, CV_16S);
             }
         }
+
+        if (dialog1 != nullptr)
+        {
+            delete dialog1;
+        }
         shouldQuit = true;
-        return;
+        return true;
     }
 
     Function2Parameter  functionAdjust = getAlgoFunctionAdjust(_algorithm);
@@ -576,11 +609,11 @@ void CInputDialog::DoFunction()
         if (scale == INVALID_VALUE_INT)
         {
             shouldQuit = true;
-            return;
+            return true;
         }
         ApplyAlgorithm(functionAdjust, true, scale);
         shouldQuit = true;
-        return;
+        return true;
     }
 
     Function2Slider     functionSlider = getAlgoFunctionSlider(_algorithm);
@@ -591,7 +624,7 @@ void CInputDialog::DoFunction()
         if (_algorithm == "Threshold" || _algorithm == "Gamma Correction")
         {
             double threshold = 0.0;
-            info inf;            
+            info inf;
 
             if (_algorithm == "Threshold")
             {
@@ -620,7 +653,7 @@ void CInputDialog::DoFunction()
             if (v == INVALID_VALUE_DOUBLE)
             {
                 shouldQuit = true;
-                return;
+                return true;
             }
 
             if (_algorithm == "Threshold")
@@ -629,14 +662,14 @@ void CInputDialog::DoFunction()
             }
             else
             {
-                threshold = static_cast<double>(v)/100;
+                threshold = static_cast<double>(v) / 100;
             }
-                
+
             ApplyAlgorithm(functionSlider, true, threshold);
 
         }
         shouldQuit = true;
-        return;
+        return true;
     }
 
     FunctionSobelParameters     functionS = getAlgoSobel(_algorithm);
@@ -653,45 +686,51 @@ void CInputDialog::DoFunction()
         int kernel_size = 5;
         wxString tip = "Depth";
 
-        wxNumberEntryDialog dialog1(this, _algorithm, tip, _algorithm, 10, min, max);
+        wxNumberEntryDialog* dialog = new wxNumberEntryDialog(this, _algorithm, tip, _algorithm, 10, min, max);
 
-        if (dialog1.ShowModal() == wxID_OK)
+        if (dialog->ShowModal() == wxID_OK)
         {
-            depth = dialog1.GetValue();
+            depth = dialog->GetValue();
         }
 
         tip = "Type";
         max = 10;
         min = 1;
 
-        wxNumberEntryDialog dialog2(this, _algorithm, tip, _algorithm, 10, min, max);
-        if (dialog2.ShowModal() == wxID_OK)
+        dialog = nullptr;
+        dialog = new wxNumberEntryDialog(this, _algorithm, tip, _algorithm, 10, min, max);
+        if (dialog->ShowModal() == wxID_OK)
         {
-            type = dialog2.GetValue();
+            type = dialog->GetValue();
         }
 
         tip = "Delta";
         max = 1000;
         min = 1;
 
-        wxNumberEntryDialog dialog3(this, _algorithm, tip, _algorithm, 10, min, max);
-        if (dialog3.ShowModal() == wxID_OK)
+        dialog = new wxNumberEntryDialog(this, _algorithm, tip, _algorithm, 10, min, max);
+        if (dialog->ShowModal() == wxID_OK)
         {
-            delta = dialog3.GetValue();
+            delta = dialog->GetValue();
         }
 
         tip = "Kernel Size";
         max = 13;
         min = 3;
 
-        wxNumberEntryDialog dialog4(this, _algorithm, tip, _algorithm, 3, min, max);
-        if (dialog4.ShowModal() == wxID_OK)
+        dialog = new wxNumberEntryDialog(this, _algorithm, tip, _algorithm, 3, min, max);
+        if (dialog->ShowModal() == wxID_OK)
         {
-            type = dialog4.GetValue();
+            type = dialog->GetValue();
         }
         ApplyAlgorithm(functionS, true, image_type, depth, type, delta, kernel_size);
         shouldQuit = true;
-        return;
+
+        if (dialog != nullptr)
+        {
+            delete dialog;
+        }
+        return true;
     }
 
     FunctionHarris farris = getAlgoHarris(_algorithm);
@@ -701,8 +740,26 @@ void CInputDialog::DoFunction()
         Mat out;
         ApplyAlgorithm(farris, true, 3, 2, 0.001, 0.0001);
         shouldQuit = true;
+        return true;
+    }
+
+    return false;
+}
+
+void CInputDialog::DoFunction()
+{
+    wxString _algorithm = getSelectionText();
+
+    if (DoFunctionBasedOnName(_algorithm) == true)
+    {
         return;
     }
+
+    if (DoFunctionBasedOnFunctor(_algorithm) == true)
+    {
+        return;
+    }
+ 
 }
 
 

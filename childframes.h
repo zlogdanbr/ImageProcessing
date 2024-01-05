@@ -281,6 +281,8 @@ protected:
 
     void DoFunction();
 
+    bool DoFunctionBasedOnName(wxString& _algorithm);
+    bool DoFunctionBasedOnFunctor(wxString& _algorithm);
     Mat actual_first;
 
 public:

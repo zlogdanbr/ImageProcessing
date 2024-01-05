@@ -130,12 +130,20 @@ void MyFrame::OnSave(wxCommandEvent& event)
 {
     CSaveImage* saveFileCustom{ new CSaveImage(&ImageHelper,&outxt) };
     saveFileCustom->SaveFile(*this);
+    if (saveFileCustom != nullptr)
+    {
+        delete saveFileCustom;
+    }
 }
 
 void MyFrame::OnOpen(wxCommandEvent& event)
 {
     COpenImage* openFileCustom { new COpenImage(&ImageHelper,&outxt)};
     openFileCustom->OpenFile(*this);
+    if (openFileCustom != nullptr)
+    {
+        delete openFileCustom;
+    }
 }
 
 void MyFrame::onAllMenu(wxCommandEvent& event)
@@ -162,6 +170,11 @@ void MyFrame::onAllMenu(wxCommandEvent& event)
         else
         {
             showImage(ImageHelper.getOrginalImageOpenCV(), "Final");
+        }
+
+        if (InputDialog != nullptr)
+        {
+            delete InputDialog;
         }
     }
 }

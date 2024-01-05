@@ -40,6 +40,7 @@ namespace image_constants
 		"Morphological Top Hat",
 		"Apply custom algo",
 		"Gaussian Extended",
+		"Gaussian Difference",
 		"Median",
 		"Laplacian Extended",
 		"Sobel",
