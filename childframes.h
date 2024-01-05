@@ -469,4 +469,39 @@ public:
     virtual void doProcess() override;
 };
 
+struct template_info
+{
+    wxString mode = "TM_SQDIFF";
+    wxString Algorithm = "Canny";
+    double t1 = 125;
+    double t2 = 350;
+};
+
+class CSelectTemplateParam : public wxDialog
+{
+private:
+
+protected:
+    wxButton* m_button5;
+    wxButton* m_button6;
+    wxStaticText* m_staticText5;
+    wxStaticText* m_staticText6;
+    wxStaticText* m_staticText7;
+    wxComboBox* m_comboBox3;
+    wxSpinCtrlDouble* m_spinCtrlDouble3;
+    wxSpinCtrlDouble* m_spinCtrlDouble4;
+
+public:
+
+    CSelectTemplateParam(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(477, 302), long style = wxDEFAULT_DIALOG_STYLE);
+
+    ~CSelectTemplateParam();
+
+    template_info _inf;
+    bool IsOK;
+
+};
+
+
+
 #endif

@@ -84,10 +84,51 @@ void CMatchTemplateFull::doProcess()
 
 		_images.clear();
 
-		auto r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_CCORR(img, temps, 125,350);
+		template_info info;
+		CSelectTemplateParam dialog(nullptr, wxID_ANY, "Select Parameters");
+		dialog.ShowModal();
+		if (dialog.IsOK == true)
+		{
+
+			Mat r;
+
+			info = dialog._inf;
+
+			if (info.mode == "TM_SQDIFF")
+			{
+				r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_SQDIFF(img, temps, info.t1, info.t2);
+			}
+			else
+			if (info.mode == "TM_SQDIFF_NORMED")
+			{
+				r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_SQDIFF_NORMED(img, temps, info.t1, info.t2);
+			}
+			else
+			if (info.mode == "TM_CCORR")
+			{
+				r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_CCORR(img, temps, info.t1, info.t2);
+			}
+			else
+			if (info.mode == "TM_CCORR_NORMED")
+			{
+				r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_CCORR_NORMED(img, temps, info.t1, info.t2);
+			}
+			else
+			if (info.mode == "TM_CCOEFF")
+			{
+				r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_CCOEFF(img, temps, info.t1, info.t2);
+			}
+			else
+			if (info.mode == "TM_CCOEFF_NORMED")
+			{
+				r = template_matching::canny_matching::ApplyTemplateMatchingFull_TM_CCOEFF_NORMED(img, temps, info.t1, info.t2);
+			}
+			
+			showImage(r, "Original");
+		}
 		
 		//op_busy_local::Stop(wait);
-		showImage(r, "Original");
+
 	}
 	catch (std::exception& e)
 	{

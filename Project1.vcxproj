@@ -280,6 +280,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="image_io.cpp" />
     <ClCompile Include="image_algorithms.cpp" />
     <ClCompile Include="image_helper.cpp" />
+    <ClCompile Include="image_select.cpp" />
     <ClCompile Include="image_sift.cpp" />
     <ClCompile Include="image_slide.cpp" />
     <ClCompile Include="image_spin.cpp" />
