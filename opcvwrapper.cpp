@@ -420,14 +420,10 @@ processing
 Mat ApplyHoughTransformLines(const Mat& img)
 {
     Mat dst;
-    Mat cdst;
+    Mat cdst = img.clone();
 
     // Apply Canny algorithm
-    cv::Mat contours;
     Canny(img, dst, 50, 200, 3);
-
-    // Copy edges to the images that will display the results in BGR
-    cvtColor(dst, cdst, COLOR_GRAY2BGR);
 
     // Probabilistic Line Transform
     std::vector<Vec4i> linesP; // will hold the results of the detection
@@ -445,7 +441,7 @@ Mat ApplyHoughTransformLines(const Mat& img)
         Vec4i l = linesP[i];
         line(cdst, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(0, 0, 255), 3, LINE_AA);
     }
-    contours.deallocate();
+
     dst.deallocate();
     return cdst;
 }
@@ -461,14 +457,10 @@ processing
 Mat ApplyHoughTransformCircles(const Mat& img)
 {
     Mat dst;
-    Mat cdst;
+    Mat cdst = img.clone();
 
     // Apply Canny algorithm
-    cv::Mat contours;
     Canny(img, dst, 50, 200, 3);
-
-    // Copy edges to the images that will display the results in BGR
-    cvtColor(dst, cdst, COLOR_GRAY2BGR);
 
     // Standard Hough circles Transform
     std::vector<cv::Vec3f> circles;
@@ -493,31 +485,9 @@ Mat ApplyHoughTransformCircles(const Mat& img)
         ++itc;
     }
 
-    contours.deallocate();
     dst.deallocate();
     return cdst;
 
-}
-
-
-Mat Sharpening(const Mat& img)
-{
-    Mat Iconv = 0.5 * ApplyLaplacianExtended(img, 3, 1);
-    Mat igray = convertograyScale(img);
-    Mat final =  igray - Iconv;
-    Iconv.deallocate();
-    igray.deallocate();
-    return final;
-}
-
-Mat Unsharp(const Mat& img)
-{
-    Mat Iconv = GaussianImageSmoothExtended(img,3, 150,150);
-    Mat igray = convertograyScale(img);
-    Mat final = (1.5) * igray - 0.5 * Iconv;
-    Iconv.deallocate();
-    igray.deallocate();
-    return final;
 }
 
 Mat ApplyErodeEx(const Mat& img,int type)
@@ -596,48 +566,6 @@ Mat segmentErode(const Mat& img)
     img2.deallocate();
 
     return final;
-}
-
-/* -------------------------------------------------------------------------------------------
-OpenCV 3 Computer Vision
-Application Programming
-Cookbook
-Third Edition
-Robert Laganiere
-Page [ 239 ]
-Page [245 ] for the math
-----------------------------------------------------------------------------------------------*/
-Mat detectCornersHarrisAlgoFull(    const Mat& image,
-                                    int neighborhood_size,
-                                    int aperture_size,
-                                    double threshold,
-                                    double Harris_parameter
-                                )
-{
-    // Detect Harris Corners
-    cv::Mat cornerStrength;
-    cv::Mat imgclone;
-    imgclone = convertograyScale(image);
-
-    cv::cornerHarris(   imgclone, // input image
-                        cornerStrength, // image of cornerness
-                        2, // neighborhood size
-                        3, // aperture size
-                        0.04); // Harris parameter
-
-    cv::Mat harrisCorners;
-
-    // threshold the corner strengths
-    cv::threshold(  cornerStrength,
-                    harrisCorners,
-                    threshold,
-                    255,
-                    cv::THRESH_BINARY);
-
-    imgclone.deallocate();
-    cornerStrength.deallocate();
-
-    return harrisCorners;
 }
 
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold, int aperture)

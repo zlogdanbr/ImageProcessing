@@ -47,7 +47,6 @@ namespace image_util
 	using Function5Parameters = std::function<Mat(Mat, int, int, int, int)>;
 	using Function2Slider = std::function<Mat(Mat, double)>;
 	using FunctionSobelParameters = std::function<Mat(Mat, int, int, int, double, int)>;
-	using FunctionHarris          = std::function<Mat(Mat, int, int, double, double)>;
 
 	using Function1ParContainer = std::map < wxString, Function1Parameter >;
 	using Function2ParContainer = std::map < wxString, Function2Parameter >;
@@ -56,7 +55,6 @@ namespace image_util
 	using Function5ParContainer = std::map < wxString, Function5Parameters >;
 	using Function2SliderContainer = std::map < wxString, Function2Slider >;
 	using FunctionSobelParametersContainer = std::map < wxString, FunctionSobelParameters >;
-	using FunctionHarrisParametersContainer = std::map < wxString, FunctionHarris >;
 
 	using CPointCst = std::pair<int, int>;
 	using CDataValue = std::vector<CPointCst>;

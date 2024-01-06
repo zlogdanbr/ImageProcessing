@@ -47,7 +47,6 @@ namespace image_constants
 		"Canny Extended",
 		"Hough Transform Lines",
 		"Hough Transform Circles",
-		"Harris Algorithm",
 		"Find Contourns ( Threshold )",
 		"Find Contourns ( Canny )",
 		"Find Contourns Descriptors",

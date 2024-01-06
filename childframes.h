@@ -176,12 +176,10 @@ protected:
     void ApplyAlgorithm(Function5Parameters& f, bool Gray, int kernel_size, int p1, int p2, int p3);
     void ApplyAlgorithm(FunctionSobelParameters& f, bool Gray, int, int, int, double, int);
     void ApplyAlgorithm(Function2Slider& f, bool Gray, double t);   
-    void ApplyAlgorithm(FunctionHarris& f, bool Gray, int, int, double, double);
 
     template<typename F, typename...Args>
     void ApplyAlgorithmEffective(F& f, bool Gray, Args&&... args);
    
-
     Function1ParContainer fsimple;
     Function2ParContainer fadjust;
     Function2ParContainer fmore;
@@ -190,7 +188,6 @@ protected:
     Function5ParContainer fmorepp;
     Function2SliderContainer fslider;
     FunctionSobelParametersContainer fsobel;
-    FunctionHarrisParametersContainer fharris;
 
     bool stop = false;
 
@@ -273,9 +270,6 @@ protected:
 
     FunctionSobelParameters
         getAlgoSobel(wxString key);
-
-    FunctionHarris
-        getAlgoHarris(wxString key);
 
     bool shouldQuit = false;
     bool DoFunctionBasedOnNameAlgo(wxString& _algorithm);

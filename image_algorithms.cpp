@@ -164,18 +164,6 @@ CInputDialog::ApplyAlgorithm(
     return ApplyAlgorithmEffective(f, Gray, image_type, depth, type, delta, kernel_size);
 }
 
-void
-CInputDialog::ApplyAlgorithm(
-                                FunctionHarris& f, 
-                                bool Gray, 
-                                int neighborhood_size, 
-                                int aperture_size, 
-                                double threshold, 
-                                double Harris_parameter)
-{
-    ApplyAlgorithmEffective(f, Gray, neighborhood_size, aperture_size, threshold, Harris_parameter);
-}
-
 void CInputDialog::setSimpleMaps()
 {
     fsimple["Convert to Gray Scale"] = convertograyScale;
@@ -217,7 +205,6 @@ void CInputDialog::setOtherMaps()
     fsobel["Sobel"] = ApplySobelExtended;
     fslider["Threshold"] = ApplyThreShold;
     fslider["Gamma Correction"] = adjustGama;
-    fharris["Harris Algorithm"] = detectCornersHarrisAlgoFull;
 }
 
 void CInputDialog::fillComboInfo()
@@ -314,16 +301,6 @@ CInputDialog::getAlgoSobel(wxString key)
     if (fsobel.find(key) != fsobel.end())
     {
         return fsobel[key];
-    }
-    return nullptr;
-}
-
-FunctionHarris
-CInputDialog::getAlgoHarris(wxString key)
-{
-    if (fharris.find(key) != fharris.end())
-    {
-        return fharris[key];
     }
     return nullptr;
 }
@@ -458,6 +435,10 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
                 return true;
             }
 
+            if (dialogCrop1 != nullptr)
+            {
+                delete dialogCrop1;
+            }
             dialogCrop1 = nullptr;
 
             dialogCrop1 = new wxNumberEntryDialog(this, "Height of window", "Crop size", "Crop size", 8, 4, 128);
@@ -770,6 +751,12 @@ bool CInputDialog::DoFunctionBasedOnFunctor(wxString& _algorithm)
         max = 1000;
         min = 1;
 
+        if (dialog != nullptr)
+        {
+            delete dialog;
+        }
+        dialog = nullptr;
+
         dialog = new wxNumberEntryDialog(this, _algorithm, tip, _algorithm, 10, min, max);
         if (dialog->ShowModal() == wxID_OK)
         {
@@ -792,16 +779,6 @@ bool CInputDialog::DoFunctionBasedOnFunctor(wxString& _algorithm)
         {
             delete dialog;
         }
-        return true;
-    }
-
-    FunctionHarris farris = getAlgoHarris(_algorithm);
-
-    if (farris != nullptr)
-    {
-        Mat out;
-        ApplyAlgorithm(farris, true, 3, 2, 0.001, 0.0001);
-        shouldQuit = true;
         return true;
     }
 

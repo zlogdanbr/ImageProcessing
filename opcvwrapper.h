@@ -137,14 +137,6 @@ Mat ApplySobelExtended(const Mat& img,
     int kernel_size);
 
 /*************************************************************************************
-* Edge detectors Sharpening/Unsharp
-*************************************************************************************/
-
-Mat Sharpening(const Mat& img);
-
-Mat Unsharp(const Mat& img);
-
-/*************************************************************************************
 *  Morphological
 /*************************************************************************************/
 
@@ -161,14 +153,6 @@ Mat segmentErode(const Mat& img);
 /*************************************************************************************
 *  Advanced Algorithms
 /*************************************************************************************/
-
-Mat detectCornersHarrisAlgoFull(const Mat& image,
-                                int neighborhood_size,
-                                int aperture_size,
-                                double threshold,
-                                double Harris_parameter
-                                );
-
 Mat ApplyCustomAlgo(const Mat& image);
 Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat ApplyDifferenceOfGaussian(const Mat& im);
