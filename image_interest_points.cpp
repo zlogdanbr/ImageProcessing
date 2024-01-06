@@ -120,9 +120,6 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
 
 namespace image_info
 {
-
- 
-
     Descriptors getImageDescriptors(const Mat& img)
     {
 
@@ -219,35 +216,6 @@ namespace image_info
         }
     }
 
-    void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname)
-    {
-        std::ofstream myfile(fname);
-        int i = 0;
-        if (myfile.is_open())
-        {
-            for (const auto& descriptor : descriptors)
-            {
-                if (i == 0)
-                {
-                    myfile << "x,y,size,angle,response,octave,class_id" << std::endl;
-                    i++;
-                    continue;
-                }
-                                
-                // write fields to s
-                std::stringstream s;
-                s << descriptor.pt.x << ",";
-                s << descriptor.pt.y << ",";
-                s << descriptor.size << ",";
-                s << descriptor.angle << ",";
-                s << descriptor.response << ",";
-                s << descriptor.octave << ",";
-                s << descriptor.class_id <<  std::endl;
-                myfile << s.str();
-            }
-            myfile.close();
-        }
-    }
 }
 
 namespace fast_algo
@@ -297,6 +265,36 @@ namespace op_busy
 
 namespace sift_algo
 {
+    void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname)
+    {
+        std::ofstream myfile(fname);
+        int i = 0;
+        if (myfile.is_open())
+        {
+            for (const auto& descriptor : descriptors)
+            {
+                if (i == 0)
+                {
+                    myfile << "x,y,size,angle,response,octave,class_id" << std::endl;
+                    i++;
+                    continue;
+                }
+
+                // write fields to s
+                std::stringstream s;
+                s << descriptor.pt.x << ",";
+                s << descriptor.pt.y << ",";
+                s << descriptor.size << ",";
+                s << descriptor.angle << ",";
+                s << descriptor.response << ",";
+                s << descriptor.octave << ",";
+                s << descriptor.class_id << std::endl;
+                myfile << s.str();
+            }
+            myfile.close();
+        }
+    }
+
     std::vector < cv::KeyPoint> ApplySift(const Mat& img, Mat& descriptors)
     {
         Mat gray = convertograyScale(img);
@@ -412,7 +410,7 @@ namespace sift_algo
                 wxString spath = saveFileDialog.GetPath();
                 std::string path = convertWxStringToString(spath);
 
-                image_info::createCSV(kp1, path);
+                sift_algo::createCSV(kp1, path);
             }
         }
     }

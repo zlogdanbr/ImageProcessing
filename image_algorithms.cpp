@@ -186,8 +186,8 @@ void CInputDialog::setSimpleMaps()
     fsimple["Segmentation Erode"] = segmentErode;
     fsimple["Find Contourns ( Threshold )"] = ApplyFindContournsThreshold;
     fsimple["Find Contourns ( Canny )"] = ApplyFindContournsCanny;
-    fsimple["Find Sift Descriptors"] = ApplySiftToImage;
     fsimple["Gaussian Difference"] = ApplyDifferenceOfGaussian;
+    fsimple["Show Sift Descriptors"] = ApplySiftToImage;
 
 }
 
@@ -399,7 +399,7 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
                 wxFileDialog saveFileDialog(this,
                     wxEmptyString,
                     wxEmptyString,
-                    "pca.csv",
+                    "conotour.csv",
                     "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
                     wxFD_SAVE);
 
@@ -409,6 +409,41 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
                     std::string path = convertWxStringToString(spath);
 
                     image_info::createCSV(descriptors, path);
+                }
+            }
+        }
+        setOriginalImage();
+        return true;
+    }
+
+    if (_algorithm == "Find Sift Descriptors")
+    {
+        if (original.empty() == false)
+        {
+            Mat clone = original.clone();
+            Mat descriptors;
+            wxBusyInfo* wait = ProgramBusy();
+            std::vector < cv::KeyPoint >  kp = sift_algo::ApplySift(clone, descriptors);
+            Stop(wait);
+
+            if (wxYES == wxMessageBox(wxT("Save file?"),
+                wxT("Save file?"),
+                wxNO_DEFAULT | wxYES_NO | wxCANCEL | wxICON_INFORMATION,
+                this))
+            {
+
+                wxFileDialog saveFileDialog(this,
+                    wxEmptyString,
+                    wxEmptyString,
+                    "sift.csv",
+                    "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                    wxFD_SAVE);
+
+                if (saveFileDialog.ShowModal() == wxID_OK)
+                {
+                    wxString spath = saveFileDialog.GetPath();
+                    std::string path = convertWxStringToString(spath);
+                    sift_algo::createCSV(kp, path);
                 }
             }
         }

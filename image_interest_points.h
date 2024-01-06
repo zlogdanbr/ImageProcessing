@@ -172,11 +172,6 @@ namespace image_info
 	*/
 	void createCSV(Descriptors& descriptors, std::string fname);
 
-	/*
-	*		Creates a csv file with with sif descriptors called somewhere
-	*		else
-	*/
-	void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname);
 }
 
 namespace fast_algo
@@ -189,6 +184,12 @@ namespace fast_algo
 
 namespace sift_algo
 {
+	/*
+	*		Creates a csv file with with sif descriptors called somewhere
+	*		else
+	*/
+	void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname);
+
 	Mat ApplyAndCompareSIFT(std::vector<Mat>& images,
 		std::vector<std::string>& filenames);
 
