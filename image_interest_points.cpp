@@ -1,5 +1,6 @@
 #include "image_interest_points.h"
 #include <wx/busyinfo.h>
+#include "wx/msgdlg.h"
 #include "filesys.h"
 #include <fstream>
 
@@ -325,10 +326,17 @@ namespace sift_algo
             matcher.match(descriptor1, descriptor2, matches);
 
             // extract the show_matches best matches
-            int show_matches = min(kp1.size(), kp2.size());
-            show_matches = min(show_matches, 10);
-            std::nth_element(matches.begin(), matches.begin() + show_matches, matches.end());
-            matches.erase(matches.begin() + show_matches, matches.end());
+            int show_matches = min(static_cast<int>(matches.size()), 10);
+            try
+            {
+                std::nth_element(matches.begin(), matches.begin() + show_matches, matches.end());
+                matches.erase(matches.begin() + show_matches, matches.end());
+            }
+            catch (...)
+            {
+
+            }
+
         }
         else
         if (option == 1)
@@ -377,6 +385,38 @@ namespace sift_algo
         return result;
     }
 
+    std::string convertWxStringToString(const wxString wsx)
+    {
+        std::stringstream s;
+        s << wsx;
+        return s.str();
+    }
+
+    void saveCSV(std::vector < cv::KeyPoint >&  kp1)
+    {
+        if (wxYES == wxMessageBox(wxT("Save file?"),
+            wxT("Save file?"),
+            wxNO_DEFAULT | wxYES_NO | wxCANCEL | wxICON_INFORMATION,
+            nullptr))
+        {
+
+            wxFileDialog saveFileDialog(nullptr,
+                wxEmptyString,
+                wxEmptyString,
+                "pca.csv",
+                "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                wxFD_SAVE);
+
+            if (saveFileDialog.ShowModal() == wxID_OK)
+            {
+                wxString spath = saveFileDialog.GetPath();
+                std::string path = convertWxStringToString(spath);
+
+                image_info::createCSV(kp1, path);
+            }
+        }
+    }
+
     Mat ApplyAndCompareSIFT(   std::vector<Mat>& images, 
                                 std::vector<std::string>& filenames)
     {
@@ -395,14 +435,8 @@ namespace sift_algo
         std::vector < cv::KeyPoint >  kp1 = ApplySift(img1, descriptor1);
         std::vector < cv::KeyPoint >  kp2 = ApplySift(img2, descriptor2);
 
-        std::stringstream os1;
-        std::stringstream os2;
-
-        std::string f = createFolderAtHomeUser("\\dimage");
-        os1 << f << "\\" << "image_sift_" << getOnlyNameNoExt(filenames[0]) <<  ".csv";
-        image_info::createCSV(kp1, os1.str());
-        os2 << f << "\\" << "image_sift_" << getOnlyNameNoExt(filenames[1]) << ".csv";
-        image_info::createCSV(kp2, os2.str());
+        saveCSV(kp1);
+        saveCSV(kp2);
 
         Mat result = getMatchedImage(descriptor1, descriptor2, kp1, kp2, img1, img2);
 

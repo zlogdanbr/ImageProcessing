@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <wx/textdlg.h>
+#include "wx/msgdlg.h"
 #include "image_interest_points.h"
 #include "filesys.h"
 #include "pca.h"
@@ -346,18 +347,38 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
         {
             wxBusyInfo* wait = ProgramBusy();
             std::stringstream os = getEingenSpaceInfo(original);
-            std::stringstream os1;
-            std::string f = createFolderAtHomeUser("\\dimage\\");
-            os1 << f << "\\" << "pca" << ".csv";
-
-            std::ofstream myfile(os1.str());
-            if (myfile.is_open())
-            {
-                myfile << os.str();
-            }
-            myfile.close();
-
             Stop(wait);
+
+            if (wxYES == wxMessageBox(  wxT("Save file?"),
+                                        wxT("Save file?"),
+                                        wxNO_DEFAULT | wxYES_NO | wxCANCEL | wxICON_INFORMATION,
+                                        this))
+            {
+                std::stringstream os1;
+                std::string f = createFolderAtHomeUser("\\dimage\\");
+                os1 << f << "\\" << "pca" << ".csv";
+
+                wxFileDialog saveFileDialog(this,
+                                            wxEmptyString,
+                                            wxEmptyString,
+                                            "pca.csv",
+                                            "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                                            wxFD_SAVE);
+
+                if (saveFileDialog.ShowModal() == wxID_OK)
+                {
+                    wxString spath = saveFileDialog.GetPath();
+                    std::string path = convertWxStringToString(spath);
+
+                    std::ofstream myfile(path);
+                    if (myfile.is_open())
+                    {
+                        myfile << os.str();
+                    }
+                    myfile.close();
+                }
+            }
+            
         } 
         return true;
     }
@@ -390,12 +411,29 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
         {
             wxBusyInfo* wait = ProgramBusy();
             Descriptors descriptors = image_info::getImageDescriptors(original);
-            std::stringstream os1;
-            std::string f = createFolderAtHomeUser("\\dimage\\");
-            os1 << f << "\\" << "out_file" << ".csv";
-            image_info::createCSV(descriptors, os1.str());
             Stop(wait);
 
+            if (wxYES == wxMessageBox(wxT("Save file?"),
+                wxT("Save file?"),
+                wxNO_DEFAULT | wxYES_NO | wxCANCEL | wxICON_INFORMATION,
+                this))
+            {
+
+                wxFileDialog saveFileDialog(this,
+                    wxEmptyString,
+                    wxEmptyString,
+                    "pca.csv",
+                    "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                    wxFD_SAVE);
+
+                if (saveFileDialog.ShowModal() == wxID_OK)
+                {
+                    wxString spath = saveFileDialog.GetPath();
+                    std::string path = convertWxStringToString(spath);
+
+                    image_info::createCSV(descriptors, path);
+                }
+            }
         }
         setOriginalImage();
         return true;

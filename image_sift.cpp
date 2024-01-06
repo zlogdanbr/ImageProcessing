@@ -250,16 +250,16 @@ void CApplySift::doProcess()
 		return;
 	}
 
-	wxBusyInfo* wait = op_busy_sift::ProgramBusy();
+	//wxBusyInfo* wait = op_busy_sift::ProgramBusy();
 	try
 	{
 		Mat result = sift_algo::ApplyAndCompareSIFT(_images, _filenames);
-		op_busy_sift::Stop(wait);
+		//op_busy_sift::Stop(wait);
 		showImage(result, "Result");
 	}
 	catch (std::exception& e)
 	{
-		op_busy_sift::Stop(wait);
+		//op_busy_sift::Stop(wait);
 		std::string a = e.what();
 		wxMessageBox(a.c_str(), "Error", wxOK | wxICON_ERROR);
 	}
