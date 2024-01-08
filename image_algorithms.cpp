@@ -331,9 +331,6 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
                                         wxNO_DEFAULT | wxYES_NO | wxCANCEL | wxICON_INFORMATION,
                                         this))
             {
-                std::stringstream os1;
-                std::string f = createFolderAtHomeUser("\\dimage\\");
-                os1 << f << "\\" << "pca" << ".csv";
 
                 wxFileDialog saveFileDialog(this,
                                             wxEmptyString,

@@ -276,18 +276,12 @@ namespace sift_algo
     void createCSV(std::vector < cv::KeyPoint >& descriptors, std::string fname)
     {
         std::ofstream myfile(fname);
-        int i = 0;
+
         if (myfile.is_open())
         {
+            myfile << "x,y,size,angle,response,octave,class_id" << std::endl;
             for (const auto& descriptor : descriptors)
             {
-                if (i == 0)
-                {
-                    myfile << "x,y,size,angle,response,octave,class_id" << std::endl;
-                    i++;
-                    continue;
-                }
-
                 // write fields to s
                 std::stringstream s;
                 s << descriptor.pt.x << ",";
