@@ -797,17 +797,20 @@ void drawSquaresAtImgFromRoi(Mat& img, Rect& roi)
 
 }
 
-Mat FindFacesAndDrawRectangles(Mat& img)
+Mat FindFacesAndDrawRectangles(const Mat& img)
 {
-    Mat clone = convertograyScale(img);
-    std::vector<Rect> faces = detectFacesInImage(img);
+    Mat gray;
+    cvtColor(img, gray, COLOR_BGR2GRAY);
+    equalizeHist(gray, gray);
+
+    std::vector<Rect> faces = detectFacesInImage(gray);
 
     for (auto& roi : faces)
     {
-        drawSquaresAtImgFromRoi(clone, roi);
+        drawSquaresAtImgFromRoi(gray, roi);
     }
 
-    return clone;
+    return gray;
 }
 
 
@@ -826,8 +829,6 @@ std::vector<Rect> detectFacesInImage(Mat& img)
 }
 
 // Only worked on linux Windows 10
-// Apparently there is some internal driver that prevents me from using
-// cascade classifiers
 // https://docs.opencv.org/3.4/db/d28/tutorial_cascade_classifier.html
 std::vector<Rect> detectEyesInImage(Mat& img)
 {

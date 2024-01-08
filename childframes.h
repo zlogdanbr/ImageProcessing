@@ -24,6 +24,7 @@
 #include "logs.h"
 #include "filesys.h"
 #include "image_util.h"
+#include "pca.h"
 
 
 using namespace image_util;
@@ -500,6 +501,8 @@ public:
     bool IsOK;
 
 };
+
+void ShowPCA(std::vector<std::vector<Point> >& contours);
 
 
 

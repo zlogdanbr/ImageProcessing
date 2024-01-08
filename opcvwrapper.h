@@ -170,7 +170,7 @@ Mat ApplySiftToImage(const Mat& img);
 /*************************************************************************************/
 std::vector<Rect> detectFacesInImage(Mat& img);
 std::vector<Rect> detectEyesInImage(Mat& img);
-Mat FindFacesAndDrawRectangles(Mat& img);
+Mat FindFacesAndDrawRectangles(const Mat& img);
 
 #endif
 

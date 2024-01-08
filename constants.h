@@ -53,6 +53,7 @@ namespace image_constants
 		"Find Sift Descriptors",
 		"Show Sift Descriptors",
 		"Create PCA file",
-		"Apply Custom Kernel"
+		"Apply Custom Kernel",
+		"Find Faces"
 	};
 }

@@ -8,6 +8,7 @@
 #include "filesys.h"
 #include "pca.h"
 #include <fstream>
+#include <CvPlot/cvplot.h>
 
 CInputDialog::CInputDialog(     wxWindow* parent,
                                 const Mat& original,
@@ -188,6 +189,7 @@ void CInputDialog::setSimpleMaps()
     fsimple["Find Contourns ( Canny )"] = ApplyFindContournsCanny;
     fsimple["Gaussian Difference"] = ApplyDifferenceOfGaussian;
     fsimple["Show Sift Descriptors"] = ApplySiftToImage;
+    fsimple["Find Faces"] = FindFacesAndDrawRectangles;
 
 }
 
@@ -315,6 +317,36 @@ double Distance(const ImageDescriptors& lhs, const ImageDescriptors& rhs)
     return sqrt(pow(xrhs - xlhs, 2) + pow(yrhs - ylhs, 2));
 }
 
+void ShowPCA(eigenSpace& _espace)
+{
+    eigenvectors evectors = _espace.first;
+    eigenvalues  evalues = _espace.second;
+    auto axes = CvPlot::makePlotAxes();
+
+    std::vector<double> x1;    
+    std::vector<double> y1;
+
+    for (const auto& ev : evalues)
+    {
+        // using eigenvector = std::vector<Point2d>;
+        // using eigenvectors = std::vector< eigenvector >;
+        // using eigenvalues = std::vector< eigenvalue  >;
+        // using eigenvalue = std::vector<double>;
+
+        for (const auto& e : ev)
+        {
+            double x = e;
+            x1.push_back(x);
+        }
+    }
+    
+
+    axes.create<CvPlot::Series>(x1, "-g");
+
+    CvPlot::show("mywindow", axes);
+}
+
+
 bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
 {
 
@@ -322,8 +354,9 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
     {
         if (original.empty() == false)
         {
+            eigenSpace _espace;
             wxBusyInfo* wait = ProgramBusy();
-            std::stringstream os = getEingenSpaceInfo(original);
+            std::stringstream os = getEingenSpaceInfo(original, _espace);
             Stop(wait);
 
             if (wxYES == wxMessageBox(  wxT("Save file?"),
@@ -352,7 +385,9 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
                     myfile.close();
                 }
             }
-            
+
+            // let's show some graphics
+            ShowPCA(_espace);
         } 
         return true;
     }

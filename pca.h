@@ -21,7 +21,7 @@ using Angles = std::vector<double>;
 std::vector<std::vector<Point> > getContourns(const Mat& img);
 eigenSpace getEingenSpace(const contourns& contours, Mat& src, centers& _centers);
 PointValue getEingenFromContourn(const std::vector<Point>& pts, Mat& img, center& c);
-std::stringstream getEingenSpaceInfo(const Mat& img);
+std::stringstream getEingenSpaceInfo(const Mat& img, eigenSpace& _espace);
 PCA getPCAAnalysis(const std::vector<Point>& pts);
 
 double calculateDistance2D(eigenvector& e);

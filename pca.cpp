@@ -146,7 +146,7 @@ std::vector<std::vector<Point> > getContourns(const Mat& img)
 /*
 *   Prints all the relevant information about contourns 
 */
-std::stringstream  getEingenSpaceInfo(const Mat& img)
+std::stringstream  getEingenSpaceInfo(const Mat& img, eigenSpace& _espace)
 {
     std::stringstream outinfo;
     //------------------------------------------------------------------------
@@ -160,7 +160,7 @@ std::stringstream  getEingenSpaceInfo(const Mat& img)
     //------------------------------------------------------------------------
     centers _centers;
     Mat clone = img.clone();
-    eigenSpace _espace = getEingenSpace(contours, clone, _centers);
+    _espace = getEingenSpace(contours, clone, _centers);
 
     //------------------------------------------------------------------------
     //  Step 3 : Print values to a stringstream
