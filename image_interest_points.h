@@ -165,7 +165,7 @@ namespace image_info
 	*		gets image descriptors using parameters like 
 	*		centroid, area, perimeter etc
 	*/
-	Descriptors getImageDescriptors(const Mat& img);
+	Descriptors getImageDescriptors(const Mat& img, int opt = 0);
 
 	/*
 	*		Creates a csv file with the descriptors from the above function

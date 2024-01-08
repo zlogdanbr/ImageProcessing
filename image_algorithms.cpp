@@ -387,7 +387,7 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
         if (original.empty() == false)
         {
             wxBusyInfo* wait = ProgramBusy();
-            Descriptors descriptors = image_info::getImageDescriptors(original);
+            Descriptors descriptors = image_info::getImageDescriptors(original,0);
             Stop(wait);
 
             if (wxYES == wxMessageBox(wxT("Save file?"),

@@ -120,7 +120,7 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
 
 namespace image_info
 {
-    Descriptors getImageDescriptors(const Mat& img)
+    Descriptors getImageDescriptors(const Mat& img, int opt)
     {
 
         Descriptors out;
@@ -141,7 +141,20 @@ namespace image_info
 
             std::pair<int, int> centroid = hull.getCentroid(object.momInertia);
 
-            if (Area < 1e2 || 1e5 < Area) continue;
+            if (opt == 0)
+            {
+                if (Area < 1e2 || 1e5 < Area) continue;
+            }
+            else
+            if (opt == 1)
+            {
+                if (r_factor < 0.6) continue;
+            }
+            else
+            if (opt == 2)
+            {
+                if (orientation > 180) continue;
+            }
 
             ImageDescriptors d;
 
@@ -177,17 +190,12 @@ namespace image_info
         std::sort(descriptors.begin(), descriptors.end());
 
         std::ofstream myfile(fname);
-        int i = 0;
+
         if (myfile.is_open())
         {
+            myfile << "Area,Perimeter,roundness,orientation,cx,cy,h0,h1,h2,h3,h4,h5,h6" << std::endl;
             for (const auto& descriptor : descriptors)
             {
-                if (i == 0)
-                {
-                    myfile << "Area,Perimeter,roundness,orientation,cx,cy,h0,h1,h2,h3,h4,h5,h6" << std::endl;
-                    i++;
-                    continue;
-                }
                 std::stringstream s;
                 s << descriptor.Area << "," <<
                     descriptor.perimeter << "," <<
