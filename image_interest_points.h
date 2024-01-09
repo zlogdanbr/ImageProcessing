@@ -172,6 +172,12 @@ namespace image_info
 	*/
 	void createCSV(Descriptors& descriptors, std::string fname);
 
+	/*
+	*		Creates countourns info
+	*		it will be used for processing
+	*/
+	ObjectsCollection getContournInfo(const Mat& img);
+
 }
 
 namespace fast_algo

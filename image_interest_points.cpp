@@ -120,6 +120,35 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
 
 namespace image_info
 {
+    /*
+    *  we can use
+    *               double Area = hull.getArea(object.region);
+    *               double perimeter = arcLength(object.region, true);
+    *               double r_factor = hull.getRoundNess(object.region);
+    *               double orientation = hull.getOrientation(object.momInertia)
+    * 
+    *                double Huh[7];
+    *                for (auto& h : Huh)
+    *                {
+    *                    h = 0;
+    *                }
+    *
+    *                HuMoments(object.momInertia, Huh);
+    *
+    *                for (int i = 0; i < 7; i++)
+    *                {
+    *                    d.HuMoments[i] = -1 * copysign(1.0, Huh[i]) * log10(abs(Huh[i]));
+    *                }
+    */
+    ObjectsCollection getContournInfo(const Mat& img)
+    {
+        CImageComponentsDescriptorHull hull(img);
+
+        hull.detectRegions(CHAIN_APPROX_SIMPLE);
+        hull.getObjectsInfo();
+        return hull.getImageFullInformation();
+    }
+
     Descriptors getImageDescriptors(const Mat& img, int opt)
     {
 
