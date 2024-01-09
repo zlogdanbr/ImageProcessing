@@ -56,6 +56,7 @@ private:
     void onImageDraw(wxCommandEvent& event);
     void onApplyTemplate(wxCommandEvent& event);
     void onApplyTemplateFull(wxCommandEvent& event);
+    void onApplyHuh(wxCommandEvent& event);
 
     enum  Opt 
     {
@@ -67,7 +68,8 @@ private:
         MAKE_SAME_SIZE,
         DRAW_ON_IMAGE,
         TEMPLATE_ID,
-        TEMPLATE_ID_FULL
+        TEMPLATE_ID_FULL,
+        HUHID,
     };
 
     void BinAllEvents()
@@ -82,6 +84,7 @@ private:
         Bind(wxEVT_MENU, &MyFrame::onImageDraw, this, DRAW_ON_IMAGE);
         Bind(wxEVT_MENU, &MyFrame::onApplyTemplate, this, TEMPLATE_ID); 
         Bind(wxEVT_MENU, &MyFrame::onApplyTemplateFull, this, TEMPLATE_ID_FULL);
+        Bind(wxEVT_MENU, &MyFrame::onApplyHuh, this, HUHID);
                 
     }
 
@@ -98,6 +101,9 @@ private:
 
         auto menuTemplateFull = menuAlgo->Append(TEMPLATE_ID_FULL, "Local Template Matching", "Image Space");
         menuTemplateFull->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
+
+        auto menuHuh = menuAlgo->Append(HUHID, "Compare using Huh Moments", "Image Space");
+        menuHuh->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
     }
 };

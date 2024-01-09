@@ -276,6 +276,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="COpenCVDraw.cpp" />
     <ClCompile Include="filesys.cpp" />
     <ClCompile Include="image_gridialog.cpp" />
+    <ClCompile Include="image_humoments.cpp" />
     <ClCompile Include="image_interest_points.cpp" />
     <ClCompile Include="image_io.cpp" />
     <ClCompile Include="image_algorithms.cpp" />

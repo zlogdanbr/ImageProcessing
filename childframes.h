@@ -464,6 +464,23 @@ public:
     virtual void doProcess() override;
 };
 
+class CMatchHuMomments : public CLoadImageSetBase
+{
+private: 	
+    std::stringstream os;
+public:
+    CMatchHuMomments(wxWindow* parent,
+        CWriteLogs* outxt,
+        wxWindowID id = wxID_ANY,
+        const wxString& title = wxEmptyString,
+        int inputs = 5);
+
+    virtual void doProcess() override;
+
+    std::string getInfo() { return os.str(); };
+};
+
+
 struct template_info
 {
     wxString mode = "TM_SQDIFF";

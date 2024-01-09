@@ -74,6 +74,19 @@ void MyFrame::onApplySIFT(wxCommandEvent& event)
     }
 }
 
+void MyFrame::onApplyHuh(wxCommandEvent& event)
+{
+    CMatchHuMomments ImgSet(this, &outxt, -1, "Select Images", 8);
+    ImgSet.ShowModal();
+    if (ImgSet.IsoK)
+    {
+        ImgSet.doProcess();
+        wxString out = ImgSet.getInfo().c_str();
+        outxt.writeTo( out );
+        outxt.writeTo("End.");
+    }
+}
+
 void MyFrame::onApplyTemplate(wxCommandEvent& event)
 {
     CMatchTemplate ImgSet(this, &outxt, -1, "Select Images", 2);
