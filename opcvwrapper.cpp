@@ -224,7 +224,7 @@ void plotHistogram(const Mat& img)
         _histogram.push_back(hist.at<float>(i));
     }
 
-    bar(_histogram);
+    matplot::hist(_histogram);
 
     show();
 

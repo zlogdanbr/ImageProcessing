@@ -9,6 +9,7 @@
 #include "pca.h"
 #include <fstream>
 #include <CvPlot/cvplot.h>
+#include <matplot/matplot.h>
 
 CInputDialog::CInputDialog(     wxWindow* parent,
                                 const Mat& original,
@@ -322,12 +323,11 @@ void ShowPCA(eigenSpace& _espace)
 {
     eigenvectors evectors = _espace.first;
     eigenvalues  evalues = _espace.second;
-    auto axes = CvPlot::makePlotAxes();
 
     std::vector<double> x1;    
     std::vector<double> y1;
 
-    for (const auto& ev : evalues)
+    for (const auto& ev : evectors)
     {
         // using eigenvector = std::vector<Point2d>;
         // using eigenvectors = std::vector< eigenvector >;
@@ -336,15 +336,15 @@ void ShowPCA(eigenSpace& _espace)
 
         for (const auto& e : ev)
         {
-            double x = e;
-            x1.push_back(x);
+            x1.push_back(e.x);
+            y1.push_back(e.y);
         }
+
     }
     
+    matplot::feather(x1, y1);
+    matplot::show();
 
-    axes.create<CvPlot::Series>(x1, "-g");
-
-    CvPlot::show("mywindow", axes);
 }
 
 
