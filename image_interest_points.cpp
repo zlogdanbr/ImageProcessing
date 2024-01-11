@@ -279,7 +279,7 @@ namespace image_info
             return clone;
         }
 
-        Moments moments = cv::moments(clone, true);
+        Moments moments = cv::moments(clone, false);
         double huMoments[7];
         HuMoments(moments, huMoments);
         std::vector<double> MomentsToMatch;

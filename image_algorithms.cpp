@@ -11,6 +11,7 @@
 #include <CvPlot/cvplot.h>
 #include <matplot/matplot.h>
 
+
 CInputDialog::CInputDialog(     wxWindow* parent,
                                 const Mat& original,
                                 wxWindowID id, 
