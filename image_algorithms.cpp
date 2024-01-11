@@ -190,6 +190,7 @@ void CInputDialog::setSimpleMaps()
     fsimple["Gaussian Difference"] = ApplyDifferenceOfGaussian;
     fsimple["Show Sift Descriptors"] = ApplySiftToImage;
     fsimple["Find Faces"] = FindFacesAndDrawRectangles;
+    fsimple["Locate"] = image_info::locateObjectAtImage;
 
 }
 
@@ -414,37 +415,12 @@ bool CInputDialog::DoFunctionBasedOnNameAlgo(wxString& _algorithm)
         return true;
     }
 
-    if (_algorithm == "Find Contourns Descriptors")
+    if (_algorithm == "Histogram")
     {
         if (original.empty() == false)
         {
-            wxBusyInfo* wait = ProgramBusy();
-            Descriptors descriptors = image_info::getImageDescriptors(original,0);
-            Stop(wait);
-
-            if (wxYES == wxMessageBox(wxT("Save file?"),
-                wxT("Save file?"),
-                wxNO_DEFAULT | wxYES_NO | wxCANCEL | wxICON_INFORMATION,
-                this))
-            {
-
-                wxFileDialog saveFileDialog(this,
-                    wxEmptyString,
-                    wxEmptyString,
-                    "conotour.csv",
-                    "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
-                    wxFD_SAVE);
-
-                if (saveFileDialog.ShowModal() == wxID_OK)
-                {
-                    wxString spath = saveFileDialog.GetPath();
-                    std::string path = convertWxStringToString(spath);
-
-                    image_info::createCSV(descriptors, path);
-                }
-            }
+            plotHistogram(original);
         }
-        setOriginalImage();
         return true;
     }
 

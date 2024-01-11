@@ -1,6 +1,7 @@
 #pragma once
 
 #include "opcvwrapper.h"
+#include "savekernel.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -113,12 +114,6 @@ public:
 
 	void detectRegions(int mode1 = RETR_CCOMP, int mode2 = CHAIN_APPROX_NONE);
 	ObjectsCollection getImageFullInformation()const { return Objects; };
-
-	std::pair<int, int> getCentroid(cv::Moments& momInertia) const;
-	double getOrientation(cv::Moments& momInertia) const;
-	double getArea(std::vector<cv::Point>& region) const;
-	double getPerimeter(std::vector<cv::Point>& region, bool closed = true) const;
-	double getRoundNess(std::vector<cv::Point>& region);
 	
 	// implement for each type of contour you are using
 	virtual void getObjectsInfo() = 0;
@@ -161,22 +156,31 @@ public:
 
 namespace image_info
 {
-	/*
-	*		gets image descriptors using parameters like 
-	*		centroid, area, perimeter etc
-	*/
-	Descriptors getImageDescriptors(const Mat& img, int opt = 0);
 
-	/*
-	*		Creates a csv file with the descriptors from the above function
-	*/
-	void createCSV(Descriptors& descriptors, std::string fname);
+	std::string getHuhMomentsLine(Mat& img);
+	std::vector<std::vector<double>> getMatchingInfo(std::string& filename);
+	std::pair<int, int> getCentroid(cv::Moments& momInertia);
+	std::string convertWxStringToString(const wxString wsx);
 
-	/*
-	*		Creates countourns info
-	*		it will be used for processing
-	*/
+	double getArea(std::vector<cv::Point>& region);
+	double getPerimeter(std::vector<cv::Point>& region, bool closed);
+	double getRoundNess(std::vector<cv::Point>& region);
+	double getOrientation(cv::Moments& momInertia);
+	void getHuMoments(std::vector<cv::Point>& region, double* huh);
+	std::string getHuhMomentsLine(Mat& img);
+	
+	std::string loadDescriptorFile();
+
+	int readCSV2(	std::vector<std::vector<double>>& obs,
+					int nfields,
+					bool ignoreheader,
+					std::string& filename);
+
+	bool MatchDescLine(std::vector<double>& huh_vector, std::vector<double>& vec);
+
 	ObjectsCollection getContournInfo(const Mat& img);
+
+	Mat locateObjectAtImage(const Mat& img);
 
 }
 

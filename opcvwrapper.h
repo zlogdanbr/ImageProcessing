@@ -7,6 +7,7 @@
 #define _CVWRAPPER_
 
 #include "image_util.h"
+#include <matplot/matplot.h>
 
 
 /*************************************************************************************
@@ -34,6 +35,8 @@ Mat adjustContrast(const Mat& img, int factor);
 Mat adjustBrightness(const Mat& img, int factor);
 
 Mat adjustGama(const Mat& img, double);
+
+void plotHistogram(const Mat& img);
 
 /*************************************************************************************
 *   Gray Scale
@@ -158,6 +161,7 @@ Mat ApplyCannyAlgoFull(const Mat& img, int threshold = 125, int aperture = 350);
 Mat ApplyDifferenceOfGaussian(const Mat& im);
 Mat ApplyFindContournsThreshold(const Mat& img);
 Mat ApplyFindContournsCanny(const Mat& img);
+
 
 /*************************************************************************************
 *   SIFT

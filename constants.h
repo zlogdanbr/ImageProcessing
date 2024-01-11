@@ -18,6 +18,7 @@ namespace image_constants
 		"Convert to Gray Scale",
 		"Equalize Gray Scale Image",
 		"Equalize Color Scale Image",
+		"Histogram",
 		"Flip Image Horizontally",
 		"Flip Image Vertically",
 		"Flip Image",
@@ -49,11 +50,11 @@ namespace image_constants
 		"Hough Transform Circles",
 		"Find Contourns ( Threshold )",
 		"Find Contourns ( Canny )",
-		"Find Contourns Descriptors",
 		"Find Sift Descriptors",
 		"Show Sift Descriptors",
 		"Create PCA file",
 		"Apply Custom Kernel",
-		"Find Faces"
+		"Find Faces",
+		"Locate"
 	};
 }

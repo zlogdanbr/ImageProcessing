@@ -94,8 +94,16 @@ void showImage(const Mat& img, const std::string& title)
     {
         auto axes = CvPlot::plotImage(clone);
         cv::Mat mat = axes.render(clone.size().width, clone.size().height);
-        CvPlot::show(title, axes);
-        waitKey(0);
+        try
+        {
+            CvPlot::show(title, axes);
+            waitKey(0);
+        }
+        catch (cv::Exception& e)
+        {
+            std::cerr << e.msg << std::endl;
+        }
+
     }
     catch (...)
     {
@@ -174,6 +182,53 @@ Mat getBinaryImage(const Mat& img)
     
     threshold(bw, bw, 40, 255, THRESH_BINARY | THRESH_OTSU);
     return bw;
+}
+
+void plotHistogram(const Mat& img)
+{
+    using namespace matplot;
+    Mat hsv;
+    cvtColor(img, hsv, COLOR_BGR2HSV);
+
+    // Quantize the hue to 30 levels
+    // and the saturation to 32 levels
+    int hbins = 30, sbins = 32;
+    int histSize[] = { hbins, sbins };
+
+    // hue varies from 0 to 179, see cvtColor
+    float hranges[] = { 0, 180 };
+
+    // saturation varies from 0 (black-gray-white) to
+    // 255 (pure spectrum color)
+    float sranges[] = { 0, 256 };
+
+    const float* ranges[] = { hranges, sranges };
+    Mat hist;
+    // we compute the histogram from the 0-th and 1-st channels
+    int channels[] = { 0, 1 };
+    calcHist(   &hsv, 
+                1,
+                channels, 
+                Mat(), // do not use mask
+                hist, 
+                2, 
+                histSize, 
+                ranges,
+                true, // the histogram is uniform
+                false);
+
+    std::vector<float> _histogram;
+
+    for (int i = 0; i < 256; i++)
+    {
+        _histogram.push_back(hist.at<float>(i));
+    }
+
+    bar(_histogram);
+
+    show();
+
+
 }
 
 //https://docs.opencv.org/4.x/d4/d1b/tutorial_histogram_equalization.html

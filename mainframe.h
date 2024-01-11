@@ -102,7 +102,7 @@ private:
         auto menuTemplateFull = menuAlgo->Append(TEMPLATE_ID_FULL, "Local Template Matching", "Image Space");
         menuTemplateFull->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
-        auto menuHuh = menuAlgo->Append(HUHID, "Compare using Huh Moments", "Image Space");
+        auto menuHuh = menuAlgo->Append(HUHID, "Create Descriptors file(Huh Moments)", "Image Space");
         menuHuh->SetBitmap(wxArtProvider::GetBitmap(wxART_TICK_MARK, wxART_MENU));
 
     }

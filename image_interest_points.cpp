@@ -3,7 +3,7 @@
 #include "wx/msgdlg.h"
 #include "filesys.h"
 #include <fstream>
-
+#include <matplot/matplot.h>
 
 void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
 {
@@ -26,51 +26,6 @@ void CImageComponentsDescriptorBase::detectRegions(int mode1, int mode2)
     // Find all the contours in the thresholded image
     findContours(canny_output, raw_contourns, mode1, mode2);
 }
-
-std::pair<int, int> CImageComponentsDescriptorBase::getCentroid(cv::Moments& momInertia) const
-{
-    int cx = momInertia.m10 / momInertia.m00;
-    int cy = momInertia.m01 / momInertia.m00;
-    std::pair<int, int> p(cx, cy);
-    return p;
-}
-
-double CImageComponentsDescriptorBase::getArea(std::vector<cv::Point>& region) const
-{
-    return contourArea(region);
-}
-
-double CImageComponentsDescriptorBase::getPerimeter(std::vector<cv::Point>& region, bool closed) const
-{
-    return arcLength(region, closed);
-}
-
-double CImageComponentsDescriptorBase::getRoundNess(std::vector<cv::Point>& region)
-{
-    double Area = getArea(region);
-    double Perimeter = getPerimeter(region);
-
-    return 4*CV_PI*( Area/pow(Perimeter,2));
-}
-
-double CImageComponentsDescriptorBase::getOrientation(cv::Moments& momInertia) const
-{
-    double u11 = momInertia.m11;
-    double u20 = momInertia.m20;
-    double u02 = momInertia.m02;
-
-    double factor = ( 2 * u11 )/ (u20 - u02);
-    double angle =  0.5 * atan(factor);
-
-    double degrees = angle * (180.0 / CV_PI);
-
-    if (degrees < 0)
-    {
-        degrees = 180 + degrees;
-    }
-    return degrees;
-}
-
 
 void CImageComponentsDescriptorNormal::getObjectsInfo()
 {
@@ -120,26 +75,6 @@ void CImageComponentsDescriptorAprox::getObjectsInfo()
 
 namespace image_info
 {
-    /*
-    *  we can use
-    *               double Area = hull.getArea(object.region);
-    *               double perimeter = arcLength(object.region, true);
-    *               double r_factor = hull.getRoundNess(object.region);
-    *               double orientation = hull.getOrientation(object.momInertia)
-    * 
-    *                double Huh[7];
-    *                for (auto& h : Huh)
-    *                {
-    *                    h = 0;
-    *                }
-    *
-    *                HuMoments(object.momInertia, Huh);
-    *
-    *                for (int i = 0; i < 7; i++)
-    *                {
-    *                    d.HuMoments[i] = -1 * copysign(1.0, Huh[i]) * log10(abs(Huh[i]));
-    *                }
-    */
     ObjectsCollection getContournInfo(const Mat& img)
     {
         CImageComponentsDescriptorHull hull(img);
@@ -149,110 +84,225 @@ namespace image_info
         return hull.getImageFullInformation();
     }
 
-    Descriptors getImageDescriptors(const Mat& img, int opt)
+    std::pair<int, int> getCentroid(cv::Moments& momInertia)
     {
+        int cx = momInertia.m10 / momInertia.m00;
+        int cy = momInertia.m01 / momInertia.m00;
+        std::pair<int, int> p(cx, cy);
+        return p;
+    }
 
-        Descriptors out;
+    double getArea(std::vector<cv::Point>& region)
+    {
+        return contourArea(region);
+    }
 
-        CImageComponentsDescriptorHull hull(img);
+    double getPerimeter(std::vector<cv::Point>& region, bool closed)
+    {
+        return arcLength(region, closed);
+    }
 
-        hull.detectRegions(CHAIN_APPROX_SIMPLE);
-        hull.getObjectsInfo();
-        ObjectsCollection Information = hull.getImageFullInformation();
-        int objectsIndex = 0;
-        for (auto& object : Information)
+    double getRoundNess(std::vector<cv::Point>& region)
+    {
+        double Area = getArea(region);
+        double Perimeter = getPerimeter(region,true);
+
+        return 4 * CV_PI * (Area / pow(Perimeter, 2));
+    }
+
+    double getOrientation(cv::Moments& momInertia) 
+    {
+        double u11 = momInertia.m11;
+        double u20 = momInertia.m20;
+        double u02 = momInertia.m02;
+
+        double factor = (2 * u11) / (u20 - u02);
+        double angle = 0.5 * atan(factor);
+
+        double degrees = angle * (180.0 / CV_PI);
+
+        if (degrees < 0)
         {
+            degrees = 180 + degrees;
+        }
+        return degrees;
+    }
 
-            double Area = hull.getArea(object.region);
-            double perimeter = arcLength(object.region, true);
-            double r_factor = hull.getRoundNess(object.region);
-            double orientation = hull.getOrientation(object.momInertia);
-
-            std::pair<int, int> centroid = hull.getCentroid(object.momInertia);
-
-            if (opt == 0)
-            {
-                if (Area < 1e2 || 1e5 < Area) continue;
-            }
-            else
-            if (opt == 1)
-            {
-                if (r_factor < 0.6) continue;
-            }
-            else
-            if (opt == 2)
-            {
-                if (orientation > 180) continue;
-            }
-
-            ImageDescriptors d;
-
-            d.Area = Area;
-            d.perimeter = perimeter;
-            d.r_factor = r_factor;
-            d.orientation = orientation;
-            d.convex = object.convex;
-            d.centroid = centroid;
-
-            double Huh[7];
-            for (auto& h : Huh)
-            {
-                h = 0;
-            }
-
-            HuMoments(object.momInertia, Huh);
+    void getHuMoments(std::vector<cv::Point>& region, double* huh)
+    {
+        if (huh != nullptr)
+        {
+            Moments moments = cv::moments(region, false);
+            HuMoments(moments, huh);
 
             for (int i = 0; i < 7; i++)
             {
-                d.HuMoments[i] = -1 * copysign(1.0, Huh[i]) * log10(abs(Huh[i]));
+                huh[i] = -1 * copysign(1.0, huh[i]) * log10(abs(huh[i]));
             }
-
-            out.emplace_back(d);
         }
-
-        return out;
     }
 
-
-
-
-    void createCSV(Descriptors& descriptors, std::string fname)
+    std::string getHuhMomentsLine(Mat& img)
     {
-        std::sort(descriptors.begin(), descriptors.end());
+        std::stringstream os;
+        Mat clone = convertograyScale(img);
+        // Calculate Moments 
+        Moments moments = cv::moments(clone, false);
+        // Calculate Hu Moments 
+        double huMoments[7];
+        HuMoments(moments, huMoments);
 
-        std::ofstream myfile(fname);
-
-        if (myfile.is_open())
+        for (int i = 0; i < 7; i++)
         {
-            myfile << "Area,Perimeter,roundness,orientation,cx,cy,h0,h1,h2,h3,h4,h5,h6" << std::endl;
-            for (const auto& descriptor : descriptors)
-            {
-                std::stringstream s;
-                s << descriptor.Area << "," <<
-                    descriptor.perimeter << "," <<
-                    descriptor.r_factor << "," <<
-                    descriptor.centroid.first << "," <<
-                    descriptor.centroid.second << "," <<
-                    descriptor.orientation << ",";
+            huMoments[i] = -1 * copysign(1.0, huMoments[i]) * log10(abs(huMoments[i]));
+        }
 
-                for (int i = 0; i < 7; i++)
+        for (const auto& h : huMoments)
+        {
+            os << h << ",";
+        }
+
+        os << std::endl;
+        return os.str();
+    }
+
+    std::string convertWxStringToString(const wxString wsx)
+    {
+        std::stringstream s;
+        s << wsx;
+        return s.str();
+    }
+
+    int readCSV2(  std::vector<std::vector<double>>& obs,
+                   int nfields,
+                   bool ignoreheader,
+                   std::string& filename)
+    {
+        std::ifstream myFile;
+        myFile.open(filename, std::ios_base::in);
+
+        if (myFile.is_open())
+        {
+            while (myFile.good())
+            {
+
+                std::string Line;
+                getline(myFile, Line);
+
+                if (ignoreheader == true)
                 {
-                    if (i == 6)
+                    ignoreheader = false;
+                    continue;
+                }
+
+                if (Line.length() == 0)
+                {
+                    break;
+                }
+
+                int pos = 0;
+                int start = 0;
+                std::vector<double> ob;
+                int cnt = 0;
+                while (pos != -1)
+                {
+                    if (cnt < nfields)
                     {
-                        s << descriptor.HuMoments[i] << std::endl;
+                        pos = static_cast<int>(Line.find(',', start));
+                        std::string tmp = Line.substr(start, pos - start);
+                        start = pos + 1;
+                        double f = stof(tmp);
+                        ob.push_back(f);
+                        cnt++;
                     }
                     else
                     {
-                        s << descriptor.HuMoments[i] << ",";
+                        break;
                     }
-                    
                 }
-
-                myfile << s.str();
-
+                obs.push_back(ob);
             }
-            myfile.close();
+            myFile.close();
         }
+        else
+        {
+            return -1;
+        }
+
+        return 0;
+    };
+
+    std::vector<std::vector<double>> getMatchingInfo(std::string& filename)
+    {
+        std::vector<std::vector<double>> data;
+        readCSV2(data, 7, true, filename);
+        return data;
+    }
+
+    std::string loadDescriptorFile()
+    {
+        wxFileDialog openFileDialog(nullptr,
+        wxEmptyString,
+        wxEmptyString,
+        wxEmptyString,
+        "csv file (*.csv)|*.csv|All Files (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+        std::string spath;
+        if (openFileDialog.ShowModal() == wxID_OK)
+        {
+            wxString path = openFileDialog.GetPath();
+            spath = convertWxStringToString(path);
+        }
+        return spath;
+    }
+
+    bool MatchDescLine(std::vector<double>& huh_vector, std::vector<double>& vec)
+    {
+        double err = abs(huh_vector[0] - vec[0]);
+        return err <= 0.1;
+    }
+
+    Mat locateObjectAtImage(const Mat& img)
+    {
+        Mat clone = convertograyScale(img);
+        Mat final = img.clone();
+        std::string path = loadDescriptorFile();
+
+        if (path == "")
+        {
+            return clone;
+        }
+
+        std::vector<std::vector<double>> lookup_info = getMatchingInfo(path);
+
+        if (lookup_info.empty())
+        {
+            return clone;
+        }
+
+        Moments moments = cv::moments(clone, true);
+        double huMoments[7];
+        HuMoments(moments, huMoments);
+        std::vector<double> MomentsToMatch;
+
+        for (int i = 0; i < 7; i++)
+        {
+            huMoments[i] = -1 * copysign(1.0, huMoments[i]) * log10(abs(huMoments[i]));
+            MomentsToMatch.push_back(huMoments[i]);
+        }
+
+        bool found = false;
+        for (auto& _v : lookup_info)
+        {
+            if (MatchDescLine(MomentsToMatch, _v) == true)
+            {
+                found = true;
+                auto p = getCentroid(moments);
+                Point pt1 = Point(p.first, p.second);
+                circle(final, pt1, 1, Scalar(50, 255, 1), 10);
+            }
+        }
+        
+        return final;
     }
 
 }
@@ -434,7 +484,7 @@ namespace sift_algo
             wxFileDialog saveFileDialog(nullptr,
                 wxEmptyString,
                 wxEmptyString,
-                "pca.csv",
+                "sift.csv",
                 "Text Files (*.csv)|*.csv|All Files (*.*)|*.*",
                 wxFD_SAVE);
 

@@ -119,9 +119,11 @@ OpenCV:
 
 https://opencv.org
 
-The excellent graphics lib:
+The excellent graphics libs:
 
 https://github.com/Profactor/cv-plot
+
+https://alandefreitas.github.io/matplotplusplus/
 
 ### Tools used
 
@@ -131,6 +133,7 @@ https://github.com/Profactor/cv-plot
 - wxWdigets 3.2.1
 - wxFormBuilder. Get it at  https://github.com/wxFormBuilder/wxFormBuilder
 - https://github.com/Profactor/cv-plot
+- https://alandefreitas.github.io/matplotplusplus/
 
 
 Python soon will be required.
