@@ -205,7 +205,7 @@ void plotHistogram(const Mat& img)
     const float* ranges[] = { hranges, sranges };
     Mat hist;
     // we compute the histogram from the 0-th and 1-st channels
-    int channels[] = { 0, 1 };
+    int channels[] = { 0, 1, 2 };
     calcHist(   &hsv, 
                 1,
                 channels, 
@@ -224,7 +224,7 @@ void plotHistogram(const Mat& img)
         _histogram.push_back(hist.at<float>(i));
     }
 
-    matplot::hist(_histogram);
+    matplot::bar(_histogram);
 
     show();
 

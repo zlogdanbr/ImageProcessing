@@ -281,6 +281,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClCompile Include="image_io.cpp" />
     <ClCompile Include="image_algorithms.cpp" />
     <ClCompile Include="image_helper.cpp" />
+    <ClCompile Include="image_ml.cpp" />
     <ClCompile Include="image_select.cpp" />
     <ClCompile Include="image_sift.cpp" />
     <ClCompile Include="image_slide.cpp" />
@@ -300,6 +301,7 @@ copy C:\Users\Administrador\Documents\GitHub\ImageProcessing\x64\Release\diImage
     <ClInclude Include="filesys.h" />
     <ClInclude Include="image_helper.h" />
     <ClInclude Include="image_interest_points.h" />
+    <ClInclude Include="image_ml.h" />
     <ClInclude Include="image_util.h" />
     <ClInclude Include="logs.h" />
     <ClInclude Include="mainframe.h" />

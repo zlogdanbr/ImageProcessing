@@ -192,7 +192,6 @@ void CInputDialog::setSimpleMaps()
     fsimple["Gaussian Difference"] = ApplyDifferenceOfGaussian;
     fsimple["Show Sift Descriptors"] = ApplySiftToImage;
     fsimple["Find Faces"] = FindFacesAndDrawRectangles;
-    fsimple["Locate"] = image_info::locateObjectAtImage;
 
 }
 

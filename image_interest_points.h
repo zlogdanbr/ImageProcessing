@@ -158,7 +158,6 @@ namespace image_info
 {
 
 	std::string getHuhMomentsLine(Mat& img);
-	std::vector<std::vector<double>> getMatchingInfo(std::string& filename);
 	std::pair<int, int> getCentroid(cv::Moments& momInertia);
 	std::string convertWxStringToString(const wxString wsx);
 
@@ -176,11 +175,9 @@ namespace image_info
 					bool ignoreheader,
 					std::string& filename);
 
-	bool MatchDescLine(std::vector<double>& huh_vector, std::vector<double>& vec);
 
 	ObjectsCollection getContournInfo(const Mat& img);
 
-	Mat locateObjectAtImage(const Mat& img);
 
 }
 

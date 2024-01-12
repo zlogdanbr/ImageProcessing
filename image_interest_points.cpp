@@ -189,6 +189,11 @@ namespace image_info
                 std::string Line;
                 getline(myFile, Line);
 
+                if (Line[0] == '#')
+                {
+                   continue;
+                }
+
                 if (ignoreheader == true)
                 {
                     ignoreheader = false;
@@ -232,13 +237,6 @@ namespace image_info
         return 0;
     };
 
-    std::vector<std::vector<double>> getMatchingInfo(std::string& filename)
-    {
-        std::vector<std::vector<double>> data;
-        readCSV2(data, 7, true, filename);
-        return data;
-    }
-
     std::string loadDescriptorFile()
     {
         wxFileDialog openFileDialog(nullptr,
@@ -255,55 +253,6 @@ namespace image_info
         return spath;
     }
 
-    bool MatchDescLine(std::vector<double>& huh_vector, std::vector<double>& vec)
-    {
-        double err = abs(huh_vector[0] - vec[0]);
-        return err <= 0.1;
-    }
-
-    Mat locateObjectAtImage(const Mat& img)
-    {
-        Mat clone = convertograyScale(img);
-        Mat final = img.clone();
-        std::string path = loadDescriptorFile();
-
-        if (path == "")
-        {
-            return clone;
-        }
-
-        std::vector<std::vector<double>> lookup_info = getMatchingInfo(path);
-
-        if (lookup_info.empty())
-        {
-            return clone;
-        }
-
-        Moments moments = cv::moments(clone, false);
-        double huMoments[7];
-        HuMoments(moments, huMoments);
-        std::vector<double> MomentsToMatch;
-
-        for (int i = 0; i < 7; i++)
-        {
-            huMoments[i] = -1 * copysign(1.0, huMoments[i]) * log10(abs(huMoments[i]));
-            MomentsToMatch.push_back(huMoments[i]);
-        }
-
-        bool found = false;
-        for (auto& _v : lookup_info)
-        {
-            if (MatchDescLine(MomentsToMatch, _v) == true)
-            {
-                found = true;
-                auto p = getCentroid(moments);
-                Point pt1 = Point(p.first, p.second);
-                circle(final, pt1, 1, Scalar(50, 255, 1), 10);
-            }
-        }
-        
-        return final;
-    }
 
 }
 
